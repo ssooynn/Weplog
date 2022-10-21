@@ -13,10 +13,10 @@ export const BootstrapButton = styled(motion.button)({
   margin: "10px",
   border: "none",
   fontFamily: `gwtt, sans-serif`,
-  backgroundColor: "#64CCBE",
+  backgroundColor: "#57BA83",
   borderRadius: "10px",
   "&:hover": {
-    backgroundColor: "#64CCBE",
+    backgroundColor: "#57BA83",
     boxShadow: "none",
     color: "white",
   },
@@ -35,9 +35,9 @@ export const RegisterButton = styled(motion.button)({
   border: "none",
   margin: "10px",
   borderRadius: "10px",
-  backgroundColor: "#64CCBE",
+  backgroundColor: "#57BA83",
   "&:hover": {
-    backgroundColor: "#64CCBE",
+    backgroundColor: "#57BA83",
     boxShadow: "none",
     color: "white",
   },
@@ -54,10 +54,10 @@ export const PauseButton = styled(motion.button)({
   height: "5vh",
   border: "none",
   margin: "10px",
-  backgroundColor: "#64CCBE",
+  backgroundColor: "#57BA83",
   borderRadius: "10px",
   "&:hover": {
-    backgroundColor: "#64CCBE",
+    backgroundColor: "#57BA83",
     boxShadow: "none",
     color: "white",
   },
@@ -66,7 +66,7 @@ export const PauseButton = styled(motion.button)({
 export const WhiteButton = styled(motion.button)({
   boxShadow: "none",
   textTransform: "none",
-  border: "1px solid #64CCBE",
+  border: "1px solid #57BA83",
   fontSize: 14,
   fontFamily: "gwmd",
   fontWeight: "bold",
@@ -80,7 +80,7 @@ export const WhiteButton = styled(motion.button)({
   "&:hover": {
     backgroundColor: "white",
     boxShadow: "none",
-    color: "#64CCBE",
+    color: "#57BA83",
   },
 });
 

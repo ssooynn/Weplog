@@ -1,5 +1,5 @@
-// import React, { useEffect, useState } from "react";
-// import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 // import Logo from "../assets/images/logo.png";
 // import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { ReactComponent as CourseIcon } from "../assets/icons/course.svg";
@@ -14,9 +14,9 @@
 // import { ServiceTerms } from "./ServiceTerms";
 // import Stars from "../assets/images/stars.png";
 // import StarsBlank from "../assets/images/stars_blank.png";
-// import { Box } from "grommet";
-// import { Map, Polyline } from "react-kakao-maps-sdk";
-// import { motion } from "framer-motion";
+import { Box } from "grommet";
+import { Map, Polyline } from "react-kakao-maps-sdk";
+import { motion } from "framer-motion";
 // // 공통 컴포넌트들을 정의하는 클래스
 // // ex) 버튼, 레이아웃, 틀
 
@@ -151,23 +151,24 @@
 //   );
 // };
 
-// //텍스트 폼
-// const TextForm = styled.div`
-//   color: ${(props) => props.color || "black"};
-//   font-size: ${(props) => props.size || "14px"};
-//   font-weight: ${(props) => props.weight || "normal"};
-//   align-items: end;
-//   display: flex;
-// `;
+//텍스트 폼
+const TextForm = styled.div`
+  color: ${(props) => props.color || "black"};
+  font-size: ${(props) => props.size || "14px"};
+  font-weight: ${(props) => props.weight || "normal"};
+  align-items: end;
+  display: flex;
+  text-decoration: none;
+`;
 
-// //텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트
-// export function StyledText({ size, color, weight, text, style }) {
-//   return (
-//     <TextForm size={size} color={color} weight={weight} style={style}>
-//       {text}
-//     </TextForm>
-//   );
-// }
+//텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트
+export function StyledText({ size, color, weight, text, style }) {
+  return (
+    <TextForm size={size} color={color} weight={weight} style={style}>
+      {text}
+    </TextForm>
+  );
+}
 
 // //Footer
 // const FooterContainer = styled.div`
