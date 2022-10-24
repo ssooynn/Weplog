@@ -50,6 +50,7 @@ export const NavBar = () => {
   const [show, handleShow] = useState("visible");
   const [opacity, setOpacity] = useState("1");
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     let mounted = true;
     window.addEventListener("scroll", () => {
@@ -110,19 +111,6 @@ export const NavBar = () => {
           </Link>
         </motion.div>
         <Box width="55px" height="25px"></Box>
-        <motion.div
-          style={{
-            justifyContent: "end",
-            alignItems: "center",
-            position: "absolute",
-            bottom: "0",
-          }}
-          whileTap={{ scale: 1.2 }}
-        >
-          <Link to="/plogging/start" style={{ textDecoration: "none" }}>
-            <img src={Plogging} width="55px" height="55px" />
-          </Link>
-        </motion.div>
         <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
           <Link to="/rank" style={{ textDecoration: "none" }}>
             <Box justify="end" height="100%" align="center">

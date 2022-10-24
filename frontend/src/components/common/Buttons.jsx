@@ -12,7 +12,7 @@ export const BootstrapButton = styled(motion.button)({
   height: "43px",
   margin: "10px",
   border: "none",
-  fontFamily: `gwtt, sans-serif`,
+  fontFamily: `shsnMedium, sans-serif`,
   backgroundColor: "#57BA83",
   borderRadius: "10px",
   "&:hover": {
