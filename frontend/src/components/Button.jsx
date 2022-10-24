@@ -16,8 +16,8 @@ const StyledButton = styled(motion.button)`
       height: 59px;
       border: 0px;
       font-size: 18px;
-      color: white;
-      background: #64ccbe;
+      color: #1f1d1d;
+      background: #57BA83;
       width: 80vw;
     `}
 
