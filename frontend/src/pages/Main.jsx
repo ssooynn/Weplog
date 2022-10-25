@@ -8,7 +8,8 @@ export const Main = () => {
         width: "100%",
         justify: "center",
         background: "#fffff",
-        height: "120vh",
+        textAlign: "center",
+        height: "calc(94vh - 50px)",
       }}
       initial="hidden"
       animate="visible"

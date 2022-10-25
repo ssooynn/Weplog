@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import { motion } from "framer-motion";
 export const BootstrapButton = styled(motion.button)({
-  boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
+  boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
   textTransform: "none",
   fontSize: 18,
   fontWeight: "bold",
@@ -20,6 +20,17 @@ export const BootstrapButton = styled(motion.button)({
     boxShadow: "none",
     color: "white",
   },
+});
+
+export const PloggingButton = styled(motion.button)({
+  textTransform: "none",
+  backgroundColor: "#fff",
+  fontSize: 18,
+  fontWeight: "bold",
+  color: "white",
+  margin: "10px",
+  border: "none",
+  fontFamily: `shsnMedium, sans-serif`,
 });
 
 export const RegisterButton = styled(motion.button)({
@@ -64,17 +75,18 @@ export const PauseButton = styled(motion.button)({
 });
 
 export const WhiteButton = styled(motion.button)({
-  boxShadow: "none",
+  boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
   textTransform: "none",
-  border: "1px solid #57BA83",
-  fontSize: 14,
+  border: "2px solid #57BA83",
+  fontSize: 18,
   fontFamily: "gwmd",
   fontWeight: "bold",
   padding: "6px 12px",
-  color: "#64CCBE",
-  width: "50%",
-  height: "5vh",
+  color: "#57BA83",
+  width: "60%",
+  height: "43px",
   margin: "10px",
+  fontFamily: `shsnMedium, sans-serif`,
   backgroundColor: "white",
   borderRadius: "10px",
   "&:hover": {
