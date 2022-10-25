@@ -5,6 +5,7 @@ import { LogoHeader } from "./components/common/Header.jsx";
 import { Challenge } from "./pages/challenge/Challenge.jsx";
 import { Crew } from "./pages/crew/Crew.jsx";
 // import { Footer, LogoHeader, NavBar } from "./components/Common.jsx";
+import { useNavigate } from "react-router-dom";
 import { Main } from "./pages/Main.jsx";
 import { PloggingStart } from "./pages/plogging/PloggingStart.jsx";
 import { Rank } from "./pages/ranking/Rank.jsx";

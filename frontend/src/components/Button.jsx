@@ -13,12 +13,16 @@ const StyledButton = styled(motion.button)`
   ${(props) =>
     props.biggreen &&
     css`
+    border-radius: 2px;
       height: 59px;
       border: 0px;
-      font-size: 18px;
-      color: #1f1d1d;
+      font-family: 'Spoqa Han Sans Neo';
+      font-weight: 300;
+      font-size: 16px;
+      color: white;
       background: #57BA83;
-      width: 80vw;
+      width: 100%;
+      
     `}
 
   ${(props) =>
@@ -107,14 +111,17 @@ const StyledButton = styled(motion.button)`
     `}
 
     ${(props) =>
-    props.infoselect &&
+    props.nicknamecheck &&
     css`
-      height: 29px;
+      height: 32px;
       border: 0px;
-      border-radius: 88px;
-      background: rgba(67, 150, 82, 0.79);
+      border-radius: 2px;
+      background: #57BA83;
       color: white;
-      width: 15vw;
+      width: 90px;
+      font-family: 'Spoqa Han Sans Neo';
+      font-weight: 300;
+      font-size: 13px;
     `}
 
     ${(props) =>
@@ -155,7 +162,7 @@ const StyledButton = styled(motion.button)`
 
 export default function Button({ children, ...props }) {
   return (
-    <StyledButton {...props} whileTap={{ scale: 1.2 }}>
+    <StyledButton {...props} whileTap={{ scale: 1.05 }}>
       {children}
     </StyledButton>
   );

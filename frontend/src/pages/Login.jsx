@@ -31,11 +31,11 @@ export const Login = () => {
             <img src={kakaoLogin} alt="카카오로 로그인" width="300px" />
             <img src={googleLogin} alt="구글로 로그인" width="300px" />
             <Box direction="row" margin={{top:"15px"}}>
-              <Text color="white" size="small" weight="lighter" onClick={(e)=>GoSignup()} margin={{right:"5px",}}>회원가입</Text>
-              <Text color="white" size="small" weight="lighter">|</Text>
-              <Text color="white" size="small" weight="lighter" margin={{left:"5px",right:"5px"}}>아이디찾기</Text>
-              <Text color="white" size="small" weight="lighter">/</Text>
-              <Text color="white" size="small" weight="lighter" margin={{left:"5px",}}>비밀번호 찾기</Text>
+              <Text color="white" size="small" weight="300" onClick={(e)=>GoSignup()} margin={{right:"5px",}}>회원가입</Text>
+              <Text color="white" size="small" weight="300">|</Text>
+              <Text color="white" size="small" weight="300" margin={{left:"5px",right:"5px"}}>아이디찾기</Text>
+              <Text color="white" size="small" weight="300">/</Text>
+              <Text color="white" size="small" weight="300" margin={{left:"5px",}}>비밀번호 찾기</Text>
             </Box>
           </Box>
         </Box>
