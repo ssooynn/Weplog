@@ -21,32 +21,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.ssafy.weplog.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthService {
 
     @Value("${token.refresh-cookie-key}")
     private String cookieKey;
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
-
-    @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(String.valueOf(findMember.getRole())));
-
-        LoginUserDetails loginUserDetails = new LoginUserDetails(String.valueOf(findMember.getId()), "", authorities);
-        loginUserDetails.setMember(findMember);
-        return loginUserDetails;
-    }
 
     public String refreshToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
         // 1. Validation Refresh Token
@@ -61,7 +49,7 @@ public class AuthService implements UserDetailsService {
         Authentication authentication = tokenProvider.getAuthentication(oldAccessToken);
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
-        String id = user.getId();
+        UUID id = user.getId();
 
         // 3. Match Refresh Token
         String savedToken = memberRepository.getRefreshTokenById(id);

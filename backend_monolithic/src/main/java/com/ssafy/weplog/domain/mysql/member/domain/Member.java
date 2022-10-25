@@ -1,10 +1,12 @@
 package com.ssafy.weplog.domain.mysql.member.domain;
 
+import com.fasterxml.uuid.Generators;
 import com.ssafy.weplog.domain.mysql.challenge.domain.Challenge;
 import com.ssafy.weplog.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,16 +16,15 @@ import javax.persistence.*;
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
-    private String id;
+    @Column(name = "member_id" ,columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(name = "social_id")
     private String socialId;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
-    private LoginPath loginPath;
+    @Column(name = "login_path",length = 10)
+    private AuthProvider authProvider;
 
     @Column(length = 10)
     private String name;
@@ -35,10 +36,7 @@ public class Member extends BaseEntity {
     private String nickname;
 
     private Integer weight;
-    private Integer point;
-    private Long distance;
-    private Long time;
-    private Integer challengeCnt;
+
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
@@ -51,6 +49,19 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    @Enumerated(EnumType.STRING)
-    private AuthProvider authProvider;
+    @PrePersist
+    public void createUserUniqId() {
+        //sequential uuid 생성
+        UUID uuid = Generators.timeBasedGenerator().generate();
+        String[] uuidArr = uuid.toString().split("-");
+        String uuidStr = uuidArr[2]+uuidArr[1]+uuidArr[0]+uuidArr[3]+uuidArr[4];
+        StringBuffer sb = new StringBuffer(uuidStr);
+        sb.insert(8, "-");
+        sb.insert(13, "-");
+        sb.insert(18, "-");
+        sb.insert(23, "-");
+        uuid = UUID.fromString(sb.toString());
+        this.id = uuid;
+    }
+
 }
