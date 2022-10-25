@@ -17,7 +17,8 @@ public class Coordinate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "POINT")
+    // GPS 로 부터 받는 위치 정보를 저장하기 위해 WGS 84 좌표계(SRID=3857, 4326)으로 이중 lon,lat 순서로 하기 위해 3857로 컬럼을 정의
+    @Column(columnDefinition = "POINT SRID 3857", nullable = false)
     private Point ploggingLoc;
 
     @ManyToOne(fetch = FetchType.LAZY)
