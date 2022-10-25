@@ -3,8 +3,11 @@ package com.ssafy.weplog.domain.mysql.pet.service;
 import java.util.List;
 
 import com.ssafy.weplog.domain.mysql.pet.domain.Pet;
+import com.ssafy.weplog.domain.mysql.pet.dto.PetReq;
+import com.ssafy.weplog.domain.mysql.pet.dto.PetRes;
 
 public interface PetService {
-	public List<Pet> getMyPets(String userId);
-	public List<Pet> getPetsByLevel(int level);
+
+	public List<PetRes> getPetsByLevel(int level);
+
 }
