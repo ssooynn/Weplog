@@ -1,6 +1,7 @@
 package com.ssafy.weplog.domain.mysql.pet.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ssafy.weplog.domain.mysql.member.dao.MemberRepository;
 import com.ssafy.weplog.domain.mysql.member.domain.Member;
@@ -22,13 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 public class PetServiceImpl implements PetService {
 
 	private static PetRepository petRepository;
-	private static MemberRepository memberRepository;
-	private static MemberPetRepository memberPetRepository;
 
 	@Override
 	public List<PetRes> getPetsByLevel(int level) {
-
-		return null;
+		List<PetRes> list = petRepository.getPetsByLevel(level).stream().map(m->new PetRes(m))
+				.collect(Collectors.toList());
+		return list;
 	}
 
 

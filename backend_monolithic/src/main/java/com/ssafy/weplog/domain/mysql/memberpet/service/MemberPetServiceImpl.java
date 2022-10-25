@@ -13,6 +13,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,7 +45,9 @@ public class MemberPetServiceImpl implements MemberPetService{
 
     @Override
     public List<Integer> getMyPetsKind(String userId) {
-        List<Integer> list = (List<Integer>)memberPetRepository.getMemberPetsByKind(userId).stream().map(m -> m.intValue());
+        List<Integer> list = memberPetRepository.getMemberPetsByKind(userId).stream()
+                .map(m -> m.intValue())
+                .collect(Collectors.toList());
         return list;
     }
 
