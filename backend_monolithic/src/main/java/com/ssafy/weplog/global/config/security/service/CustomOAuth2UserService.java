@@ -4,6 +4,8 @@ import com.ssafy.weplog.domain.mysql.member.dao.MemberRepository;
 import com.ssafy.weplog.domain.mysql.member.domain.AuthProvider;
 import com.ssafy.weplog.domain.mysql.member.domain.Member;
 import com.ssafy.weplog.domain.mysql.member.domain.MemberRole;
+import com.ssafy.weplog.domain.mysql.memberdetail.dao.MemberDetailRepository;
+import com.ssafy.weplog.domain.mysql.memberdetail.domain.MemberDetail;
 import com.ssafy.weplog.global.common.error.exception.OAuthProcessingException;
 import com.ssafy.weplog.global.config.security.auth.CustomUserDetails;
 import com.ssafy.weplog.global.config.security.auth.OAuth2UserInfo;
@@ -25,6 +27,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
+    private final MemberDetailRepository memberDetailRepository;
+
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -41,7 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userInfo.getEmail().isEmpty()) {
             throw new OAuthProcessingException("Email not found from OAuth2 provider");
         }
-        Optional<Member> userOptional = memberRepository.findBySocialId(Long.valueOf(userInfo.getId()));
+        Optional<Member> userOptional = memberRepository.findBySocialId(userInfo.getId());
         Member member;
 
         if (userOptional.isPresent()) {		// 이미 가입된 경우
@@ -64,8 +68,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .profileImageUrl(userInfo.getImageUrl())
                 .role(MemberRole.ROLE_MEMBER)
                 .authProvider(authProvider)
-                .point(0)
                 .build();
-        return memberRepository.save(member);
+        Member save = memberRepository.save(member);
+
+        MemberDetail memberDetail = MemberDetail.builder()
+                .point(0)
+                .time(0L)
+                .challengeCnt(0)
+                .ploggingCnt(0)
+                .profileImageUrl(save.getProfileImageUrl())
+                .member(save)
+                .build();
+
+        memberDetailRepository.save(memberDetail);
+        return save;
     }
 }

@@ -1,10 +1,8 @@
 package com.ssafy.weplog.domain.mysql.memberdetail.domain;
 
+import com.ssafy.weplog.domain.mysql.member.domain.Member;
 import com.ssafy.weplog.global.common.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class MemberDetail extends BaseEntity {
 
     @Id
@@ -25,4 +24,8 @@ public class MemberDetail extends BaseEntity {
     private Integer challengeCnt;
     private Integer ploggingCnt;
     private String profileImageUrl;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
