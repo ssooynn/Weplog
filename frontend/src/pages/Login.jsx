@@ -23,7 +23,7 @@ export const Login = () => {
     Navigate("/signup");
   }
   return (
-    <Box height="100vh" background={{ image: `url(/assets/images/login/Login${bgImgNum}.jpg)` }}>
+    <Box height="100vh" background={{ image: `url(/assets/images/Login/Login${bgImgNum}.jpg)` }}>
       <GradientBlack>
         <Box direction="column" justify="around" align="center" width="100%" height="100%">
           <img src={logo} alt="로고" width="120px"/>
