@@ -26,7 +26,7 @@ public class ChallengeController {
 	private final ChallengeService challengeService;
 
 	@ApiOperation(value = "챌린지 목록조회")
-	@PostMapping()
+	@GetMapping()
 	public ResponseEntity<Slice<ChallengeRes>> getChallengeList(Pageable pageable) {
 
 		return null;
