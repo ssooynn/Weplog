@@ -159,6 +159,7 @@ const TextForm = styled.div`
   align-items: end;
   display: flex;
   text-decoration: none;
+  font-family: "shsnMedium", sans-serif;
 `;
 
 //텍스트 사이즈, 컬러, 웨이트, 글자를 설정할 수 있는 컴포넌트

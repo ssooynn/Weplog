@@ -4,6 +4,7 @@ import { container } from "../../utils/util";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { Box } from "grommet";
 import { BootstrapButton } from "../../components/common/Buttons";
+import { useNavigate } from "react-router-dom";
 export const PloggingStart = () => {
   const [loc, setLoc] = useState({
     center: {
@@ -13,6 +14,8 @@ export const PloggingStart = () => {
     errMsg: null,
     isLoading: true,
   });
+
+  const navigate = useNavigate();
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -42,7 +45,7 @@ export const PloggingStart = () => {
       style={{
         width: "100%",
         textAlign: "center",
-        height: "94vh",
+        height: "calc(94vh - 50px)",
       }}
     >
       {/* 지도 */}
@@ -79,8 +82,7 @@ export const PloggingStart = () => {
             color: "white",
             borderRadius: "10px",
             fontWeight: "bold",
-            background:
-              "linear-gradient(to top left,rgba(87, 186, 131, 1) 20%, rgba(29, 38, 255, 0.4) 70%)",
+            background: "#57BA83",
           }}
         >
           경기도 용인시 기흥구 신갈동
@@ -107,7 +109,14 @@ export const PloggingStart = () => {
         align="center"
         style={{ position: "absolute", bottom: "7%", zIndex: "15" }}
       >
-        <BootstrapButton whileTap={{ scale: 1.2 }}>Plogging!</BootstrapButton>
+        <BootstrapButton
+          whileTap={{ scale: 1.2 }}
+          onClick={() => {
+            navigate("/plogging");
+          }}
+        >
+          Plogging!
+        </BootstrapButton>
       </Box>
     </motion.div>
   );
