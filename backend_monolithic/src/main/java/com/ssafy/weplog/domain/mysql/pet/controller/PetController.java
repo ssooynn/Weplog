@@ -19,7 +19,7 @@ public class PetController {
 	private final PetService petService;
 
 	@ApiOperation(value = "레벨별 펫 조회")
-	@GetMapping("/level/{level}")
+	@GetMapping("/{level}")
 	public ResponseEntity<?> getPetsByLevel(@PathVariable("level") int level) {
 		return ResponseEntity.ok(petService.getPetsByLevel(level));
 	}

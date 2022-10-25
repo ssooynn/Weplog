@@ -24,7 +24,6 @@ public class Pet extends BaseEntity {
     private String category;
 
     private Integer level;
-    private Integer imageLevel;
     private String fileUrl;
     private Integer maxExp;
 
