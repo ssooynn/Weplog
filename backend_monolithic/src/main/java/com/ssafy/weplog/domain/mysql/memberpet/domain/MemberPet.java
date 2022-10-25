@@ -3,10 +3,7 @@ package com.ssafy.weplog.domain.mysql.memberpet.domain;
 import com.ssafy.weplog.domain.mysql.member.domain.Member;
 import com.ssafy.weplog.domain.mysql.pet.domain.Pet;
 import com.ssafy.weplog.global.common.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -38,4 +35,29 @@ public class MemberPet extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
     private Pet pet;
+
+    @Builder
+    public MemberPet(Member member, Pet pet){
+        this.member = member;
+        this.pet = pet;
+        this.currentExp = 0;
+        this.currentLevel = 0;
+        this.fileUrl = pet.getFileUrl();
+        this.imageLevel = 0;
+        this.maxExp = pet.getMaxExp();
+        this.name = pet.getCategory();
+    }
+
+    @Builder
+    public MemberPet(Member member, Pet pet, int currentLevel, int currentExp, int imageLevel){
+        this.member = member;
+        this.pet = pet;
+        this.currentExp = currentLevel;
+        this.currentLevel = currentExp;
+        this.fileUrl = pet.getFileUrl();
+        this.imageLevel = imageLevel;
+        this.maxExp = pet.getMaxExp();
+        this.name = pet.getCategory();
+    }
+
 }
