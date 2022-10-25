@@ -40,17 +40,21 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     public Slice<ChallengeRes> getChallengeList(Pageable pageable) {
-        return null;
+        Slice<ChallengeRes> slice = challengeRepository.getChallengeList(pageable).map(m -> new ChallengeRes(m));
+        return slice;
     }
 
     @Override
-    public Slice<ChallengeRes> getMyChallengeList(Pageable pageable) {
-        return null;
+    public Slice<ChallengeRes> getMyChallengeList(String id, Pageable pageable) {
+        Slice<ChallengeRes> slice = challengeRepository.getChallengeByID(id, pageable).map(m->new ChallengeRes(m));
+        return slice;
     }
 
     @Override
     public Slice<ChallengeRes> getChallengeBySearch(String title, Pageable pageable) {
-        return null;
+        Slice<ChallengeRes> slice = challengeRepository.getChallengeByTitle(title, pageable)
+                .map(m ->new ChallengeRes(m));
+        return slice;
     }
 
     @Override

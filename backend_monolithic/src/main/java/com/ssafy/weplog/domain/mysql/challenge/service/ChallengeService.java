@@ -12,7 +12,7 @@ public interface ChallengeService {
 
     void deleteChallenge(Long id);
     Slice<ChallengeRes> getChallengeList(Pageable pageable);
-    Slice<ChallengeRes> getMyChallengeList(Pageable pageable);
+    Slice<ChallengeRes> getMyChallengeList(String id, Pageable pageable);
     Slice<ChallengeRes> getChallengeBySearch(String title, Pageable pageable);
     ChallengeDetailRes getChallengeDetail(Long id);
 
