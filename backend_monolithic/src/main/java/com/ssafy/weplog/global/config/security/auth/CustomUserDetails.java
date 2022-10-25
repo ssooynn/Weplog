@@ -8,15 +8,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails, OAuth2User {
-    private final String id;
+    private final UUID id;
     private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
