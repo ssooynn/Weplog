@@ -33,8 +33,8 @@
     font-display: fallback;
     src: url("../src/assets/fonts/SpoqaHanSansNeo-Bold.ttf") format("truetype"),
       url("../src/assets/fonts/SpoqaHanSansNeo-Bold.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
+    font-weight: 100;
+    font-style: bold;
   }
   
   @font-face {
@@ -42,7 +42,7 @@
     font-display: fallback;
     src: url("../src/assets/fonts/SpoqaHanSansNeo-Light.ttf") format("truetype"),
       url("../src/assets/fonts/SpoqaHanSansNeo-Light.woff") format("woff");
-    font-weight: 400;
+    font-weight: 100;
     font-style: normal;
   }
   @font-face {
@@ -50,7 +50,7 @@
     font-display: fallback;
     src: url("../src/assets/fonts/SpoqaHanSansNeo-Medium.ttf") format("truetype"),
       url("../src/assets/fonts/SpoqaHanSansNeo-Medium.woff") format("woff");
-    font-weight: 400;
+    font-weight: 100;
     font-style: normal;
   }
   
@@ -59,7 +59,7 @@
     font-display: fallback;
     src: url("../src/assets/fonts/SpoqaHanSansNeo-Regular.ttf") format("truetype"),
       url("../src/assets/fonts/SpoqaHanSansNeo-Regular.woff") format("woff");
-    font-weight: 400;
+    font-weight: 100;
     font-style: normal;
   }
   
@@ -68,7 +68,7 @@
     font-display: fallback;
     src: url("../src/assets/fonts/SpoqaHanSansNeo-Thin.ttf") format("truetype"),
       url("../src/assets/fonts/SpoqaHanSansNeo-Thin.woff") format("woff");
-    font-weight: 400;
+    font-weight: 100;
     font-style: normal;
   }
   

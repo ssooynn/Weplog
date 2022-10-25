@@ -20,6 +20,7 @@ export const LogoHeader = () => {
         style={{
           margin: "8px 10px",
           alignContent: "center",
+          width: "27%",
         }}
         whileTap={{ scale: 1.2 }}
         alt="logo"

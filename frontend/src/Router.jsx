@@ -9,31 +9,15 @@ import { Main } from "./pages/Main.jsx";
 import { PloggingStart } from "./pages/plogging/PloggingStart.jsx";
 import { Rank } from "./pages/ranking/Rank.jsx";
 import { motion } from "framer-motion";
-import PloggingImg from "./assets/images/plogging.png";
 import { Plogging } from "./pages/plogging/Plogging.jsx";
+import { PloggingEnd } from "./pages/plogging/PloggingEnd.jsx";
+// import { PloggingRegister } from "./pages/plogging/PloggingRegister.jsx";
 const Layout = () => {
   const navigate = useNavigate();
   return (
     <div className="rootRoute">
       <LogoHeader />
       <Outlet />
-      <motion.div
-        style={{
-          justifyContent: "end",
-          alignItems: "center",
-          position: "absolute",
-          bottom: "0",
-          left: "50%",
-          marginLeft: "-27.5px" /* width의 50% */,
-          zIndex: 1000,
-        }}
-        whileTap={{ scale: 1.2 }}
-        onClick={() => {
-          navigate("/plogging/start");
-        }}
-      >
-        <img src={PloggingImg} width="55px" height="55px" style={{}} />
-      </motion.div>
       <NavBar />
     </div>
   );
@@ -62,11 +46,13 @@ export const Router = () => {
       {/* 로고, 푸터, 내브바 */}
       <Route path="/" element={<Layout />}>
         {/* <Route index element={<MapTest />}></Route> */}
-        <Route index element={<PloggingStart />} />
+        <Route index element={<Main />} />
         <Route path="/crew" element={<Crew />} />
         <Route path="/rank" element={<Rank />} />
         <Route path="/challenge/list" element={<Challenge />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
+        <Route path="/plogging/end" element={<PloggingEnd />} />
+        {/* <Route path="/plogging/register" element={<PloggingRegister />} /> */}
       </Route>
       {/* 로고 */}
       <Route path="/" element={<LayoutFullScreen />}>

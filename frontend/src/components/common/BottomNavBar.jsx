@@ -26,7 +26,7 @@ const NavBarText = ({ text, active }) => {
 
 //NavBar
 const NavBarDiv = styled.div`
-  position: fixed;
+  position: relative;
   bottom: 0;
   display: flex;
   flex-direction: row;
@@ -79,69 +79,82 @@ export const NavBar = () => {
     };
   }, []);
   return (
-    <Box width="100%">
-      <NavBarDiv isShow={show} opacity={opacity}>
-        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <Box justify="end" height="100%" align="center">
-              <img
-                width="25px"
-                height="25px"
-                src={pathname === "/" ? HomeActive : Home}
-              />
-              <NavBarText text="홈" active={pathname === "/" ? true : false} />
-            </Box>
-          </Link>
-        </motion.div>
-        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
-          <Link to="/challenge/list" style={{ textDecoration: "none" }}>
-            <Box justify="end" height="100%" align="center">
-              <img
-                width="25px"
-                height="25px"
-                src={
-                  pathname === "/challenge/list" ? ChallengeActive : Challenge
-                }
-              />
-              <NavBarText
-                text="챌린지"
-                active={pathname === "/challenge/list" ? true : false}
-              />
-            </Box>
-          </Link>
-        </motion.div>
-        <Box width="55px" height="25px"></Box>
-        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
-          <Link to="/rank" style={{ textDecoration: "none" }}>
-            <Box justify="end" height="100%" align="center">
-              <img
-                width="25px"
-                height="25px"
-                src={pathname === "/rank" ? RankActive : Rank}
-              />
-              <NavBarText
-                text="랭킹"
-                active={pathname === "/rank" ? true : false}
-              />
-            </Box>
-          </Link>
-        </motion.div>
-        <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
-          <Link to="/crew" style={{ textDecoration: "none" }}>
-            <Box justify="end" height="100%" align="center">
-              <img
-                width="25px"
-                height="25px"
-                src={pathname === "/crew" ? CrewActive : Crew}
-              />
-              <NavBarText
-                text="크루"
-                active={pathname === "/crew" ? true : false}
-              />
-            </Box>
-          </Link>
-        </motion.div>
-      </NavBarDiv>
-    </Box>
+    <NavBarDiv isShow={show} opacity={opacity}>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <Box justify="end" height="100%" align="center">
+            <img
+              width="25px"
+              height="25px"
+              src={pathname === "/" ? HomeActive : Home}
+            />
+            <NavBarText text="홈" active={pathname === "/" ? true : false} />
+          </Box>
+        </Link>
+      </motion.div>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+        <Link to="/challenge/list" style={{ textDecoration: "none" }}>
+          <Box justify="end" height="100%" align="center">
+            <img
+              width="25px"
+              height="25px"
+              src={pathname === "/challenge/list" ? ChallengeActive : Challenge}
+            />
+            <NavBarText
+              text="챌린지"
+              active={pathname === "/challenge/list" ? true : false}
+            />
+          </Box>
+        </Link>
+      </motion.div>
+      <Box width="55px" height="25px"></Box>
+      <motion.div
+        style={{
+          justifyContent: "end",
+          alignItems: "center",
+          position: "absolute",
+          bottom: "0",
+          left: "50%",
+          marginLeft: "-27.5px" /* width의 50% */,
+          zIndex: 1000,
+        }}
+        whileTap={{ scale: 1.2 }}
+        onClick={() => {
+          navigate("/plogging/start");
+        }}
+      >
+        <img src={Plogging} width="55px" height="55px" style={{}} />
+      </motion.div>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+        <Link to="/rank" style={{ textDecoration: "none" }}>
+          <Box justify="end" height="100%" align="center">
+            <img
+              width="25px"
+              height="25px"
+              src={pathname === "/rank" ? RankActive : Rank}
+            />
+            <NavBarText
+              text="랭킹"
+              active={pathname === "/rank" ? true : false}
+            />
+          </Box>
+        </Link>
+      </motion.div>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+        <Link to="/crew" style={{ textDecoration: "none" }}>
+          <Box justify="end" height="100%" align="center">
+            <img
+              width="25px"
+              height="25px"
+              src={pathname === "/crew" ? CrewActive : Crew}
+            />
+            <NavBarText
+              text="크루"
+              active={pathname === "/crew" ? true : false}
+            />
+          </Box>
+        </Link>
+      </motion.div>
+    </NavBarDiv>
   );
 };
