@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes} from "react-router-dom";
 import { NavBar } from "./components/common/BottomNavBar.jsx";
 import { LogoHeader } from "./components/common/Header.jsx";
 import { Challenge } from "./pages/challenge/Challenge.jsx";
@@ -9,6 +9,7 @@ import { Main } from "./pages/Main.jsx";
 import { PloggingStart } from "./pages/plogging/PloggingStart.jsx";
 import { Rank } from "./pages/ranking/Rank.jsx";
 import {Login} from "./pages/Login.jsx";
+import { Signup } from "./pages/Signup.jsx";
 
 const Layout = () => {
   return (
@@ -47,6 +48,7 @@ export const Router = () => {
         <Route path="/plogging/start" element={<PloggingStart />} />
       </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
     </Routes>
   );
 };
