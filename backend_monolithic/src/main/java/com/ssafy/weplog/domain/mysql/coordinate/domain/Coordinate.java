@@ -2,7 +2,6 @@ package com.ssafy.weplog.domain.mysql.coordinate.domain;
 
 import com.ssafy.weplog.domain.mysql.plogging.domain.Plogging;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
@@ -18,6 +17,7 @@ public class Coordinate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "POINT")
     private Point ploggingLoc;
 
     @ManyToOne(fetch = FetchType.LAZY)
