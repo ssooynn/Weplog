@@ -28,8 +28,7 @@ public class ChallengeController {
 	@ApiOperation(value = "챌린지 목록조회")
 	@GetMapping()
 	public ResponseEntity<Slice<ChallengeRes>> getChallengeList(Pageable pageable) {
-
-		return null;
+		return new ResponseEntity<>(challengeService.getChallengeList(pageable), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "챌린지 생성")
@@ -53,20 +52,20 @@ public class ChallengeController {
 	@GetMapping("/my")
 	public ResponseEntity<Slice<ChallengeRes>> getMyChallengeList(@ApiIgnore @AuthenticationPrincipal CustomUserDetails
 																			  member, Pageable pageable) {
-		Slice<ChallengeRes> res = challengeService.getMyChallengeList(pageable);
+		Slice<ChallengeRes> res = challengeService.getMyChallengeList(member.getId(), pageable);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "챌린지 제목으로 조회")
 	@GetMapping("/search/{title}")
-	public ResponseEntity<?> getChallengeBySearch(@PathVariable("title") String title, Pageable pageable) {
-		return null;
+	public ResponseEntity<Slice<ChallengeRes>> getChallengeBySearch(@PathVariable("title") String title, Pageable pageable) {
+		return new ResponseEntity<>(challengeService.getChallengeBySearch(title, pageable), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "챌린지 상세 조회")
 	@GetMapping("/{challengeId}")
-	public ResponseEntity<?> getChallengeDetail(@PathVariable("challengeId") String challengeId) {
-		return null;
+	public ResponseEntity<?> getChallengeDetail(@PathVariable("challengeId") Long challengeId) {
+		return new ResponseEntity<>(challengeService.getChallengeDetail(challengeId), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "챌린지 내부 랭킹 조회")
@@ -74,11 +73,4 @@ public class ChallengeController {
 	public ResponseEntity<?> getRankInChallenge(@PathVariable("challengeId") String challengeId) {
 		return null;
 	}
-
-	@ApiOperation(value = "챌린지 내부 피드 리스트 조회")
-	@GetMapping("feed/{challengeId}")
-	public ResponseEntity<?> getFeedInChallenge(@PathVariable("challengeId") String challengeId) {
-		return null;
-	}
-
 }
