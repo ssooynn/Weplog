@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const ProfileStyled = styled.img`
-  height: ${(props) => props.height || "130px"};
-  width: ${(props) => props.width || "130px"};
+  height: ${(props) => props.height || "110px"};
+  width: ${(props) => props.width || "110px"};
   border-radius: 50%;
   margin: ${(props) => props.margin || "5px"};
   /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2); */
