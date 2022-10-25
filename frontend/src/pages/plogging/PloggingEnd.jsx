@@ -49,49 +49,55 @@ export const PloggingEnd = () => {
         </Map>
       </Box>
       {/* 데이터 박스 */}
-
-      <Box
-        width="100%"
-        height={register ? "50%" : "35%"}
-        align="center"
-        justify="center"
-        background="#fff"
+      <motion.div
+        transition={{ duration: 0.25 }}
+        animate={{ height: register ? "50%" : "35%" }}
         style={{
+          background: "white",
+          width: "100%",
+          height: register ? "50%" : "35%",
           position: "absolute",
           bottom: 0,
           zIndex: "12",
         }}
       >
-        <img
-          src={Charact}
-          style={{
-            width: "200px",
-            fill: "cover",
-            position: "absolute",
-            right: 0,
-            top: "-150px",
-            zIndex: "15",
-          }}
-        />
-        <Box direction="row" width="100%" justify="center" gap="55px">
-          <DataBox label="킬로미터" data={ploggingData.totalDistance} />
-          <DataBox label="시간" data={timeToString(ploggingData.time)} />
-          <DataBox label="칼로리" data={ploggingData.kcal} />
-        </Box>
-        <Box width="100%" align="center">
-          <BootstrapButton
+        <Box
+          width="100%"
+          height="100%"
+          align="center"
+          justify="center"
+          style={{}}
+        >
+          <img
+            src={Charact}
             style={{
-              width: "75%",
-              height: "50px",
+              width: "200px",
+              fill: "cover",
+              position: "absolute",
+              right: 0,
+              top: "-150px",
+              zIndex: "15",
             }}
-            whileTap={{ scale: 1.2 }}
-            onClick={() => {
-              setRegister(true);
-            }}
-          >
-            {!register ? "Plog 등록하기" : "플로깅 완료!"}
-          </BootstrapButton>
-          {!register && (
+          />
+          <Box direction="row" width="100%" justify="center" gap="55px">
+            <DataBox label="킬로미터" data={ploggingData.totalDistance} />
+            <DataBox label="시간" data={timeToString(ploggingData.time)} />
+            <DataBox label="칼로리" data={ploggingData.kcal} />
+          </Box>
+          <Box width="100%" align="center">
+            <BootstrapButton
+              style={{
+                width: "75%",
+                height: "50px",
+              }}
+              whileTap={{ scale: 1.2 }}
+              onClick={() => {
+                setRegister(true);
+              }}
+            >
+              {!register ? "Plog 등록하기" : "플로깅 완료!"}
+            </BootstrapButton>
+
             <WhiteButton
               style={{
                 width: "75%",
@@ -99,14 +105,14 @@ export const PloggingEnd = () => {
               }}
               whileTap={{ scale: 1.2 }}
               onClick={() => {
-                navigate("/");
+                !register ? navigate("/") : setRegister(false);
               }}
             >
-              메인으로
+              {!register ? "메인으로" : "돌아가기"}
             </WhiteButton>
-          )}
+          </Box>
         </Box>
-      </Box>
+      </motion.div>
     </motion.div>
   );
 };

@@ -77,7 +77,7 @@ export const PauseButton = styled(motion.button)({
 export const WhiteButton = styled(motion.button)({
   boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
   textTransform: "none",
-  border: "2px solid #57BA83",
+  border: "1.5px solid #57BA83",
   fontSize: 18,
   fontFamily: "gwmd",
   fontWeight: "bold",
