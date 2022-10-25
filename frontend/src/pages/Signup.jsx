@@ -62,7 +62,7 @@ export const Signup = () => {
   }, [check1, check2, check3]);
 
   return (
-    <Box direction="column" height="100vh" justify="between">
+    <Box direction="column" height="auto" justify="between" style={{minHeight:"700px"}}>
       {/* 제목 Header */}
       <Box pad="18px" width="100%" height="60px" justify="center" align="center" border={{ color: "#EAEAEA", size: "2px", styled: "solid", side: "bottom" }}>
         <Text size="16px" weight="500">
