@@ -71,21 +71,21 @@ export const Signup = () => {
         </Text>
       </Box>
       {/* 회원가입에 필요한 입력값 */}
-      <Box direction="column" height="93%" pad="30px 45px">
+      <Box direction="column" min-height="93%" pad="30px 45px">
         {/* 프로필 이미지 */}
         <Box justify="center" align="center">
           <StyledProfile src={profile === "" ? userProfile : profile} />
           <div
             style={{
               position: "absolute",
-              width: "30px",
-              height: "30px",
-              paddingLeft: "90px",
-              paddingTop: "90px",
+              width: "20px",
+              height: "20px",
+              paddingLeft: "70px",
+              paddingTop: "70px",
             }}
           >
             <label htmlFor="image">
-              <img src={gallery} alt="프로필 편집" />
+              <img src={gallery} width="30px" height="30px"  alt="프로필 편집" />
             </label>
             <input
               id="image"
@@ -100,7 +100,7 @@ export const Signup = () => {
         </Box>
         {/* 이름 */}
         <Box margin="40px 0px 0px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="16px">
+          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
             이름
           </Text>
           <StyledInput
@@ -110,11 +110,12 @@ export const Signup = () => {
               setName(e.target.value);
               console.log(name);
             }}
+            width="50%"
           />
         </Box>
         {/* 닉네임 */}
         <Box margin="20px 0px 0px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="16px">
+          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
             닉네임
           </Text>
           <Box direction="row" justify="between">
@@ -125,6 +126,7 @@ export const Signup = () => {
                 setNickName(e.target.value);
                 console.log(nickname);
               }}
+              width="50%"
             />
             <Button
               nicknamecheck
@@ -139,7 +141,7 @@ export const Signup = () => {
         {/* 몸무게 */}
         <Box margin="20px 0px 0px 0px">
           <Box direction="row" justify="between">
-            <Text color="#7E7E7E" weight="400" alignSelf="start" size="16px">
+            <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
               몸무게
             </Text>
             <Text color="#7E7E7E" weight="400" alignSelf="center" size="8px">
@@ -154,50 +156,44 @@ export const Signup = () => {
                 setWeight(e.target.value);
                 console.log(weight);
               }}
+              width="50%"
             />
-            <Text color="#7E7E7E" weight="400" alignSelf="center" size="16px">
+            <Text color="#7E7E7E" weight="400" alignSelf="center" size="14px">
               Kg
             </Text>
           </Box>
         </Box>
         {/* 약관 */}
         <Box margin="20px 0px 20px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="16px">
+          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
             약관 동의
           </Text>
           <Box alignSelf="center" width="100%" height="170px" border={{ color: "#D9D9D9", size: "1px", style: "solid", side: "all" }} margin={{ top: "10px" }} pad="medium">
             <Box direction="row" align="center" margin="5px">
-              <input type="checkbox" name="Term" value="이용약관" checked={checkAll} style={{ alignSelf: "end" }} onChange={(e) => CheckAllChange()} />
-              <label for="이용약관">
+              <input type="checkbox" name="Term" value="이용약관" checked={checkAll} style={{ alignSelf: "center", transform:"scale(1)" }} onChange={(e) => CheckAllChange()} />
                 <Text size="14px" weight="400" margin={{ left: "10px" }}>
                   모두 동의
                 </Text>
-              </label>
             </Box>
             <hr style={{ border: "1px solid #EAEAEA", width: "98%" }} />
-            <Box direction="row" align="center" margin="5px">
-              <input type="checkbox" name="Term" value="쇼핑몰 이용약관" checked={check1} style={{ alignSelf: "end" }} onChange={(e) => Check1Change()} />
-              <label for="이용약관">
+            <Box direction="row" align="center" margin="10px 5px">
+              <input type="checkbox" name="Term" value="쇼핑몰 이용약관" checked={check1} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check1Change()} />
                 <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
                   쇼핑몰 이용약관
                 </Text>
-              </label>
             </Box>
-            <Box direction="row" align="center" margin="5px">
-              <input type="checkbox" name="Term" value="개인정보처리방침" checked={check2} style={{ alignSelf: "end" }} onChange={(e) => Check2Change()} />
-              <label for="이용약관">
+            <Box direction="row" align="center" margin="10px 5px">
+              <input type="checkbox" name="Term" value="개인정보처리방침" checked={check2} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check2Change()} />
                 <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
                   개인정보처리방침
                 </Text>
-              </label>
+
             </Box>
-            <Box direction="row" align="center" margin="5px">
-              <input type="checkbox" name="Term" value="개인정보 처리의 위탁" checked={check3} style={{ alignSelf: "end" }} onChange={(e) => Check3Change()} />
-              <label for="이용약관">
+            <Box direction="row" align="center" margin="10px 5px 5px 5px">
+              <input type="checkbox" name="Term" value="개인정보 처리의 위탁" checked={check3} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check3Change()} />
                 <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
                   개인정보 처리의 위탁
                 </Text>
-              </label>
             </Box>
           </Box>
         </Box>
