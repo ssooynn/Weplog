@@ -1,6 +1,7 @@
 package com.ssafy.weplog.domain.mysql.pet.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
 	@Override
-	public List<Pet> getMyPets(String userId) {
+	public List<Pet> getMyPets(UUID userId) {
 		return null;
 	}
 
