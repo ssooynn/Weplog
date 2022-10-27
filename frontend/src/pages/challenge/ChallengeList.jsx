@@ -57,7 +57,7 @@ export const ChallengeList = () => {
           marginLeft: "45%",
           marginTop: "300px",
           objectFit: "cover",
-          boxShadow:"4px 4px 4px rgba(0,0,0,0.1)"
+          boxShadow:"4px 4px 4px rgba(0,0,0,0.3)"
         }}
       ></img>
       <Box pad="large" direction="column" align="center" justify="start">
