@@ -22,6 +22,7 @@ const StyledButton = styled(motion.button)`
       color: white;
       background: #57BA83;
       width: 100%;
+      boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
     `}
   ${(props) =>
     props.biggreenround &&
@@ -35,6 +36,7 @@ const StyledButton = styled(motion.button)`
       color: white;
       background: #57BA83;
       width: 100%;
+      boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
     `}
     
 

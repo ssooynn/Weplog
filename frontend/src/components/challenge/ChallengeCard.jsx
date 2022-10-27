@@ -40,9 +40,9 @@ export const ChallengeCard = (data) => {
             기한 - 2022.12.25 15시까지
           </Text>
           <Box direction="row" width="100%" justify="between">
-            <Box direction="row" justify="between" align="center" width="70%">
+            <Box direction="row" justify="between" align="center" width="200px">
               <ProgressBar id="progress" value="75" min="0" max="100"></ProgressBar>
-              <Text size="6px" weight="400">
+              <Text size="8px" weight="400">
                 75%
               </Text>
             </Box>
