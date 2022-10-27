@@ -22,8 +22,21 @@ const StyledButton = styled(motion.button)`
       color: white;
       background: #57BA83;
       width: 100%;
-      
     `}
+  ${(props) =>
+    props.biggreenround &&
+    css`
+    border-radius: 10px;
+      height: 59px;
+      border: 0px;
+      font-family: 'Spoqa Han Sans Neo';
+      font-weight: 400;
+      font-size: 16px;
+      color: white;
+      background: #57BA83;
+      width: 100%;
+    `}
+    
 
   ${(props) =>
     props.bigpink &&

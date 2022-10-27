@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, Route, Routes} from "react-router-dom";
 import { NavBar } from "./components/common/BottomNavBar.jsx";
 import { LogoHeader } from "./components/common/Header.jsx";
-import { Challenge } from "./pages/challenge/Challenge.jsx";
+import { ChallengeList } from "./pages/challenge/ChallengeList.jsx";
 import { Crew } from "./pages/crew/Crew.jsx";
 // import { Footer, LogoHeader, NavBar } from "./components/Common.jsx";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,15 @@ const LayoutNoNav = () => {
   );
 };
 
+const LayoutNoLogo = () => {
+  return (
+    <div className="rootRoute">
+      <Outlet />
+      <NavBar />
+    </div>
+  );
+};
+
 const LayoutFullScreen = () => {
   return (
     <div className="rootRoute">
@@ -53,7 +62,6 @@ export const Router = () => {
         <Route index element={<Main />} />
         <Route path="/crew" element={<Crew />} />
         <Route path="/rank" element={<Rank />} />
-        <Route path="/challenge/list" element={<Challenge />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route path="/plogging/end" element={<PloggingEnd />} />
         {/* <Route path="/plogging/register" element={<PloggingRegister />} /> */}
@@ -61,6 +69,10 @@ export const Router = () => {
       {/* 로고 */}
       <Route path="/" element={<LayoutFullScreen />}>
         <Route path="/plogging" element={<Plogging />} />
+      </Route>
+      {/* 내브바 */}
+      <Route path="/" element={<LayoutNoLogo/>}>
+        <Route path="/challenge/list" element={<ChallengeList />} />
       </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
