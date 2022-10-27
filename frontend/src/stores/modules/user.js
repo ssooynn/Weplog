@@ -14,7 +14,7 @@ const initialState = {
     id: 0,
     name: "",
     nickname: "",
-    phone: "",
+    weight: "",
     profileImageUrl: "",
     role: "",
   },

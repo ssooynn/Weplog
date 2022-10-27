@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { container, timeToString } from "../../utils/util";
@@ -6,13 +6,18 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 import { Box } from "grommet";
 import { DataBox } from "./Plogging";
 import Charact from "../../assets/images/char.gif";
+import domtoimage from "dom-to-image";
+import { saveAs } from "file-saver";
 import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
+import { StyledText } from "../../components/Common";
 export const PloggingEnd = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { ploggingType, ploggingData } = location.state;
   const [data, setData] = useState(ploggingData);
+  const [lineImage, setLineImage] = useState(null);
   const [register, setRegister] = useState(false);
+  const lineRef = useRef();
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -20,6 +25,55 @@ export const PloggingEnd = () => {
   //       time: time,
   //       totalDistance: data.totalDistance,
   //     },
+
+  const handlePageChange = () => {
+    const line = lineRef.current;
+    line.style.background = "none";
+    const filter = (line) => {
+      if (line.style) {
+        line.style.background = "none";
+        if (line.style.stroke) {
+          line.style.stroke = "rgb(255, 255, 255)";
+        }
+        if (line.style.color) {
+          line.style.color = "rgb(255, 255, 255)";
+        }
+        if (line.style.height === "6px") {
+          line.style = {};
+        }
+        if (line.style.fontFamily) {
+          line.style.fontSize = 0;
+        }
+      }
+      return line.tagName !== "IMG" && line.tagName !== "SVG";
+    };
+    // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
+    //   console.log(blob);
+    //   setLineImage(blob);
+    //   saveAs(blob, "card.png");
+    //   // navigate("/plogging/register", {
+    //   //   state: {
+    //   //     ploggingType: ploggingType,
+    //   //     ploggingData: ploggingData,
+    //   //     lineImage: lineImage,
+    //   //   },
+    //   // });
+    // });
+
+    domtoimage.toSvg(line, { filter: filter }).then(function (dataUrl) {
+      /* do something */
+      // console.log(dataUrl);
+      setLineImage(dataUrl);
+      navigate("/plogging/register", {
+        state: {
+          ploggingType: ploggingType,
+          ploggingData: ploggingData,
+          lineImage: dataUrl,
+        },
+      });
+    });
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -28,14 +82,24 @@ export const PloggingEnd = () => {
       style={{
         position: "relative",
         textAlign: "center",
-        height: "calc(94vh - 50px)",
+        height: "100vh",
       }}
     >
-      <Box width="100%" height="65%">
+      <Box width="100%" height="7%" align="center" justify="center">
+        <StyledText
+          text="지구가 더 깨끗해졌어요!"
+          size="18px"
+          weight="bold"
+          style={{
+            fontFamily: `"shsnBold", sans-serif`,
+          }}
+        />
+      </Box>
+      <Box width="100%" height="63%" ref={lineRef}>
         <Map
           center={ploggingData.latlng[parseInt(ploggingData.latlng.length / 2)]}
           isPanto={true}
-          style={{ borderRadius: "25px", width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "100%" }}
         >
           {ploggingData.latlng && (
             <Polyline
@@ -44,6 +108,17 @@ export const PloggingEnd = () => {
               strokeColor={"#030ff1"} // 선의 색깔입니다
               strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
               strokeStyle={"solid"} // 선의 스타일입니다
+              zIndex={100}
+            />
+          )}
+          {ploggingData.latlng && (
+            <Polyline
+              path={[ploggingData.latlng]}
+              strokeWeight={5} // 선의 두께 입니다
+              strokeColor={"#ffffff"} // 선의 색깔입니다
+              strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+              strokeStyle={"solid"} // 선의 스타일입니다
+              zIndex={1}
             />
           )}
         </Map>
@@ -51,34 +126,26 @@ export const PloggingEnd = () => {
       {/* 데이터 박스 */}
       <motion.div
         transition={{ duration: 0.25 }}
-        animate={{ height: register ? "50%" : "35%" }}
+        // animate={{ height: register ? "50%" : "35%" }}
         style={{
           background: "white",
           width: "100%",
-          height: register ? "50%" : "35%",
-          position: "absolute",
-          bottom: 0,
-          zIndex: "12",
+          height: "30%",
+          position: "relative",
         }}
       >
-        <Box
-          width="100%"
-          height="100%"
-          align="center"
-          justify="center"
-          style={{}}
-        >
-          <img
-            src={Charact}
-            style={{
-              width: "200px",
-              fill: "cover",
-              position: "absolute",
-              right: 0,
-              top: "-150px",
-              zIndex: "15",
-            }}
-          />
+        <img
+          src={Charact}
+          style={{
+            width: "200px",
+            fill: "cover",
+            position: "absolute",
+            right: 0,
+            top: "-150px",
+            zIndex: "15",
+          }}
+        />
+        <Box width="100%" height="100%" align="center" justify="around">
           <Box direction="row" width="100%" justify="center" gap="55px">
             <DataBox label="킬로미터" data={ploggingData.totalDistance} />
             <DataBox label="시간" data={timeToString(ploggingData.time)} />
@@ -90,26 +157,26 @@ export const PloggingEnd = () => {
                 width: "75%",
                 height: "50px",
               }}
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
-                setRegister(true);
+                handlePageChange();
               }}
             >
-              {!register ? "Plog 등록하기" : "플로깅 완료!"}
+              {!register ? "다음" : "플로깅 완료!"}
             </BootstrapButton>
 
-            <WhiteButton
+            {/* <WhiteButton
               style={{
                 width: "75%",
                 height: "50px",
               }}
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
-                !register ? navigate("/") : setRegister(false);
+                navigate("/");
               }}
             >
               {!register ? "메인으로" : "돌아가기"}
-            </WhiteButton>
+            </WhiteButton> */}
           </Box>
         </Box>
       </motion.div>

@@ -9,7 +9,12 @@ import {
 } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
-import { container, timeToString } from "../../utils/util";
+import {
+  calcCalories,
+  calcDistance,
+  container,
+  timeToString,
+} from "../../utils/util";
 import { Avatar, Box } from "grommet";
 import { StyledText } from "../../components/Common";
 import StopBtn from "../../assets/images/stop.png";
@@ -51,6 +56,11 @@ export const Plogging = () => {
     totalDistance: 0,
   });
   const [walking, setWalking] = useState(true);
+  const [user, setUser] = useState({
+    info: {
+      weight: 60,
+    },
+  });
   const locations = useLocation();
   const [open, setOpen] = useState(false);
   const [when, setWhen] = useState(true);
@@ -73,7 +83,7 @@ export const Plogging = () => {
   };
 
   // 두 좌표간 거리 계산
-  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1); // deg2rad below
     var dLon = deg2rad(lon2 - lon1);
@@ -87,12 +97,22 @@ export const Plogging = () => {
     var d = R * c; // Distance in km
     d = Math.round(d * 1000);
     return d;
-  }
+  };
 
   // 각도를 라디안으로 변환
-  function deg2rad(deg) {
+  const deg2rad = (deg) => {
     return deg * (Math.PI / 180);
-  }
+  };
+
+  // 시간에 따른 칼로리 구함.
+  const handleCalories = () => {
+    // kcal = MET * (3.5 * kg * min) * 5 / 1000
+    return calcCalories(user.info.weight, time);
+  };
+
+  const handleDistance = () => {
+    return calcDistance(data.totalDistance);
+  };
 
   // 뒤로가기 방지
   function useBlocker(blocker, when = true) {
@@ -178,22 +198,26 @@ export const Plogging = () => {
   useInterval(
     () => {
       setTime(time + 1);
+      // setData((prev) => ({
+      //   kcal: handleCalories(),
+      //   totalDistance: prev.totalDistance,
+      // }));
     },
-    ready ? 1000 : null
+    ready && walking ? 1000 : null
   );
 
   // 실시간 위치를 찍어주는 함수
   useInterval(
     () => {
       if (walking && ready && isGeolocationAvailable && isGeolocationEnabled) {
-        console.log("location : ", coords);
+        // console.log("location : ", coords);
 
         const gps = {
           lat: coords.latitude,
           lng: coords.longitude,
         };
 
-        console.log("gps : ", gps);
+        // console.log("gps : ", gps);
         // 이전이랑 위치가 같을 때
         if (
           mapData.latlng.length > 0 &&
@@ -210,7 +234,7 @@ export const Plogging = () => {
           if (time >= 1) {
             // 위치가 1개 초과로 저장되었을 때 거리 계산
             if (mapData.latlng.length > 1) {
-              console.log("data : ", data);
+              // console.log("data : ", data);
 
               let dis = getDistanceFromLatLonInKm(
                 mapData.latlng.at(-1).lat,
@@ -218,10 +242,10 @@ export const Plogging = () => {
                 gps.lat,
                 gps.lng
               );
-              console.log("dis: ", dis);
+              // console.log("dis: ", dis);
               if (dis > 0) {
                 setData((prev) => ({
-                  kcal: 0,
+                  kcal: handleCalories(time),
                   totalDistance: prev.totalDistance + dis,
                 }));
               }
@@ -241,7 +265,7 @@ export const Plogging = () => {
         // idle = idle + 1;
         setData((prev) => {
           return {
-            kcal: 0,
+            kcal: prev.kcal,
             totalDistance: prev.totalDistance,
           };
         });
@@ -355,14 +379,14 @@ export const Plogging = () => {
         >
           {/* 거리, 시간, 칼로리 */}
           <Box direction="row" width="100%" justify="center" gap="55px">
-            <DataBox label="킬로미터" data={data.totalDistance} />
+            <DataBox label="킬로미터" data={handleDistance()} />
             <DataBox label="시간" data={timeToString(time)} />
             <DataBox label="칼로리" data={data.kcal} />
           </Box>
           {/* 정지, 일시정지 버튼 */}
           <Box width="100%" direction="row" justify="center" gap="25px">
             <PloggingButton
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 confirmNavigation();
                 setOpen(true);
@@ -379,7 +403,7 @@ export const Plogging = () => {
               </Avatar>
             </PloggingButton>
             <PloggingButton
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 if (walking === true) setWalking(false);
                 else setWalking(true);
