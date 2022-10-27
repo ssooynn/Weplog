@@ -10,7 +10,7 @@ const InputStyled = styled.input`
   font-weight: 400;
   border: 0px;
   &::placeholder{
-    color:#C5C5C5;
+    color:#7e7e7e;
   }
 `;
 export function StyledInput({ chidren, height, width, border, padding, margin, ...props }) {

@@ -11,7 +11,12 @@ import Button from "../../components/Button";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
+  const goChallengeRegister = () =>{
+    navigate("/challenge/register");
+  }
   return (
+    <motion.div>
+
     <Box direction="column">
       <Box background={{ image: `url(${bgGradient})` }} direction="column" height="460px" pad="large" align="center" justify="start">
         <Box direction="row" justify="between" align="center">
@@ -24,7 +29,7 @@ export const ChallengeList = () => {
             alt="logo"
             src={Logo}
             onClick={() => navigate("/")}
-          />
+            />
           <img src={searchIcon} style={{ alignSelf: "center" }} alt="챌린지 검색" />
         </Box>
         <Text alignSelf="start" weight="500" size="16px" margin={{ top: "20px" }}>
@@ -59,9 +64,9 @@ export const ChallengeList = () => {
           objectFit: "cover",
           boxShadow:"4px 4px 4px rgba(0,0,0,0.3)"
         }}
-      ></img>
+        ></img>
       <Box pad="large" direction="column" align="center" justify="start">
-        <Button biggreenround="true">새로운 챌린지 만들기</Button>
+        <Button biggreenround="true" onClick={goChallengeRegister}>새로운 챌린지 만들기</Button>
          <Text alignSelf="start" weight="500" size="16px" margin={{ top: "20px" }}>
           오늘의 추천 챌린지
         </Text>
@@ -91,5 +96,6 @@ export const ChallengeList = () => {
       </Box>
       
     </Box>
+        </motion.div>
   );
 };

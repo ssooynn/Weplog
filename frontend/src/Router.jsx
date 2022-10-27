@@ -15,6 +15,8 @@ import { Signup } from "./pages/Signup.jsx";
 import { motion } from "framer-motion";
 import { Plogging } from "./pages/plogging/Plogging.jsx";
 import { PloggingEnd } from "./pages/plogging/PloggingEnd.jsx";
+import { ChallengeDetail } from "./pages/challenge/ChallengeDetail.jsx";
+import { ChallengeRegister } from "./pages/challenge/ChallengeRegister.jsx";
 // import { PloggingRegister } from "./pages/plogging/PloggingRegister.jsx";
 const Layout = () => {
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ const LayoutFullScreen = () => {
 export const Router = () => {
   return (
     <Routes>
-      {/* 로고, 푸터, 내브바 */}
+      {/* 로고, 내브바 */}
       <Route path="/" element={<Layout />}>
         {/* <Route index element={<MapTest />}></Route> */}
         <Route index element={<Main />} />
@@ -64,6 +66,10 @@ export const Router = () => {
         <Route path="/rank" element={<Rank />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route path="/plogging/end" element={<PloggingEnd />} />
+        <Route path="/challenge/detail" element={<ChallengeDetail />} />
+        <Route path="/challenge/register" element={<ChallengeRegister />} />
+        
+
         {/* <Route path="/plogging/register" element={<PloggingRegister />} /> */}
       </Route>
       {/* 로고 */}
