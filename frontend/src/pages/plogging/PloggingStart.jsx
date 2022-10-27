@@ -110,7 +110,7 @@ export const PloggingStart = () => {
         style={{ position: "absolute", bottom: "7%", zIndex: "15" }}
       >
         <BootstrapButton
-          whileTap={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => {
             navigate("/plogging");
           }}

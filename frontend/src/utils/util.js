@@ -28,3 +28,11 @@ export const timeToString = (time) => {
     }`;
   }
 };
+
+export const calcCalories = (time, weight) => {
+  return parseInt((8.5 * (3.5 * weight * parseFloat(time / 60.0)) * 5) / 1000);
+};
+
+export const calcDistance = (distance) => {
+  return parseFloat(distance / 1000).toFixed(2);
+};

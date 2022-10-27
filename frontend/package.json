@@ -13,6 +13,8 @@
     "@nivo/radar": "^0.80.0",
     "@stomp/stompjs": "^6.1.2",
     "axios": "^0.27.2",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^7.5.2",
     "grommet": "^2.25.3",
     "grommet-icons": "^4.7.0",

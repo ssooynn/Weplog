@@ -72,14 +72,14 @@ export const AlertDialog = ({
         <Button
           smallwhite="true"
           onClick={handleClose}
-          whileTap={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
         >
           {cancel}
         </Button>
         {accept !== undefined &&
           (register ? (
             <Button
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               smallgreen="true"
               onClick={handleAction}
               autoFocus
@@ -88,7 +88,7 @@ export const AlertDialog = ({
             </Button>
           ) : (
             <Button
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               smallpink="true"
               onClick={handleAction}
               autoFocus
@@ -386,7 +386,7 @@ export const AlertDialog = ({
 //                   onClick={() => {
 //                     setOpWeather(true);
 //                   }}
-//                   whileTap={{ scale: 1.2 }}
+//                   whileTap={{ scale: 0.9 }}
 //                 />
 //               )}
 //             </Box>
@@ -406,7 +406,7 @@ export const AlertDialog = ({
 //                         onClick={() => {
 //                           setSelected(idx);
 //                         }}
-//                         whileTap={{ scale: 1.2 }}
+//                         whileTap={{ scale: 0.9 }}
 //                         style={{
 //                           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
 //                           display: "inline-block",
@@ -439,7 +439,7 @@ export const AlertDialog = ({
 //           <WhiteButton
 //             onClick={handleClose}
 //             children={cancel}
-//             whileTap={{ scale: 1.2 }}
+//             whileTap={{ scale: 0.9 }}
 //           />
 //           {/* {accept && type === "detail" ? (
 //             <BootstrapButton onClick={handleAction} children={accept} />
