@@ -5,7 +5,6 @@ import { container } from "../../utils/util";
 import { Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
-import DefalutPic from "../../assets/images/defaultPic.png";
 import PloggingTitle from "../../assets/images/ploggingTitle.png";
 import { StyledText } from "../../components/Common";
 import { ContentSelectBottomSheet } from "../../components/plogging/ContentSelectBottomSheet";
@@ -30,7 +29,28 @@ export const PloggingRegister = () => {
   const [data, setData] = useState(ploggingData);
   const [open, setOpen] = useState(false);
   const [format, setFormat] = useState(null);
+  const [image, setImage] = useState(null);
+  const [prev, setPrev] = useState(null);
   const imageRef = useRef();
+
+  // 사진 추가
+  const handleImageUpload = (e) => {
+    const fileArr = e.target.files;
+    console.log(fileArr);
+    let fileURL = "";
+    if (fileArr) {
+      // console.log(fileArr[0]);
+      setImage(fileArr[0]);
+      let reader = new FileReader();
+      reader.onload = () => {
+        fileURL = reader.result;
+        setPrev(fileURL);
+        // console.log(fileURL);
+      };
+      reader.readAsDataURL(fileArr[0]);
+    }
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -71,11 +91,19 @@ export const PloggingRegister = () => {
         <Box width="10%"></Box>
       </Box>
       {/* 사진 박스 */}
-      <Box
-        width="100%"
-        height="43%"
+      <motion.div
+        animate={{ height: 0 }}
         style={{
+          width: "100%",
+          backgroundImage:
+            prev === null
+              ? "url('/assets/images/defaultPic.png')"
+              : `url('${prev}')`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
           position: "relative",
+          height: "auto",
+          zIndex: "1500",
         }}
         ref={imageRef}
       >
@@ -155,7 +183,7 @@ export const PloggingRegister = () => {
             </Box>
           )}
         </Box>
-        <img
+        {/* <img
           src={DefalutPic}
           style={{
             width: "100%",
@@ -163,16 +191,48 @@ export const PloggingRegister = () => {
             zIndex: 100,
             fill: "cover",
           }}
-        />
-      </Box>
+        /> */}
+      </motion.div>
       {/* 데이터 셀렉트 박스 */}
       <Box width="100%" height="50%" align="center">
-        <ContentChooseButton whileTap={{ scale: 0.9 }}>
-          <Box direction="row" justify="between">
-            내 사진으로 추가하기
-            <img src={PlusBtn} />
-          </Box>
-        </ContentChooseButton>
+        <label
+          htmlFor="image"
+          style={{
+            display: "flex",
+            width: "95%",
+          }}
+        >
+          <motion.div
+            whileTap={{ scale: 0.9 }}
+            style={{
+              textTransform: "none",
+              fontSize: 16,
+              fontWeight: "bold",
+              padding: "6px 12px",
+              color: "black",
+              width: "90%",
+              height: "43px",
+              border: "none",
+              margin: "10px",
+              fontFamily: `shsnMedium, sans-serif`,
+              backgroundColor: "white",
+            }}
+          >
+            <Box direction="row" justify="between" width="100%">
+              내 사진으로 추가하기
+              <img src={PlusBtn} />
+            </Box>
+          </motion.div>
+        </label>
+        <input
+          id="image"
+          type="file"
+          accept="image/jpg,image/png,image/jpeg,image/gif"
+          style={{
+            display: "none",
+          }}
+          onChange={handleImageUpload}
+        />
         <ContentChooseButton
           onClick={() => {
             setOpen(true);

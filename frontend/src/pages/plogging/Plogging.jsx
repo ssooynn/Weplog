@@ -13,6 +13,7 @@ import {
   calcCalories,
   calcDistance,
   container,
+  getDistanceFromLatLonInKm,
   timeToString,
 } from "../../utils/util";
 import { Avatar, Box } from "grommet";
@@ -49,8 +50,11 @@ export const Plogging = () => {
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
+    maxLng: { lat: 0, lng: 0 },
+    minLng: { lat: 0, lng: 180 },
+    maxLat: { lat: 0, lng: 0 },
+    minLat: { lat: 90, lng: 0 },
   });
-
   const [data, setData] = useState({
     kcal: 0,
     totalDistance: 0,
@@ -80,28 +84,6 @@ export const Plogging = () => {
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
-  };
-
-  // 두 좌표간 거리 계산
-  const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    d = Math.round(d * 1000);
-    return d;
-  };
-
-  // 각도를 라디안으로 변환
-  const deg2rad = (deg) => {
-    return deg * (Math.PI / 180);
   };
 
   // 시간에 따른 칼로리 구함.
@@ -179,6 +161,10 @@ export const Plogging = () => {
           kcal: data.kcal,
           time: time,
           totalDistance: data.totalDistance,
+          maxLng: mapData.maxLng,
+          minLng: mapData.minLng,
+          maxLat: mapData.maxLat,
+          minLat: mapData.minLat,
         },
       },
     });
@@ -198,6 +184,7 @@ export const Plogging = () => {
   useInterval(
     () => {
       setTime(time + 1);
+      console.log(mapData);
       // setData((prev) => ({
       //   kcal: handleCalories(),
       //   totalDistance: prev.totalDistance,
@@ -229,6 +216,10 @@ export const Plogging = () => {
             return {
               center: gps,
               latlng: [...prev.latlng, gps],
+              maxLng: gps.lng > prev.maxLng.lng ? gps : prev.maxLng,
+              minLng: gps.lng < prev.minLng.lng ? gps : prev.minLng,
+              maxLat: gps.lat > prev.maxLat.lat ? gps : prev.maxLat,
+              minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
           if (time >= 1) {
