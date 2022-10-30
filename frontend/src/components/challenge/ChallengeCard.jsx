@@ -1,6 +1,8 @@
 import { Box, Text } from "grommet";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { ChallengeRankCard } from "../rank/ChallengeRankCard";
 
 const ProgressBar = styled.progress`
   appearance: none;
@@ -26,8 +28,12 @@ const WhiteBg = styled.div`
 
 export const ChallengeCard = (data) => {
   console.log(data.bgimage);
+  const navigate = useNavigate();
+  const goChallengeDetail = () => {
+    navigate(`/challenge/detail/${data.challengeId}`);
+  }
   return (
-    <Box background={{ image: `url(${data.bgimage})`, opacity: "strong" }} height="100px" width="100%" margin="medium" round="small" elevation="medium">
+    <Box background={{ image: `url(${data.bgimage})`, opacity: "strong" }} height="100px" width="100%" margin="medium" round="small" elevation="medium" onClick={goChallengeDetail}>
       <WhiteBg>
         <Box justify="between" pad="14px 18px" height="100px">
           <Text size="14px" weight="500" color="black">

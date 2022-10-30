@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Route, Routes} from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import { NavBar } from "./components/common/BottomNavBar.jsx";
 import { LogoHeader } from "./components/common/Header.jsx";
 import { ChallengeList } from "./pages/challenge/ChallengeList.jsx";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Main } from "./pages/Main.jsx";
 import { PloggingStart } from "./pages/plogging/PloggingStart.jsx";
 import { Rank } from "./pages/ranking/Rank.jsx";
-import {Login} from "./pages/Login.jsx";
+import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 
 import { motion } from "framer-motion";
@@ -66,9 +66,9 @@ export const Router = () => {
         <Route path="/rank" element={<Rank />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route path="/plogging/end" element={<PloggingEnd />} />
-        <Route path="/challenge/detail" element={<ChallengeDetail />} />
+        <Route path="/challenge/detail/:challengeId" element={<ChallengeDetail />} />
         <Route path="/challenge/register" element={<ChallengeRegister />} />
-        
+
 
         {/* <Route path="/plogging/register" element={<PloggingRegister />} /> */}
       </Route>
@@ -77,11 +77,11 @@ export const Router = () => {
         <Route path="/plogging" element={<Plogging />} />
       </Route>
       {/* 내브바 */}
-      <Route path="/" element={<LayoutNoLogo/>}>
+      <Route path="/" element={<LayoutNoLogo />}>
         <Route path="/challenge/list" element={<ChallengeList />} />
       </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
     </Routes>
   );
 };

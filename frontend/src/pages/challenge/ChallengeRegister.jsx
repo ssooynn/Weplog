@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
+import Button from "../../components/Button";
 
 export const ChallengeRegister = () => {
   const [profile, setProfile] = useState("");
@@ -24,8 +25,13 @@ export const ChallengeRegister = () => {
   const [type, setType] = useState("");
   const [goal, setGoal] = useState("");
   const [endDate, setEndDate] = useState("");
+
+  const changeType = (str) => {
+    console.log(str);
+    setType(str);
+  }
   return (
-    <motion.div>
+    <motion.div style={{ minHeight: "88vh" }}>
       {/* 커버 사진 설정 */}
       <Box justify="center" align="center">
         {profile === "" ? (
@@ -67,10 +73,10 @@ export const ChallengeRegister = () => {
           </Box>
         )}
         {/* 데이터 입력 */}
-        <Box direction="column" pad="10px 24px" width="100%" justify="center" align="center">
+        <Box direction="column" pad="30px 24px" width="100%" justify="around" align="center" height={{ min: "450px" }}>
           <Grid
             width="90%"
-            rows={["50px", "50px", "50px", "50px"]}
+            rows={["60px", "60px", "60px", "60px"]}
             columns={["1/3", "2/3"]}
             gap="0"
             areas={[
@@ -98,6 +104,7 @@ export const ChallengeRegister = () => {
                 }}
                 padding="0px"
                 margin="0px"
+                style={{ fontSize: "16px" }}
               />
             </Box>
             <Box gridArea="type" justify="center" align="start">
@@ -105,14 +112,14 @@ export const ChallengeRegister = () => {
                 챌린지 유형
               </Text>
             </Box>
-            <Box gridArea="typedata"  justify="between" align="center" direction="row" width="80%">
-              <Text weight="500" size="16px">
+            <Box gridArea="typedata" justify="between" align="center" direction="row" width="80%">
+              <Text weight="500" size="16px" style={{ color: `${type === "distance" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("distance")}>
                 거리
               </Text>
-              <Text weight="500" size="16px">
+              <Text weight="500" size="16px" style={{ color: `${type === "count" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("count")}>
                 횟수
               </Text>
-              <Text weight="500" size="16px">
+              <Text weight="500" size="16px" style={{ color: `${type === "time" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("time")}>
                 시간
               </Text>
             </Box>
@@ -126,15 +133,17 @@ export const ChallengeRegister = () => {
                 placeholder="0"
                 value={name}
                 onChange={(e) => {
-                  setName(e.target.value);
+                  setGoal(e.target.value);
                 }}
                 width="30px"
                 padding="0px"
                 margin="0px"
               />
-              <Text weight="500" size="16px">
-                Km
-              </Text>
+
+              {(type === "distance" || type === "") && <Text weight="500" size="16px">Km</Text>}
+              {type === "count" && <Text weight="500" size="16px">회</Text>}
+              {type === "time" && <Text weight="500" size="16px">시간</Text>}
+
             </Box>
             <Box gridArea="endDate" justify="center" align="start">
               <Text weight="500" size="16px">
@@ -145,6 +154,8 @@ export const ChallengeRegister = () => {
               8
             </Box>
           </Grid>
+
+          <Button biggreenround="true">챌린지 등록</Button>
         </Box>
       </Box>
     </motion.div>
