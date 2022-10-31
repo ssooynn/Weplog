@@ -4,7 +4,9 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components';
 import shareIcon from '../../assets/icons/shareIcon.svg';
+import Button from '../../components/Button';
 import { ChallengeRankCard } from '../../components/rank/ChallengeRankCard';
+import { ChallengeRankCardList } from '../../components/rank/ChallengeRankCardList';
 import { ChallengeRankTop3 } from '../../components/rank/ChallengeRankTop3';
 
 const ProgressBar = styled.progress`
@@ -70,17 +72,11 @@ export const ChallengeDetail = () => {
         </Box>
       </Box>
 
+      {/* 내 랭크*/}
       <Box direction='column' pad="0px 8%" width="100%" margin="30px 0px">
-        {/* 내 랭크*/}
         <Text size="16px" weight="400">참여자 기여도 Ranking</Text>
-        <Box width="100%" align='center'>
-          <ChallengeRankTop3></ChallengeRankTop3>
-          <ChallengeRankCard white='true'></ChallengeRankCard>
-          <ChallengeRankCard></ChallengeRankCard>
-          <ChallengeRankCard></ChallengeRankCard>
-          <ChallengeRankCard></ChallengeRankCard>
-          <ChallengeRankCard></ChallengeRankCard>
-        </Box>
+        <ChallengeRankCardList></ChallengeRankCardList>
+        <Button biggreenround style={{ margin: "10px 0px" }}>챌린지 참여하기</Button>
       </Box>
     </motion.div>
   )

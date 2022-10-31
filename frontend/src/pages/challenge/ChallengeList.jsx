@@ -18,7 +18,7 @@ export const ChallengeList = () => {
     <motion.div>
 
       <Box direction="column">
-        <Box background={{ image: `url(${bgGradient})` }} direction="column" height="460px" pad="large" align="center" justify="start">
+        <Box background={{ image: `url(${bgGradient})` }} direction="column" height="460px" pad="18px 24px" align="center" justify="start">
           <Box direction="row" justify="between" align="center">
             <motion.img
               style={{
