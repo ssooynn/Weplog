@@ -8,20 +8,31 @@ import {
   Navigate,
 } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
+import {
+  CustomOverlayMap,
+  Map,
+  MapMarker,
+  Polyline,
+} from "react-kakao-maps-sdk";
 import {
   calcCalories,
   calcDistance,
   container,
+  getDistanceFromLatLonInKm,
   timeToString,
 } from "../../utils/util";
-import { Avatar, Box } from "grommet";
+import { Avatar, Box, Image } from "grommet";
 import { StyledText } from "../../components/Common";
 import StopBtn from "../../assets/images/stop.png";
 import PauseBtn from "../../assets/images/pause.png";
 import PlayBtn from "../../assets/images/play.png";
+import TrashIcon from "../../assets/images/trash.png";
+import DishIcon from "../../assets/images/dish.png";
+import GarbageIcon from "../../assets/images/garbage.png";
+import DesIcon from "../../assets/images/destination.png";
 import { PloggingButton } from "../../components/common/Buttons";
-import { AlertDialog } from "../../components/AlertDialog";
+import { AlertDialog, MarkerDialog } from "../../components/AlertDialog";
+import { ReactComponent as MarkerIcon } from "../../assets/icons/marker.svg";
 export const DataBox = ({ label, data }) => {
   return (
     <Box align="center" justify="center">
@@ -49,8 +60,11 @@ export const Plogging = () => {
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
+    maxLng: { lat: 0, lng: 0 },
+    minLng: { lat: 0, lng: 180 },
+    maxLat: { lat: 0, lng: 0 },
+    minLat: { lat: 90, lng: 0 },
   });
-
   const [data, setData] = useState({
     kcal: 0,
     totalDistance: 0,
@@ -63,9 +77,12 @@ export const Plogging = () => {
   });
   const locations = useLocation();
   const [open, setOpen] = useState(false);
+  const [markerOpen, setMarkerOpen] = useState(false);
+  const [marker, setMarker] = useState();
   const [when, setWhen] = useState(true);
   const [lastLocation, setLastLocation] = useState(null);
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+  const [markerPosition, setMarkerPosition] = useState();
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -82,28 +99,6 @@ export const Plogging = () => {
     e.returnValue = "";
   };
 
-  // 두 좌표간 거리 계산
-  const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    d = Math.round(d * 1000);
-    return d;
-  };
-
-  // 각도를 라디안으로 변환
-  const deg2rad = (deg) => {
-    return deg * (Math.PI / 180);
-  };
-
   // 시간에 따른 칼로리 구함.
   const handleCalories = () => {
     // kcal = MET * (3.5 * kg * min) * 5 / 1000
@@ -112,6 +107,21 @@ export const Plogging = () => {
 
   const handleDistance = () => {
     return calcDistance(data.totalDistance);
+  };
+
+  // 마커 설정
+  const handleMarker = (index) => {
+    setMarker(index);
+    setMarkerOpen(false);
+  };
+
+  const handleMapClick = (latLng) => {
+    setMarkerOpen(true);
+    setMarker(undefined);
+    setMarkerPosition({
+      lat: latLng.getLat(),
+      lng: latLng.getLng(),
+    });
   };
 
   // 뒤로가기 방지
@@ -178,7 +188,11 @@ export const Plogging = () => {
           latlng: mapData.latlng,
           kcal: data.kcal,
           time: time,
-          totalDistance: data.totalDistance,
+          totalDistance: handleDistance(),
+          maxLng: mapData.maxLng,
+          minLng: mapData.minLng,
+          maxLat: mapData.maxLat,
+          minLat: mapData.minLat,
         },
       },
     });
@@ -198,6 +212,7 @@ export const Plogging = () => {
   useInterval(
     () => {
       setTime(time + 1);
+      console.log(mapData);
       // setData((prev) => ({
       //   kcal: handleCalories(),
       //   totalDistance: prev.totalDistance,
@@ -213,7 +228,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude,
+          lat: coords.latitude + 0.0001 * time,
           lng: coords.longitude,
         };
 
@@ -229,6 +244,10 @@ export const Plogging = () => {
             return {
               center: gps,
               latlng: [...prev.latlng, gps],
+              maxLng: gps.lng > prev.maxLng.lng ? gps : prev.maxLng,
+              minLng: gps.lng < prev.minLng.lng ? gps : prev.minLng,
+              maxLat: gps.lat > prev.maxLat.lat ? gps : prev.maxLat,
+              minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
           if (time >= 1) {
@@ -339,7 +358,29 @@ export const Plogging = () => {
             center={mapData.center}
             isPanto={true}
             style={{ width: "100%", height: "100%" }}
+            onClick={(_t, mouseEvent) => {
+              handleMapClick(mouseEvent.latLng);
+            }}
           >
+            {markerPosition && marker !== undefined && (
+              <CustomOverlayMap position={markerPosition}>
+                <Box width="30px" height="30px">
+                  <Image
+                    sizes="30px"
+                    fit="cover"
+                    src={
+                      marker === 0
+                        ? TrashIcon
+                        : marker === 1
+                        ? DishIcon
+                        : marker === 2
+                        ? DesIcon
+                        : GarbageIcon
+                    }
+                  />
+                </Box>
+              </CustomOverlayMap>
+            )}
             <MapMarker
               position={mapData.center}
               image={{
@@ -349,7 +390,7 @@ export const Plogging = () => {
                   height: 41,
                 }, // 마커이미지의 크기입니다
               }}
-            ></MapMarker>
+            />
             {mapData.latlng && (
               <Polyline
                 path={[mapData.latlng]}
@@ -436,6 +477,14 @@ export const Plogging = () => {
           desc="플로깅을 종료하시겠습니까?"
           cancel="취소"
           accept="종료"
+        />
+        <MarkerDialog
+          open={markerOpen}
+          handleClose={() => {
+            if (marker === undefined) setMarker(undefined);
+            setMarkerOpen(false);
+          }}
+          handleMarker={handleMarker}
         />
       </motion.div>
     );
