@@ -52,43 +52,62 @@ public class MemberAchievement extends BaseEntity {
                 .build();
     }
 
-    public void updateDistance(Integer distance) {
-        // 진행도가 목표치를 넘었으면 완료 처리
-        if (this.progress + distance >= this.achievement.getGoal()) {
-            this.completeFlag = true;
-            this.progress = this.achievement.getGoal();
-        } else {
-            this.progress += distance;
+    public int updateDistance(Integer distance) {
+        // 달성 완료 안된 상태면
+        if (!this.completeFlag) {
+            // 진행도가 목표치를 넘었으면 완료 처리
+            if (this.progress + distance >= this.achievement.getGoal()) {
+                this.completeFlag = true;
+                this.progress = this.achievement.getGoal();
+
+                return this.achievement.getRewardPoint();
+            } else {
+                this.progress += distance;
+
+                return 0;
+            }
         }
+
+        return 0;
     }
 
-    public void updateTime(Integer time) {
-        // 진행도가 목표치를 넘었으면 완료 처리
-        if (this.progress + time >= this.achievement.getGoal()) {
-            this.completeFlag = true;
-            this.progress = this.achievement.getGoal();
-        } else {
-            this.progress += time;
+    public int updateTime(Integer time) {
+        // 달성 완료 안된 상태면
+        if (!this.completeFlag) {
+            // 진행도가 목표치를 넘었으면 완료 처리
+            if (this.progress + time >= this.achievement.getGoal()) {
+                this.completeFlag = true;
+                this.progress = this.achievement.getGoal();
+
+                return this.achievement.getRewardPoint();
+            } else {
+                this.progress += time;
+
+                return 0;
+            }
         }
+
+        return 0;
     }
 
-    public void updateFloggingCnt() {
-        // 진행도가 목표치를 넘었으면 완료 처리
-        if (this.progress + 1 >= this.achievement.getGoal()) {
-            this.completeFlag = true;
-            this.progress = this.achievement.getGoal();
-        } else {
-            this.progress += 1;
+    public int updateNumber() {
+        // 달성 완료 안된 상태면
+        if (!this.completeFlag) {
+            // 진행도가 목표치를 넘었으면 완료 처리
+            if (this.progress + 1 >= this.achievement.getGoal()) {
+                this.completeFlag = true;
+                this.progress = this.achievement.getGoal();
+
+                return this.achievement.getRewardPoint();
+            } else {
+                this.progress += 1;
+
+                return 0;
+            }
         }
+
+        return 0;
     }
 
-    public void updateGroupFloggingCnt() {
-        // 진행도가 목표치를 넘었으면 완료 처리
-        if (this.progress + 1 >= this.achievement.getGoal()) {
-            this.completeFlag = true;
-            this.progress = this.achievement.getGoal();
-        } else {
-            this.progress += 1;
-        }
-    }
+
 }

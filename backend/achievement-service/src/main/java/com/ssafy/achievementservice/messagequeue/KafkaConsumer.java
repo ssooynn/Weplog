@@ -1,4 +1,4 @@
-package com.ssafy.achievementservice.global.config.messagequeue;
+package com.ssafy.achievementservice.messagequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -7,6 +7,7 @@ import com.ssafy.achievementservice.domain.achievement.Achievement;
 import com.ssafy.achievementservice.domain.achievement.AchievementType;
 import com.ssafy.achievementservice.domain.member.Member;
 import com.ssafy.achievementservice.domain.memberachievement.MemberAchievement;
+import com.ssafy.achievementservice.dto.common.AddRewardPointDto;
 import com.ssafy.achievementservice.repository.AchievementRepository;
 import com.ssafy.achievementservice.repository.MemberAchievementRepository;
 import com.ssafy.achievementservice.repository.MemberRepository;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -22,11 +24,13 @@ import static com.ssafy.achievementservice.domain.achievement.AchievementType.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class KafkaConsumer {
 
     private final MemberRepository memberRepository;
     private final MemberAchievementRepository memberAchievementRepository;
     private final AchievementRepository achievementRepository;
+    private final KafkaProducer kafkaProducer;
 
     @KafkaListener(topics = "member-sign-up")
     public void createFirstMemberAchievementList(String kafkaMessage) {
@@ -66,25 +70,34 @@ public class KafkaConsumer {
         typeList.add(FLOGGING_CNT);
         typeList.add(AchievementType.GROUP_FLOGGING_CNT);
 
-        List<MemberAchievement> memberAchievementList = memberAchievementRepository.findByMemberIdAndTypesWithAchievementAtEndPlogging((UUID) map.get("memberId"), typeList);
-
+        UUID memberId = (UUID) map.get("memberId");
         Integer distance = (Integer) map.get("distance");
         Integer time = (Integer) map.get("time");
         Boolean isGroupPlogging = (Boolean) map.get("isGroupPlogging");
 
+        List<MemberAchievement> memberAchievementList = memberAchievementRepository.findByMemberIdAndTypeListWithAchievement(memberId, typeList);
+
+        int addRewardPoint = 0;
         for (MemberAchievement memberAchievement : memberAchievementList) {
             AchievementType type = memberAchievement.getAchievement().getType();
             if (type.equals(DISTANCE)) {
-                memberAchievement.updateDistance(distance);
+                addRewardPoint += memberAchievement.updateDistance(distance);
             } else if (type.equals(TIME)) {
-                memberAchievement.updateTime(time);
+                addRewardPoint += memberAchievement.updateTime(time);
             } else if (type.equals(FLOGGING_CNT)) {
-                memberAchievement.updateFloggingCnt();
+                addRewardPoint += memberAchievement.updateNumber();
             } else if (type.equals(GROUP_FLOGGING_CNT)) {
                 if (isGroupPlogging) {
-                    memberAchievement.updateGroupFloggingCnt();
+                    addRewardPoint += memberAchievement.updateNumber();
                 }
             }
+        }
+
+        // 달성한 도전과제가 있으면 리워드 포인트 지급
+        if (addRewardPoint != 0) {
+            List<AddRewardPointDto> rewardList = new ArrayList<>();
+            rewardList.add(AddRewardPointDto.create(memberId, addRewardPoint));
+            kafkaProducer.sendRewardPoint("update-reward-point", rewardList);
         }
 
         log.info("Kafka 플로깅 종료 후 도전과제 갱신 성공");
@@ -101,8 +114,53 @@ public class KafkaConsumer {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
+        List<UUID> memberIdList = (List<UUID>) map.get("memberIdList");
+        List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdListAndTypeListWithAchievement(memberIdList, CHALLENGE_COMPLETE_CNT);
+        List<AddRewardPointDto> rewardList = new ArrayList<>();
+        for (MemberAchievement memberAchievement : achievementList) {
+            int addRewardPoint = memberAchievement.updateNumber();
+            if (addRewardPoint != 0) {
+                rewardList.add(AddRewardPointDto.create(memberAchievement.getMember().getId(), addRewardPoint));
+            }
+        }
+
+        // 달성한 도전과제가 있으면 리워드 포인트 지급
+        if (!rewardList.isEmpty()) {
+            kafkaProducer.sendRewardPoint("update-reward-point", rewardList);
+        }
+
+        log.info("Kafka 챌린지 종료 후 도전과제 갱신 성공");
     }
 
+    @KafkaListener(topics = "pet-max-level")
+    public void updatePetRaiseCompleteCnt(String kafkaMessage) {
+        log.info("Counsume pet-max-level Kafka Message: -> {}", kafkaMessage);
 
+        Map<Object, Object> map = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        UUID memberId = (UUID) map.get("memberId");
+        List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdAndTypeWithAchievement(memberId, PET_RAISE_COMPLETE_CNT);
+
+        int addRewardPoint = 0;
+        for (MemberAchievement memberAchievement : achievementList) {
+            addRewardPoint += memberAchievement.updateNumber();
+        }
+
+        // 달성한 도전과제가 있으면 리워드 포인트 지급
+        if (addRewardPoint != 0) {
+            List<AddRewardPointDto> rewardList = new ArrayList<>();
+            rewardList.add(AddRewardPointDto.create(memberId, addRewardPoint));
+            kafkaProducer.sendRewardPoint("update-reward-point", rewardList);
+        }
+
+        log.info("Kafka 펫 육성 완료 후 도전과제 갱신 성공");
+    }
 
 }
