@@ -64,7 +64,6 @@ export const Router = () => {
       {/* 로고, 내브바 */}
       <Route path="/" element={<Layout />}>
         {/* <Route index element={<MapTest />}></Route> */}
-        <Route index element={<Main />} />
         <Route path="/crew" element={<Crew />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route path="/challenge/detail/:challengeId" element={<ChallengeDetail />} />
@@ -82,6 +81,7 @@ export const Router = () => {
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/challenge/list" element={<ChallengeList />} />
+        <Route index element={<Main/>}/>
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
