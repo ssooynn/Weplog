@@ -3,30 +3,50 @@ import styled from "styled-components";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import { motion } from "framer-motion";
+import { Box } from "grommet";
+import userIcon from "../../assets/icons/userIcon.svg"
+
 // Header
 const Header = styled.div`
-  background-color: white;
   width: 100%;
-  height: 6vh;
+  height: 60px;
   justify-content: center;
   align-items: center;
 `;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius:50%;
+`
 
 export const LogoHeader = () => {
   const navigate = useNavigate();
   return (
     <Header>
-      <motion.img
-        style={{
-          margin: "8px 10px",
-          alignContent: "center",
-          width: "27%",
-        }}
-        whileTap={{ scale: 0.9 }}
-        alt="logo"
-        src={Logo}
-        onClick={() => navigate("/")}
-      />
+      <Box pad="18px 24px" direction="row" justify="between" align="center">
+        <motion.img
+          style={{
+            alignContent: "center",
+            width: "27%",
+          }}
+          whileTap={{ scale: 0.9 }}
+          alt="logo"
+          src={Logo}
+          onClick={() => navigate("/")}
+        />
+        <motion.img
+          style={{
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%'
+          }}
+          whileTap={{ scale: 0.9 }}
+          alt="mypage"
+          onClick={() => navigate("/mypage")}
+          src='https://picsum.photos/400/300'
+        />
+      </Box>
     </Header>
   );
 };
