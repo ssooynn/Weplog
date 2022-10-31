@@ -8,6 +8,8 @@ import Button from "./Button";
 // import { Avatar, Button as GBtn, Spinner } from "grommet";
 // import { Button as MBtn, ThemeProvider } from "@mui/material";
 import { Box } from "grommet";
+import styled from "styled-components";
+import { Paper } from "@mui/material";
 // import styled from "styled-components";
 // import { CourseMap, StarBox, StyledText } from "./Common";
 // import WeatherBtn from "../assets/images/weather.png";
@@ -26,6 +28,61 @@ import { Box } from "grommet";
 // import { ResponsiveLine } from "@nivo/line";
 // import { motion } from "framer-motion";
 // import { getReivewDetail } from "../utils/api/reviewApi";
+const ArticleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  border-radius: 15px;
+`
+
+const ArticleBoxImg = styled.img`
+  width: 100%;
+  border-radius: 15px 15px 0 0;
+`
+
+const ArticleBoxProfileArea = styled.div`
+  padding: 3% 8%;
+  display: flex;
+  flex-direction: row;
+  height: 8vh;
+`
+
+const ArticleBoxProfileImgArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const ArticleBoxProfileImg = styled.img`
+  width: 6vh;
+  height: 6vh;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #E7E7E7;
+`
+
+const ArticleBoxProfileTextArea = styled.div`
+  padding-left: 1vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const ArticleBoxProfileName = styled.div`
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`
+
+const ArticleBoxProfileTime = styled.div`
+  font-size: 13px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`
+
 export const AlertDialog = ({
   open,
   handleClose,
@@ -72,14 +129,14 @@ export const AlertDialog = ({
         <Button
           smallwhite="true"
           onClick={handleClose}
-          whileTap={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
         >
           {cancel}
         </Button>
         {accept !== undefined &&
           (register ? (
             <Button
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               smallgreen="true"
               onClick={handleAction}
               autoFocus
@@ -88,7 +145,7 @@ export const AlertDialog = ({
             </Button>
           ) : (
             <Button
-              whileTap={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               smallpink="true"
               onClick={handleAction}
               autoFocus
@@ -96,6 +153,55 @@ export const AlertDialog = ({
               {accept}
             </Button>
           ))}
+      </Box>
+    </Dialog>
+  );
+};
+
+
+
+export const DetailDialog = ({
+  open,
+  handleClose,
+  plogData,
+}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        style: { borderRadius: 15 }
+      }}
+      style={{
+        backgroundColor: "none",
+        
+      }}
+    >
+      <Box
+        direction="row"
+        justify="center"
+        round="15px"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
+        <ArticleBox>
+          <ArticleBoxImg src={plogData.ProfileImgURL}/>
+          <ArticleBoxProfileArea>
+              <ArticleBoxProfileImgArea>
+                <ArticleBoxProfileImg src={plogData.ProfileImgURL}/>
+              </ArticleBoxProfileImgArea>
+              <ArticleBoxProfileTextArea>
+                <ArticleBoxProfileName>
+                  {plogData.Name}
+                </ArticleBoxProfileName>
+                <ArticleBoxProfileTime>
+                  {plogData.Time}분전
+                </ArticleBoxProfileTime>
+              </ArticleBoxProfileTextArea>
+            </ArticleBoxProfileArea>
+        </ArticleBox>
+        
       </Box>
     </Dialog>
   );
@@ -386,7 +492,7 @@ export const AlertDialog = ({
 //                   onClick={() => {
 //                     setOpWeather(true);
 //                   }}
-//                   whileTap={{ scale: 1.2 }}
+//                   whileTap={{ scale: 0.9 }}
 //                 />
 //               )}
 //             </Box>
@@ -406,7 +512,7 @@ export const AlertDialog = ({
 //                         onClick={() => {
 //                           setSelected(idx);
 //                         }}
-//                         whileTap={{ scale: 1.2 }}
+//                         whileTap={{ scale: 0.9 }}
 //                         style={{
 //                           boxShadow: "4px 4px 4px -4px rgb(0 0 0 / 0.2)",
 //                           display: "inline-block",
@@ -439,7 +545,7 @@ export const AlertDialog = ({
 //           <WhiteButton
 //             onClick={handleClose}
 //             children={cancel}
-//             whileTap={{ scale: 1.2 }}
+//             whileTap={{ scale: 0.9 }}
 //           />
 //           {/* {accept && type === "detail" ? (
 //             <BootstrapButton onClick={handleAction} children={accept} />

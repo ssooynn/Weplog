@@ -22,7 +22,7 @@ export const LogoHeader = () => {
           alignContent: "center",
           width: "27%",
         }}
-        whileTap={{ scale: 1.2 }}
+        whileTap={{ scale: 0.9 }}
         alt="logo"
         src={Logo}
         onClick={() => navigate("/")}

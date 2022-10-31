@@ -6,7 +6,7 @@ import produce from "immer";
 
 const SET_USER = "SET_USER";
 
-export const setUser = createAction(SET_USER, (user) => ({ user }));
+export const setUser = createAction(SET_USER, (user) => user);
 
 const initialState = {
   user: {
@@ -14,7 +14,7 @@ const initialState = {
     id: 0,
     name: "",
     nickname: "",
-    phone: "",
+    weight: "",
     profileImageUrl: "",
     role: "",
   },

@@ -70,7 +70,7 @@ export const HeaderBox = ({ goBack, title }) => {
           alignItems: "center",
         }}
       />
-      <BackButton whileTap={{ scale: 1.2 }} onClick={goBack}>
+      <BackButton whileTap={{ scale: 0.9 }} onClick={goBack}>
         <img src={CloseButton} />
       </BackButton>
     </HeaderDiv>

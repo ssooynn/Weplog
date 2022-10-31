@@ -26,7 +26,7 @@ const NavBarText = ({ text, active }) => {
 
 //NavBar
 const NavBarDiv = styled.div`
-  position: relative;
+  position: fixed;
   bottom: 0;
   display: flex;
   flex-direction: row;
@@ -34,6 +34,7 @@ const NavBarDiv = styled.div`
   width: 100%;
   background-color: white;
   max-width: 500px;
+  z-index: 1000;
   padding: 5px 0px;
   opacity: ${(props) => props.opacity || "1"};
   transition: all 0.35s;
@@ -80,7 +81,7 @@ export const NavBar = () => {
   }, []);
   return (
     <NavBarDiv isShow={show} opacity={opacity}>
-      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">
             <img
@@ -92,7 +93,7 @@ export const NavBar = () => {
           </Box>
         </Link>
       </motion.div>
-      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
         <Link to="/challenge/list" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">
             <img
@@ -118,14 +119,14 @@ export const NavBar = () => {
           marginLeft: "-27.5px" /* width의 50% */,
           zIndex: 1000,
         }}
-        whileTap={{ scale: 1.2 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => {
           navigate("/plogging/start");
         }}
       >
         <img src={Plogging} width="55px" height="55px" style={{}} />
       </motion.div>
-      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
         <Link to="/rank" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">
             <img
@@ -140,7 +141,7 @@ export const NavBar = () => {
           </Box>
         </Link>
       </motion.div>
-      <motion.div style={IconButtonStyle} whileTap={{ scale: 1.2 }}>
+      <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
         <Link to="/crew" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">
             <img

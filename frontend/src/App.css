@@ -11,3 +11,8 @@
   margin: 0 auto;
   align-items: center;
 }
+
+.Muidialog-paper{
+  background-color: aqua;
+  border-radius: 50%;
+}
