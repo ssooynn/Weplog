@@ -20,6 +20,7 @@ import { ChallengeDetail } from "./pages/challenge/ChallengeDetail.jsx";
 import { ChallengeRegister } from "./pages/challenge/ChallengeRegister.jsx";
 import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
+import { DrawingCharacter } from "./pages/plomon/DrawingCharacter.jsx";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -66,22 +67,25 @@ export const Router = () => {
         {/* <Route index element={<MapTest />}></Route> */}
         <Route path="/crew" element={<Crew />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
-        <Route path="/challenge/detail/:challengeId" element={<ChallengeDetail />} />
+        <Route
+          path="/challenge/detail/:challengeId"
+          element={<ChallengeDetail />}
+        />
         <Route path="/challenge/register" element={<ChallengeRegister />} />
-
       </Route>
       {/* 로고 */}
       <Route path="/" element={<LayoutFullScreen />}>
         <Route path="/plogging/end" element={<PloggingEnd />} />
         <Route path="/plogging/register" element={<PloggingRegister />} />
         <Route path="/plogging" element={<Plogging />} />
+        <Route path="/plomon" element={<DrawingCharacter />} />
       </Route>
       {/* 내브바 */}
       <Route path="/" element={<LayoutNoLogo />}>
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/challenge/list" element={<ChallengeList />} />
-        <Route index element={<Main/>}/>
+        <Route index element={<Main />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
