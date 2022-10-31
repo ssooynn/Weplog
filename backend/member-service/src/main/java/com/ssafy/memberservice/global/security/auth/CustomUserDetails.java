@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.global.security.auth;
 
-import com.ssafy.memberservice.domain.mysql.member.domain.Member;
+import com.ssafy.memberservice.domain.member.domain.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

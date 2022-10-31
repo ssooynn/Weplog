@@ -24,7 +24,7 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
     @Transactional
     @Modifying
     @Query("UPDATE Member m SET m.refreshToken=:token WHERE m.id=:id")
-    void updateRefreshToken(@Param("id") Long id, @Param("token") String token);
+    void updateRefreshToken(@Param("id") UUID id, @Param("token") String token);
 
     Optional<Member> findBySocialId(String socialId);
 
