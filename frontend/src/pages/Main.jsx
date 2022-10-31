@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "grommet";
+import { DetailDialog } from "../components/AlertDialog";
 
 const MainCategoryContainer = styled.div`
   display: flex;
@@ -11,7 +12,6 @@ const MainCategoryContainer = styled.div`
   align-items: center;
   padding: 1vh 0 1vh 0;
   height: 5vh;
-  // background: linear-gradient(307.96deg, rgba(87, 186, 131, 0.296), rgba(29, 38, 255, 0.088));
   
 `;
 
@@ -112,6 +112,7 @@ const ArticleProfileName = styled.div`
   font-size: 13px;
   display: flex;
   flex-direction: row;
+  font-weight: 500;
   justify-content: flex-start;
 `
 
@@ -128,6 +129,8 @@ export const Main = () => {
   const [isMyCategory, setIsMyCategory] = useState(true);
   const OnPressExplore = () => setIsMyCategory(false);
   const OnPressMy = () => setIsMyCategory(true);
+  const [open, setOpen] = useState(false);
+  const [plogData, setPlogData] = useState({ArticleImgURL:"https://picsum.photos/200/400?random=2", ProfileImgURL:"https://picsum.photos/200/300?random=41", Name:"이수연", Time:"2"});
 
 
   return (
@@ -138,7 +141,7 @@ export const Main = () => {
         background:
           "linear-gradient(307.96deg, rgba(87, 186, 131, 0.296), rgba(29, 38, 255, 0.088))",
         textAlign: "center",
-        height: "calc(94vh-10px)",
+        height: "94vh",
       }}
       initial="hidden"
       animate="visible"
@@ -155,7 +158,8 @@ export const Main = () => {
       </MainCategoryContainer>
       <ExploreArea>
         <LeftInfiniteBar>
-          <ArticleCard>
+          <>
+          <ArticleCard onClick={() => setOpen(true)}>
               <ArticleImg src="https://picsum.photos/200/400?random=2"/>
             <ArticleProfileArea>
               <ArticleProfileImgArea>
@@ -171,6 +175,8 @@ export const Main = () => {
               </ArticleProfileTextArea>
             </ArticleProfileArea>
           </ArticleCard>
+            <DetailDialog open={open} handleClose={()=>{setOpen(false)}} plogData={plogData} />
+            </>
           <ArticleCard>
             <ArticleImg src="https://picsum.photos/200/300?random=20"/>
             <ArticleProfileArea>

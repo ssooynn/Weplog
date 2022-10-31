@@ -15,11 +15,6 @@ export const BootstrapButton = styled(motion.button)({
   fontFamily: `shsnMedium, sans-serif`,
   backgroundColor: "#57BA83",
   borderRadius: "10px",
-  "&:hover": {
-    backgroundColor: "#57BA83",
-    boxShadow: "none",
-    color: "white",
-  },
 });
 
 export const PloggingButton = styled(motion.button)({
@@ -65,13 +60,23 @@ export const PauseButton = styled(motion.button)({
   height: "5vh",
   border: "none",
   margin: "10px",
+  fontFamily: `shsnMedium, sans-serif`,
   backgroundColor: "#57BA83",
   borderRadius: "10px",
-  "&:hover": {
-    backgroundColor: "#57BA83",
-    boxShadow: "none",
-    color: "white",
-  },
+});
+
+export const PloggingDataButton = styled(motion.button)({
+  boxShadow: "none",
+  textTransform: "none",
+  fontSize: 12,
+  fontWeight: "bold",
+  color: "white",
+  width: "100px",
+  height: "100px",
+  border: "none",
+  fontFamily: `shsnMedium, sans-serif`,
+  margin: "10px",
+  backgroundColor: "#57BA83",
 });
 
 export const WhiteButton = styled(motion.button)({
@@ -79,7 +84,6 @@ export const WhiteButton = styled(motion.button)({
   textTransform: "none",
   border: "1.5px solid #57BA83",
   fontSize: 18,
-  fontFamily: "gwmd",
   fontWeight: "bold",
   padding: "6px 12px",
   color: "#57BA83",
@@ -94,6 +98,20 @@ export const WhiteButton = styled(motion.button)({
     boxShadow: "none",
     color: "#57BA83",
   },
+});
+
+export const ContentChooseButton = styled(motion.button)({
+  textTransform: "none",
+  fontSize: 16,
+  fontWeight: "bold",
+  padding: "6px 12px",
+  color: "black",
+  width: "90%",
+  height: "43px",
+  border: "none",
+  margin: "10px",
+  fontFamily: `shsnMedium, sans-serif`,
+  backgroundColor: "white",
 });
 
 export const ExitButton = styled(motion.button)({
