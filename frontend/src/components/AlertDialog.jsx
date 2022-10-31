@@ -12,7 +12,10 @@ import styled from "styled-components";
 import { Paper } from "@mui/material";
 // import styled from "styled-components";
 // import { CourseMap, StarBox, StyledText } from "./Common";
-// import WeatherBtn from "../assets/images/weather.png";
+import TrashBtn from "../assets/images/trash.png";
+import DishBtn from "../assets/images/dish.png";
+import GarbageBtn from "../assets/images/garbage.png";
+import DesBtn from "../assets/images/destination.png";
 // import SoloBtn from "../assets/images/solo.png";
 // import GroupBtn from "../assets/images/group.png";
 // import { StyledHorizonTable } from "./HorizontalScrollBox";
@@ -33,40 +36,40 @@ const ArticleBox = styled.div`
   flex-direction: column;
   width: 80vw;
   border-radius: 15px;
-`
+`;
 
 const ArticleBoxImg = styled.img`
   width: 100%;
   border-radius: 15px 15px 0 0;
-`
+`;
 
 const ArticleBoxProfileArea = styled.div`
   padding: 3% 8%;
   display: flex;
   flex-direction: row;
   height: 8vh;
-`
+`;
 
 const ArticleBoxProfileImgArea = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
 const ArticleBoxProfileImg = styled.img`
   width: 6vh;
   height: 6vh;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #E7E7E7;
-`
+  border: 1px solid #e7e7e7;
+`;
 
 const ArticleBoxProfileTextArea = styled.div`
   padding-left: 1vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
+`;
 
 const ArticleBoxProfileName = styled.div`
   font-size: 15px;
@@ -74,14 +77,14 @@ const ArticleBoxProfileName = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-`
+`;
 
 const ArticleBoxProfileTime = styled.div`
   font-size: 13px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-`
+`;
 
 export const AlertDialog = ({
   open,
@@ -158,23 +161,16 @@ export const AlertDialog = ({
   );
 };
 
-
-
-export const DetailDialog = ({
-  open,
-  handleClose,
-  plogData,
-}) => {
+export const DetailDialog = ({ open, handleClose, plogData }) => {
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       PaperProps={{
-        style: { borderRadius: 15 }
+        style: { borderRadius: 15 },
       }}
       style={{
         backgroundColor: "none",
-        
       }}
     >
       <Box
@@ -186,23 +182,84 @@ export const DetailDialog = ({
         }}
       >
         <ArticleBox>
-          <ArticleBoxImg src={plogData.ProfileImgURL}/>
+          <ArticleBoxImg src={plogData.ProfileImgURL} />
           <ArticleBoxProfileArea>
-              <ArticleBoxProfileImgArea>
-                <ArticleBoxProfileImg src={plogData.ProfileImgURL}/>
-              </ArticleBoxProfileImgArea>
-              <ArticleBoxProfileTextArea>
-                <ArticleBoxProfileName>
-                  {plogData.Name}
-                </ArticleBoxProfileName>
-                <ArticleBoxProfileTime>
-                  {plogData.Time}분전
-                </ArticleBoxProfileTime>
-              </ArticleBoxProfileTextArea>
-            </ArticleBoxProfileArea>
+            <ArticleBoxProfileImgArea>
+              <ArticleBoxProfileImg src={plogData.ProfileImgURL} />
+            </ArticleBoxProfileImgArea>
+            <ArticleBoxProfileTextArea>
+              <ArticleBoxProfileName>{plogData.Name}</ArticleBoxProfileName>
+              <ArticleBoxProfileTime>{plogData.Time}분전</ArticleBoxProfileTime>
+            </ArticleBoxProfileTextArea>
+          </ArticleBoxProfileArea>
         </ArticleBox>
-        
       </Box>
+    </Dialog>
+  );
+};
+
+export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle
+        id="alert-dialog-title"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
+        마커 선택
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          id="alert-dialog-description"
+          style={{
+            fontFamily: "gwmd",
+          }}
+        >
+          마커를 선택하세요
+        </DialogContentText>
+        <Box
+          direction="row"
+          align="center"
+          justify="center"
+          height="150px"
+          gap="medium"
+        >
+          <Image
+            fit="cover"
+            src={TrashBtn}
+            onClick={() => {
+              handleMarker(0);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={DishBtn}
+            onClick={() => {
+              handleMarker(1);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={DesBtn}
+            onClick={() => {
+              handleMarker(2);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={GarbageBtn}
+            onClick={() => {
+              handleMarker(3);
+            }}
+          />
+        </Box>
+      </DialogContent>
     </Dialog>
   );
 };

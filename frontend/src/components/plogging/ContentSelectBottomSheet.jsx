@@ -8,14 +8,7 @@ import CheckBtn from "../../assets/images/check.png";
 import { StyledText } from "../Common";
 import { PloggingDataButton } from "../common/Buttons";
 
-const DataButton = ({
-  index,
-  selected,
-  setSelected,
-  setFormat,
-  active,
-  child,
-}) => {
+const DataButton = ({ index, format, setFormat, active, child }) => {
   return (
     <PloggingDataButton
       whileTap={{ scale: 0.9 }}
@@ -23,13 +16,9 @@ const DataButton = ({
         position: "relative",
       }}
       onClick={() => {
-        if (selected === index) {
-          setSelected(null);
-          setFormat(null);
-        } else {
-          setSelected(index);
-          setFormat(index);
-        }
+        !format.some((s) => s === index)
+          ? setFormat((select) => [...select, index])
+          : setFormat(format.filter((s) => s !== index));
       }}
     >
       {active && (
@@ -52,8 +41,12 @@ const DataButton = ({
     </PloggingDataButton>
   );
 };
-export const ContentSelectBottomSheet = ({ open, onDismiss, setFormat }) => {
-  const [selected, setSelected] = useState(null);
+export const ContentSelectBottomSheet = ({
+  open,
+  onDismiss,
+  format,
+  setFormat,
+}) => {
   return (
     <BottomSheet open={open} onDismiss={onDismiss}>
       <Box direction="row" justify="between" margin="20px">
@@ -63,10 +56,9 @@ export const ContentSelectBottomSheet = ({ open, onDismiss, setFormat }) => {
       <Box height="25vh" direction="row" justify="center">
         <DataButton
           index={0}
-          setSelected={setSelected}
-          selected={selected}
+          format={format}
           setFormat={setFormat}
-          active={selected === 0 ? true : false}
+          active={format.some((v) => v === 0) ? true : false}
           child={
             <Box
               align="end"
@@ -86,30 +78,29 @@ export const ContentSelectBottomSheet = ({ open, onDismiss, setFormat }) => {
         ></DataButton>
         <DataButton
           index={1}
-          setSelected={setSelected}
-          selected={selected}
+          format={format}
           setFormat={setFormat}
-          active={selected === 1 ? true : false}
+          active={format.some((v) => v === 1) ? true : false}
           child={<img src={CourseBtn} />}
         ></DataButton>
         <DataButton
           index={2}
-          setSelected={setSelected}
-          selected={selected}
+          format={format}
           setFormat={setFormat}
-          active={selected === 2 ? true : false}
+          active={format.some((v) => v === 2) ? true : false}
           child={
             <Box
               width="100%"
               height="100%"
-              align="end"
+              align="start"
+              justify="end"
               direction="row"
               pad={{
-                bottom: "3px",
-                left: "3px",
+                top: "3px",
+                right: "3px",
               }}
             >
-              <img src={WeatherBtn} />
+              서울, 관악
             </Box>
           }
         ></DataButton>
