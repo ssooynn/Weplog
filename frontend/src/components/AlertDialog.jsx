@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
 // import { Avatar, Button as GBtn, Spinner } from "grommet";
 // import { Button as MBtn, ThemeProvider } from "@mui/material";
-import { Box } from "grommet";
+import { Box, Image } from "grommet";
 import styled from "styled-components";
 import { Paper } from "@mui/material";
 // import styled from "styled-components";
