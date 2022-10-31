@@ -86,7 +86,7 @@ public class JwtTokenProvider {
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-        Long id = Long.valueOf(user.getName());
+        UUID id = UUID.fromString(user.getName());
 
         memberRepository.updateRefreshToken(id, refreshToken);
     }

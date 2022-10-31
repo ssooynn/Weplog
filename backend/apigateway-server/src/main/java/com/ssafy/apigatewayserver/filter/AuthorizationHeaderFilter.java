@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.ArrayList;
 
 @Component
 @Slf4j
@@ -51,9 +52,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return onError(exchange, "JWT token is not Valid", HttpStatus.UNAUTHORIZED);
             }
 
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-
-            }));
+            return chain.filter(exchange);
         };
 
     }

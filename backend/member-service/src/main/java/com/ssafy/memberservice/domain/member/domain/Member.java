@@ -1,7 +1,6 @@
 package com.ssafy.memberservice.domain.member.domain;
 
 import com.fasterxml.uuid.Generators;
-import com.ssafy.memberservice.domain.mysql.challenge.domain.Challenge;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 
@@ -42,10 +41,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private MemberRole role;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenging_id")
-    private Challenge challenge;
 
     private String refreshToken;
 

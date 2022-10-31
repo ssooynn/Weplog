@@ -1,7 +1,7 @@
 package com.ssafy.memberservice.domain.memberdetail.domain;
 
-import com.ssafy.weplog.domain.mysql.member.domain.Member;
-import com.ssafy.weplog.global.common.base.BaseEntity;
+import com.ssafy.memberservice.domain.member.domain.Member;
+import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
