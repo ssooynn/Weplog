@@ -1,6 +1,8 @@
 import { Box, Text } from "grommet";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { ChallengeRankCard } from "../rank/ChallengeRankCard";
 
 const ProgressBar = styled.progress`
   appearance: none;
@@ -26,10 +28,14 @@ const WhiteBg = styled.div`
 
 export const ChallengeCard = (data) => {
   console.log(data.bgimage);
+  const navigate = useNavigate();
+  const goChallengeDetail = () => {
+    navigate(`/challenge/detail/${data.challengeId}`);
+  }
   return (
-    <Box background={{ image: `url(${data.bgimage})`, opacity: "strong" }} height="100px" width="100%" margin="medium" round="small" elevation="medium">
+    <Box background={{ image: `url(${data.bgimage})`, opacity: "strong" }} height="100px" width="100%" margin="medium" round="small" elevation="medium" onClick={goChallengeDetail}>
       <WhiteBg>
-        <Box justify="between" pad="medium" height="100px">
+        <Box justify="between" pad="14px 18px" height="100px">
           <Text size="14px" weight="500" color="black">
             오늘도 지구와 함께
           </Text>
@@ -40,9 +46,9 @@ export const ChallengeCard = (data) => {
             기한 - 2022.12.25 15시까지
           </Text>
           <Box direction="row" width="100%" justify="between">
-            <Box direction="row" justify="between" align="center" width="200px">
+            <Box direction="row" justify="between" align="center" width="190px">
               <ProgressBar id="progress" value="75" min="0" max="100"></ProgressBar>
-              <Text size="8px" weight="400">
+              <Text size="10px" weight="400">
                 75%
               </Text>
             </Box>
