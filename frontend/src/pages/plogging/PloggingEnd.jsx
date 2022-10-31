@@ -15,17 +15,22 @@ import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
 import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
 import { StyledText } from "../../components/Common";
+
 export const PloggingEnd = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { ploggingType, ploggingData } = location.state;
   const [data, setData] = useState(ploggingData);
   const [lineImage, setLineImage] = useState(null);
+  const [lineImageBlack, setLineImageBlack] = useState(null);
   const [register, setRegister] = useState(false);
   const [mapLevel, setMapLevel] = useState(3);
   const [mapCenter, setMapCenter] = useState();
   const [loading, setLoading] = useState(true);
+  const [address, setAddress] = useState();
   const lineRef = useRef();
+  const { kakao } = window;
+  const geocoder = new kakao.maps.services.Geocoder();
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -37,6 +42,14 @@ export const PloggingEnd = () => {
   //       maxLat: 0,
   //       minLat: 0,
   //     },
+  const callback = (result, status) => {
+    if (status === kakao.maps.services.Status.OK) {
+      console.log(result);
+      const addName = result[0].address.address_name.split(" ");
+      console.log(addName);
+      setAddress((prev) => (prev = addName[1] + ", " + addName[0]));
+    }
+  };
 
   useEffect(() => {
     if (loading) {
@@ -59,13 +72,15 @@ export const PloggingEnd = () => {
       );
       let maxDistance = Math.max(latDistance, lngDistance);
       let center = {
-        lat: parseFloat((maxLat.lat + minLat.lat) / 2.0).toFixed(8),
-        lng: parseFloat((maxLng.lng + minLng.lng) / 2.0).toFixed(8),
+        lat: parseFloat((maxLat.lat + minLat.lat) / 2.0).toFixed(7),
+        lng: parseFloat((maxLng.lng + minLng.lng) / 2.0).toFixed(7),
       };
       console.log(center);
       setMapCenter(center);
       setLoading(false);
       setMapLevel(calcMapLevel(maxDistance));
+      var coord = new kakao.maps.LatLng(data.latlng[0].lat, data.latlng[0].lng);
+      geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
     }
     return () => {
       setLoading(false);
@@ -74,6 +89,7 @@ export const PloggingEnd = () => {
 
   const handlePageChange = () => {
     const line = lineRef.current;
+
     line.style.background = "none";
     const filter = (line) => {
       if (line.style) {
@@ -106,17 +122,44 @@ export const PloggingEnd = () => {
     //   // });
     // });
 
+    const lineBlack = lineRef.current;
+    lineBlack.style.background = "none";
+    const filterBlack = (lineBlack) => {
+      if (lineBlack.style) {
+        lineBlack.style.background = "none";
+        if (lineBlack.style.stroke) {
+          lineBlack.style.stroke = "rgb(0, 0, 0)";
+        }
+        if (lineBlack.style.color) {
+          lineBlack.style.color = "rgb(0, 0, 0)";
+        }
+        if (lineBlack.style.height === "6px") {
+          lineBlack.style = {};
+        }
+        if (lineBlack.style.fontFamily) {
+          lineBlack.style.fontSize = 0;
+        }
+      }
+      return lineBlack.tagName !== "IMG" && lineBlack.tagName !== "SVG";
+    };
+
     domtoimage.toSvg(line, { filter: filter }).then(function (dataUrl) {
       /* do something */
       // console.log(dataUrl);
       setLineImage(dataUrl);
-      navigate("/plogging/register", {
-        state: {
-          ploggingType: ploggingType,
-          ploggingData: ploggingData,
-          lineImage: dataUrl,
-        },
-      });
+      domtoimage
+        .toSvg(lineBlack, { filter: filterBlack })
+        .then(function (dataUrlBlack) {
+          navigate("/plogging/register", {
+            state: {
+              ploggingType: ploggingType,
+              ploggingData: ploggingData,
+              lineImage: dataUrl,
+              lineImageBlack: dataUrlBlack,
+              address: address,
+            },
+          });
+        });
     });
   };
   if (loading) return <Spinner />;

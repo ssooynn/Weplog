@@ -6,6 +6,7 @@ import { Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
 import PloggingTitle from "../../assets/images/ploggingTitle.png";
+import PloggingTitleBlack from "../../assets/images/ploggingTitleBlack.png";
 import { StyledText } from "../../components/Common";
 import { ContentSelectBottomSheet } from "../../components/plogging/ContentSelectBottomSheet";
 import {
@@ -18,7 +19,9 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 export const PloggingRegister = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { ploggingType, ploggingData, lineImage } = location.state;
+  const [contentColor, setContentColor] = useState("white");
+  const { ploggingType, ploggingData, lineImage, lineImageBlack, address } =
+    location.state;
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -28,7 +31,7 @@ export const PloggingRegister = () => {
   //     },
   const [data, setData] = useState(ploggingData);
   const [open, setOpen] = useState(false);
-  const [format, setFormat] = useState(null);
+  const [format, setFormat] = useState([]);
   const [image, setImage] = useState(null);
   const [prev, setPrev] = useState(null);
   const imageRef = useRef();
@@ -38,7 +41,7 @@ export const PloggingRegister = () => {
     const fileArr = e.target.files;
     console.log(fileArr);
     let fileURL = "";
-    if (fileArr) {
+    if (fileArr.length !== 0) {
       // console.log(fileArr[0]);
       setImage(fileArr[0]);
       let reader = new FileReader();
@@ -92,20 +95,23 @@ export const PloggingRegister = () => {
       </Box>
       {/* 사진 박스 */}
       <motion.div
-        animate={{ height: 0 }}
+        variants={container}
+        animate={{ height: "auto" }}
         style={{
           width: "100%",
-          backgroundImage:
-            prev === null
-              ? "url('/assets/images/defaultPic.png')"
-              : `url('${prev}')`,
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
+          // backgroundImage:
+          //   prev === null
+          //     ? "url('/assets/images/defaultPic.png')"
+          //     : `url('${prev}')`,
+          // backgroundRepeat: "no-repeat",
           position: "relative",
-          height: "auto",
           zIndex: "1500",
         }}
         ref={imageRef}
+        onClick={() => {
+          if (contentColor === "white") setContentColor("black");
+          else setContentColor("white");
+        }}
       >
         <Box
           width="100%"
@@ -119,9 +125,9 @@ export const PloggingRegister = () => {
             zIndex: "150",
           }}
         >
-          {format === 1 && (
+          {format.find((element) => element === 1) !== undefined && (
             <img
-              src={lineImage}
+              src={contentColor === "white" ? lineImage : lineImageBlack}
               style={{
                 position: "absolute",
                 width: "100%",
@@ -135,20 +141,31 @@ export const PloggingRegister = () => {
           <Box
             width="100%"
             direction="row"
+            justify="between"
             pad={{
               left: "25px",
               top: "15px",
+              right: "25px",
             }}
           >
-            <img src={PloggingTitle} />
+            <img
+              src={
+                contentColor === "white" ? PloggingTitle : PloggingTitleBlack
+              }
+            />
+            <Box justify="end" height="100%">
+              {format.find((element) => element === 2) !== undefined && (
+                <StyledText text={address} color={contentColor} weight="bold" />
+              )}
+            </Box>
           </Box>
           {/* 아래 내용 */}
-          {format === 0 && (
+          {format.find((element) => element === 0) !== undefined && (
             <Box
               direction="row"
               align="center"
               justify="around"
-              gap="125px"
+              gap="20vw"
               pad={{
                 bottom: "25px",
               }}
@@ -158,40 +175,40 @@ export const PloggingRegister = () => {
                   text={data.totalDistance}
                   weight="bold"
                   size="20px"
-                  color="white"
+                  color={contentColor}
                 />
-                <StyledText size="10px" text={"km"} color="white" />
+                <StyledText size="10px" text={"km"} color={contentColor} />
               </Box>
               <Box align="end" direction="row">
                 <StyledText
-                  text={data.totalDistance}
+                  text={data.time}
                   weight="bold"
                   size="20px"
-                  color="white"
+                  color={contentColor}
                 />
-                <StyledText size="10px" text={"시간"} color="white" />
+                <StyledText size="10px" text={"시간"} color={contentColor} />
               </Box>
               <Box align="end" direction="row">
                 <StyledText
-                  text={data.totalDistance}
+                  text={data.kcal}
                   weight="bold"
                   size="20px"
-                  color="white"
+                  color={contentColor}
                 />
-                <StyledText size="10px" text={"kcal"} color="white" />
+                <StyledText size="10px" text={"kcal"} color={contentColor} />
               </Box>
             </Box>
           )}
         </Box>
-        {/* <img
-          src={DefalutPic}
+        <img
+          src={prev === null ? "/assets/images/defaultPic.png" : prev}
           style={{
             width: "100%",
             height: "100%",
             zIndex: 100,
             fill: "cover",
           }}
-        /> */}
+        />
       </motion.div>
       {/* 데이터 셀렉트 박스 */}
       <Box width="100%" height="50%" align="center">
@@ -265,6 +282,7 @@ export const PloggingRegister = () => {
         onDismiss={() => {
           setOpen(false);
         }}
+        format={format}
         setFormat={setFormat}
       />
     </motion.div>

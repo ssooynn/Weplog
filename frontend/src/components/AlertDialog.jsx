@@ -7,10 +7,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
 // import { Avatar, Button as GBtn, Spinner } from "grommet";
 // import { Button as MBtn, ThemeProvider } from "@mui/material";
-import { Box } from "grommet";
+import { Box, Image } from "grommet";
 // import styled from "styled-components";
 // import { CourseMap, StarBox, StyledText } from "./Common";
-// import WeatherBtn from "../assets/images/weather.png";
+import TrashBtn from "../assets/images/trash.png";
+import DishBtn from "../assets/images/dish.png";
+import GarbageBtn from "../assets/images/garbage.png";
+import DesBtn from "../assets/images/destination.png";
 // import SoloBtn from "../assets/images/solo.png";
 // import GroupBtn from "../assets/images/group.png";
 // import { StyledHorizonTable } from "./HorizontalScrollBox";
@@ -97,6 +100,72 @@ export const AlertDialog = ({
             </Button>
           ))}
       </Box>
+    </Dialog>
+  );
+};
+
+export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle
+        id="alert-dialog-title"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
+        마커 선택
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          id="alert-dialog-description"
+          style={{
+            fontFamily: "gwmd",
+          }}
+        >
+          마커를 선택하세요
+        </DialogContentText>
+        <Box
+          direction="row"
+          align="center"
+          justify="center"
+          height="150px"
+          gap="medium"
+        >
+          <Image
+            fit="cover"
+            src={TrashBtn}
+            onClick={() => {
+              handleMarker(0);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={DishBtn}
+            onClick={() => {
+              handleMarker(1);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={DesBtn}
+            onClick={() => {
+              handleMarker(2);
+            }}
+          />
+          <Image
+            fit="cover"
+            src={GarbageBtn}
+            onClick={() => {
+              handleMarker(3);
+            }}
+          />
+        </Box>
+      </DialogContent>
     </Dialog>
   );
 };
