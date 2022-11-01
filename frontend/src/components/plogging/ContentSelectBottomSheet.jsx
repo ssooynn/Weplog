@@ -8,7 +8,7 @@ import CheckBtn from "../../assets/images/check.png";
 import { StyledText } from "../Common";
 import { PloggingDataButton } from "../common/Buttons";
 
-const DataButton = ({ index, format, setFormat, active, child }) => {
+export const DataButton = ({ index, format, setFormat, active, child }) => {
   return (
     <PloggingDataButton
       whileTap={{ scale: 0.9 }}

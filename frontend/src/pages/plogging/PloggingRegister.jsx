@@ -2,13 +2,21 @@ import React, { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { container } from "../../utils/util";
-import { Box } from "grommet";
+import { Avatar, Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
-import PloggingTitle from "../../assets/images/ploggingTitle.png";
-import PloggingTitleBlack from "../../assets/images/ploggingTitleBlack.png";
+import { ReactComponent as PloggingLogo } from "../../assets/icons/logo.svg";
+// import PloggingTitle from "../../assets/images/ploggingTitle.png";
+// import PloggingTitleBlack from "../../assets/images/ploggingTitleBlack.png";
 import { StyledText } from "../../components/Common";
-import { ContentSelectBottomSheet } from "../../components/plogging/ContentSelectBottomSheet";
+import CloseBtn from "../../assets/images/close.png";
+import CourseBtn from "../../assets/images/course.png";
+import WeatherBtn from "../../assets/images/weather.png";
+import CheckBtn from "../../assets/images/check.png";
+import {
+  ContentSelectBottomSheet,
+  DataButton,
+} from "../../components/plogging/ContentSelectBottomSheet";
 import {
   BootstrapButton,
   ContentChooseButton,
@@ -16,6 +24,8 @@ import {
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
 import { Map, Polyline } from "react-kakao-maps-sdk";
+import { ChromePicker, SketchPicker } from "react-color";
+
 export const PloggingRegister = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,6 +62,14 @@ export const PloggingRegister = () => {
       };
       reader.readAsDataURL(fileArr[0]);
     }
+  };
+  const handleChange = (color) => {
+    console.log(color);
+    setContentColor(color.hex);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -91,7 +109,25 @@ export const PloggingRegister = () => {
           <StyledText text="포스터 꾸미기" weight="bold" size="18px" />
         </Box>
         {/* 빈칸 */}
-        <Box width="10%"></Box>
+        <Box width="10%">
+          <label htmlFor="image">
+            <motion.img
+              src={PlusBtn}
+              width="21px"
+              height="21px"
+              whileTap={{ scale: 0.9 }}
+            />
+          </label>
+          <input
+            id="image"
+            type="file"
+            accept="image/jpg,image/png,image/jpeg,image/gif"
+            style={{
+              display: "none",
+            }}
+            onChange={handleImageUpload}
+          />
+        </Box>
       </Box>
       {/* 사진 박스 */}
       <motion.div
@@ -105,13 +141,13 @@ export const PloggingRegister = () => {
           //     : `url('${prev}')`,
           // backgroundRepeat: "no-repeat",
           position: "relative",
-          zIndex: "1500",
+          zIndex: 1,
         }}
         ref={imageRef}
-        onClick={() => {
-          if (contentColor === "white") setContentColor("black");
-          else setContentColor("white");
-        }}
+        // onClick={() => {
+        //   if (contentColor === "white") setContentColor("black");
+        //   else setContentColor("white");
+        // }}
       >
         <Box
           width="100%"
@@ -122,7 +158,7 @@ export const PloggingRegister = () => {
             position: "absolute",
             top: 0,
             left: 0,
-            zIndex: "150",
+            zIndex: 1,
           }}
         >
           {format.find((element) => element === 1) !== undefined && (
@@ -132,7 +168,7 @@ export const PloggingRegister = () => {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                zIndex: 150,
+                zIndex: 1,
                 fill: "cover",
               }}
             />
@@ -148,11 +184,12 @@ export const PloggingRegister = () => {
               right: "25px",
             }}
           >
-            <img
+            <PloggingLogo fill={contentColor} />
+            {/* <img
               src={
                 contentColor === "white" ? PloggingTitle : PloggingTitleBlack
               }
-            />
+            /> */}
             <Box justify="end" height="100%">
               {format.find((element) => element === 2) !== undefined && (
                 <StyledText text={address} color={contentColor} weight="bold" />
@@ -205,14 +242,14 @@ export const PloggingRegister = () => {
           style={{
             width: "100%",
             height: "100%",
-            zIndex: 100,
+            zIndex: 0.5,
             fill: "cover",
           }}
         />
       </motion.div>
       {/* 데이터 셀렉트 박스 */}
-      <Box width="100%" height="50%" align="center">
-        <label
+      <Box width="100%" height="43%" align="center" gap="large">
+        {/* <label
           htmlFor="image"
           style={{
             display: "flex",
@@ -249,8 +286,97 @@ export const PloggingRegister = () => {
             display: "none",
           }}
           onChange={handleImageUpload}
-        />
-        <ContentChooseButton
+        /> */}
+        <Box height="25%" direction="row" justify="center">
+          <DataButton
+            index={0}
+            format={format}
+            setFormat={setFormat}
+            active={format.some((v) => v === 0) ? true : false}
+            child={
+              <Box
+                align="end"
+                justify="between"
+                direction="row"
+                width="100%"
+                height="100%"
+                pad={{
+                  bottom: "3px",
+                }}
+              >
+                <StyledText text="km" color="white" />
+                <StyledText text="H" color="white" />
+                <StyledText text="Kcal" color="white" />
+              </Box>
+            }
+          ></DataButton>
+          <DataButton
+            index={1}
+            format={format}
+            setFormat={setFormat}
+            active={format.some((v) => v === 1) ? true : false}
+            child={<img src={CourseBtn} />}
+          ></DataButton>
+          <DataButton
+            index={2}
+            format={format}
+            setFormat={setFormat}
+            active={format.some((v) => v === 2) ? true : false}
+            child={
+              <Box
+                width="100%"
+                height="100%"
+                align="start"
+                justify="end"
+                direction="row"
+                pad={{
+                  top: "3px",
+                  right: "3px",
+                }}
+              >
+                서울, 관악
+              </Box>
+            }
+          ></DataButton>
+        </Box>
+        <motion.button
+          style={{
+            boxShadow: "none",
+            textTransform: "none",
+            fontSize: 12,
+            fontWeight: "bold",
+            color: "white",
+            border: "none",
+            fontFamily: `shsnMedium, sans-serif`,
+            margin: "10px",
+            backgroundColor: "none",
+          }}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          <Avatar background={contentColor} />
+        </motion.button>
+        {open && (
+          <motion.div
+            style={{
+              position: "absolute",
+              zIndex: 3,
+            }}
+          >
+            <motion.div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "20%",
+              }}
+              onClick={handleClose}
+            >
+              <ChromePicker color={contentColor} onChange={handleChange} />
+            </motion.div>
+          </motion.div>
+        )}
+        {/* <ContentChooseButton
           onClick={() => {
             setOpen(true);
           }}
@@ -260,7 +386,7 @@ export const PloggingRegister = () => {
             컨텐츠 추가하기
             <img src={PlusBtn} />
           </Box>
-        </ContentChooseButton>
+        </ContentChooseButton> */}
         <BootstrapButton
           style={{
             width: "75%",
@@ -277,14 +403,14 @@ export const PloggingRegister = () => {
           {"확인"}
         </BootstrapButton>
       </Box>
-      <ContentSelectBottomSheet
+      {/* <ContentSelectBottomSheet
         open={open}
         onDismiss={() => {
           setOpen(false);
         }}
         format={format}
         setFormat={setFormat}
-      />
+      /> */}
     </motion.div>
   );
 };

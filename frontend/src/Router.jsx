@@ -66,6 +66,7 @@ export const Router = () => {
       <Route path="/" element={<Layout />}>
         {/* <Route index element={<MapTest />}></Route> */}
         <Route path="/crew" element={<Crew />} />
+        <Route index element={<PloggingStart />} />
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route
           path="/challenge/detail/:challengeId"
@@ -84,8 +85,8 @@ export const Router = () => {
       <Route path="/" element={<LayoutNoLogo />}>
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/main" element={<Main />} />
         <Route path="/challenge/list" element={<ChallengeList />} />
-        <Route index element={<Main />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
