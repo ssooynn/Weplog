@@ -73,7 +73,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = tokenProvider.createAccessToken(authentication);
         tokenProvider.createRefreshToken(authentication, response);
 
-        Member member = memberRepository.findByEmail(authentication.getName())
+        Member principal = (Member) authentication.getPrincipal();
+        log.info("{}",principal.getId());
+        log.info("{}",principal.getNickname());
+
+        Member member = memberRepository.findBySocialId(authentication.getName())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         boolean isRegister = member.getNickname() == null;

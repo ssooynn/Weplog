@@ -46,6 +46,7 @@ public class JwtTokenProvider {
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         String userId = user.getName();
+        String nickname = user.getUsername();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -53,6 +54,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .setSubject(userId)
+                .setSubject(nickname)
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuer("weplug")
                 .setIssuedAt(now)
@@ -100,6 +102,7 @@ public class JwtTokenProvider {
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
 
         CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), "", authorities);
 

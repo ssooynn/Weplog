@@ -14,7 +14,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails, OAuth2User {
     private final UUID id;
-    private final String email;
+    private final String nickname;
     private final Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
@@ -24,7 +24,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
         return new CustomUserDetails(
                 member.getId(),
-                member.getEmail(),
+                member.getNickname(),
                 authorities
         );
     }
@@ -53,7 +53,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return email;
+        return nickname;
     }
 
     @Override
