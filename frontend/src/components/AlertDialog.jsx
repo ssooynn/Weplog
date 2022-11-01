@@ -129,13 +129,6 @@ export const AlertDialog = ({
           fontFamily: "gwmd",
         }}
       >
-        <Button
-          smallwhite="true"
-          onClick={handleClose}
-          whileTap={{ scale: 0.9 }}
-        >
-          {cancel}
-        </Button>
         {accept !== undefined &&
           (register ? (
             <Button

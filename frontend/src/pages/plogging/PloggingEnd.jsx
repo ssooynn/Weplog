@@ -100,12 +100,18 @@ export const PloggingEnd = () => {
         if (line.style.color) {
           line.style.color = "rgb(255, 255, 255)";
         }
-        if (line.style.height === "6px") {
-          line.style = {};
+        if (line.style.width) {
         }
-        if (line.style.fontFamily) {
-          line.style.fontSize = 0;
+        if (line.style.height) {
         }
+        // if (line.style.height === "6px") {
+        //   line.style = {};
+        // }
+        // if (line.style.fontFamily) {
+        //   line.style.fontSize = 0;
+        // }
+      } else {
+        line.style = "";
       }
       return line.tagName !== "IMG" && line.tagName !== "SVG";
     };
@@ -147,6 +153,7 @@ export const PloggingEnd = () => {
       /* do something */
       // console.log(dataUrl);
       setLineImage(dataUrl);
+      // saveAs(dataUrl, "card.svg");
       domtoimage
         .toSvg(lineBlack, { filter: filterBlack })
         .then(function (dataUrlBlack) {

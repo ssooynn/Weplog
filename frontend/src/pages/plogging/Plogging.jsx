@@ -33,6 +33,7 @@ import DesIcon from "../../assets/images/destination.png";
 import { PloggingButton } from "../../components/common/Buttons";
 import { AlertDialog, MarkerDialog } from "../../components/AlertDialog";
 import { ReactComponent as MarkerIcon } from "../../assets/icons/marker.svg";
+import Button from "../../components/Button";
 export const DataBox = ({ label, data }) => {
   return (
     <Box align="center" justify="center">
@@ -352,7 +353,7 @@ export const Plogging = () => {
         }}
       >
         {/* 지도 박스 */}
-        <Box width="100%" height="80%">
+        <Box width="100%" height="60%">
           {/* 지도 */}
           <Map
             center={mapData.center}
@@ -382,7 +383,9 @@ export const Plogging = () => {
               </CustomOverlayMap>
             )}
             <MapMarker
-              position={mapData.center}
+              position={
+                !mapData.latlng.length > 0 ? mapData.center : mapData.latlng[0]
+              }
               image={{
                 src: `/assets/images/start.png`,
                 size: {
@@ -402,10 +405,33 @@ export const Plogging = () => {
             )}
           </Map>
         </Box>
+        {/* 종료 버튼 */}
+        <Box
+          width="100%"
+          height="20%"
+          align="end"
+          justify="start"
+          style={{
+            position: "absolute",
+            top: 0,
+            zIndex: "15",
+          }}
+        >
+          <Button
+            whileTap={{ scale: 0.9 }}
+            smallpink="true"
+            onClick={() => {
+              confirmNavigation();
+              setOpen(true);
+            }}
+          >
+            {"플로깅 종료"}
+          </Button>
+        </Box>
         {/* 하단 정보 박스 */}
         <Box
           width="100%"
-          height="30%"
+          height="45%"
           align="center"
           justify="center"
           gap="40px"
@@ -424,8 +450,24 @@ export const Plogging = () => {
             <DataBox label="시간" data={timeToString(time)} />
             <DataBox label="칼로리" data={data.kcal} />
           </Box>
+          {/* 채팅 */}
+          <Box
+            width="80%"
+            height="65%"
+            style={{
+              boxShadow: "4px 4px -4px 4px rgb(172 172 172 / 0.3)",
+            }}
+          >
+            <Box width="100%" height="80%" overflow="scroll">
+              {/* 채팅 컴포넌트들 */}
+            </Box>
+            <Box width="100%" height="20%" direction="row">
+              {/* 채팅 구역 */}
+              {/* 채팅 버튼 */}
+            </Box>
+          </Box>
           {/* 정지, 일시정지 버튼 */}
-          <Box width="100%" direction="row" justify="center" gap="25px">
+          {/* <Box width="100%" direction="row" justify="center" gap="25px">
             <PloggingButton
               whileTap={{ scale: 0.9 }}
               onClick={() => {
@@ -462,7 +504,7 @@ export const Plogging = () => {
                 <img src={walking ? PauseBtn : PlayBtn} />
               </Avatar>
             </PloggingButton>
-          </Box>
+          </Box> */}
         </Box>
         <AlertDialog
           open={open}
@@ -474,8 +516,11 @@ export const Plogging = () => {
             handlePloggingFinish();
           }}
           title="플로깅 종료"
-          desc="플로깅을 종료하시겠습니까?"
-          cancel="취소"
+          desc={
+            time < 60
+              ? "1분 미만의 기록은 저장되지 않습니다. \n 플로깅을 종료하시겠습니까?"
+              : "플로깅을 종료하시겠습니까?"
+          }
           accept="종료"
         />
         <MarkerDialog
