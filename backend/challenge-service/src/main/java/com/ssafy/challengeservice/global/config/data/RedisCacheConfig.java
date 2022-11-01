@@ -15,7 +15,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ssafy.challengeservice.global.common.base.CacheKey.DEFAULT_EXPIRE_SEC;
+import static com.ssafy.challengeservice.global.common.base.CacheKey.*;
 
 @Configuration
 @EnableCaching
@@ -33,9 +33,9 @@ public class RedisCacheConfig {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)));
         Map<String,RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-        // 전체 랭킹 - 생명시간 일주일
-//        cacheConfigurations.put(RANK_TOTAL_TIME,RedisCacheConfiguration.defaultCacheConfig()
-//                .entryTtl(Duration.ofSeconds(RANK_TOTAL_EXPIRE_SEC)));
+        // 챌린지 랭킹 - 생명시간 하루
+        cacheConfigurations.put(CHALLENGE_RANKING,RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(RANKING_EXPIRE_SEC)));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory)
                 .cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurations).build();
