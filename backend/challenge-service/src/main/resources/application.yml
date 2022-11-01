@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: achievement-service
+    name: challenge-service
 
 eureka:
   instance:
@@ -16,7 +16,7 @@ eureka:
 
 logging:
   level:
-    com.ssafy.achievementservice: DEBUG
+    com.ssafy.challengeservice: DEBUG
 
 management:
   endpoints:
