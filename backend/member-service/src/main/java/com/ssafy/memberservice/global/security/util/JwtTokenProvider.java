@@ -54,6 +54,8 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .setSubject(userId)
                 .claim(AUTHORITIES_KEY, role)
+                .setIssuer("weplug")
+                .setIssuedAt(now)
                 .setExpiration(validity)
                 .compact();
     }

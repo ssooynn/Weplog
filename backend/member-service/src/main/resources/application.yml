@@ -87,12 +87,18 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 token:
-  # ?? ??
+  # 일단 하루
   expiration_time: 86400000
-  secret: wz1YzqxAz7uH3sMsWTyOYZzna300gYIOkYtf3PP23OGljTrRMSfayBjhVjJ44hmAmCu8tF8FR56R
+  secret: secretcode
   refresh-cookie-key: refresh
 
 oauth2:
   # ????? ??
   #  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
   authorizedRedirectUri: http://localost:3000/oauth2/redirect
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: refresh, health, beans
