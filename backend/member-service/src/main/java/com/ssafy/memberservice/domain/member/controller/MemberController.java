@@ -42,7 +42,7 @@ public class MemberController {
     @ApiOperation(value = "닉네임 중복 검사")
     @GetMapping("/check/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname,
-                                           @RequestHeader("userId")UUID userId) {
-        return ResponseEntity.ok(userId);
+                                           @RequestHeader("memberId")UUID memberId) {
+        return ResponseEntity.ok(memberId);
     }
 }
