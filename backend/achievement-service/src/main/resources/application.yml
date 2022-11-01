@@ -1,5 +1,7 @@
 server:
   port: 0
+
+spring:
   application:
     name: achievement-service
 
@@ -14,7 +16,7 @@ eureka:
 
 logging:
   level:
-    com.example.achievement: DEBUG
+    com.ssafy.achievementservice: DEBUG
 
 management:
   endpoints:

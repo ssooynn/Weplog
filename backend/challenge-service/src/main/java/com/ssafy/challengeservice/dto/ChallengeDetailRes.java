@@ -1,12 +1,18 @@
 package com.ssafy.challengeservice.dto;
 
-import com.ssafy.challengeservice.domain.Challenge;
+import com.ssafy.challengeservice.domain.challenge.Challenge;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChallengeDetailRes {
     private String title;
     private int goal;
@@ -14,18 +20,31 @@ public class ChallengeDetailRes {
     private int participantsCnt;
     private int rewardPoint;
     private int progress;
+    private double progressRate;
+    private boolean finishFlag;
     private String imageUrl;
-    private int totalCnt;
-    private Long totalDist;
+    private String memberId;
+    private int totalDistance;
+    private int totalTime;
+    private int totalPloggingCnt;
 
-    @Builder
-    public ChallengeDetailRes(Challenge challenge, int totalCnt, Long totalDist){
-        this.title = challenge.getTitle();
-        this.goal = challenge.getGoal();
-        this.endDate = challenge.getEndDate();
-        this.progress = challenge.getProgress();
-        this.imageUrl = challenge.getImageUrl();
-        this.totalCnt = totalCnt;
-        this.totalDist = totalDist;
+    public static ChallengeDetailRes from(Challenge challenge){
+        ChallengeDetailRes challengeDetailRes = new ChallengeDetailRes();
+
+        challengeDetailRes.title = challenge.getTitle();
+        challengeDetailRes.goal = challenge.getGoal();
+        challengeDetailRes.endDate = challenge.getEndDate();
+        challengeDetailRes.participantsCnt = challenge.getParticipantsCnt();
+        challengeDetailRes.rewardPoint = challenge.getRewardPoint();
+        challengeDetailRes.progress = challenge.getProgress();
+        challengeDetailRes.progressRate = (challenge.getProgress() / challenge.getGoal()) * 100;
+        challengeDetailRes.finishFlag = challenge.getFinishFlag();
+        challengeDetailRes.imageUrl = challenge.getImageUrl();
+        challengeDetailRes.memberId = challenge.getMember().getId().toString();
+        challengeDetailRes.totalDistance = challenge.getTotalDistance();
+        challengeDetailRes.totalTime = challenge.getTotalTime();
+        challengeDetailRes.totalPloggingCnt = challenge.getTotalPloggingCnt();
+
+        return challengeDetailRes;
     }
 }
