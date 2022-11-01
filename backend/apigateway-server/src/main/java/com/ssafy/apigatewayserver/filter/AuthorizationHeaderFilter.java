@@ -1,12 +1,8 @@
 package com.ssafy.apigatewayserver.filter;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
@@ -21,16 +17,19 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.ArrayList;
+import java.util.Base64;
 
 @Component
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
     private final Environment env;
+    private final String SECRET_KEY;
 
-    public AuthorizationHeaderFilter(Environment env) {
+    public AuthorizationHeaderFilter(Environment env, @Value("${token.secret}") String secretKey) {
         super(Config.class);
         this.env = env;
+        this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
     // login -> token -> user(with token) -> header(include token)
@@ -61,21 +60,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         boolean returnValue = true;
 
         String subject = null;
-        Key secretKey = Keys.hmacShaKeyFor(env.getProperty("token.secret").getBytes(StandardCharsets.UTF_8));
+
 
         try {
-            subject = Jwts.parserBuilder().setSigningKey(secretKey).build()
-                    .parseClaimsJws(jwt).getBody()
-                    .getSubject();
-        } catch (ExpiredJwtException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedJwtException e) {
-            throw new RuntimeException(e);
-        } catch (MalformedJwtException e) {
-            throw new RuntimeException(e);
-        } catch (SignatureException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
+            subject = getSubject(jwt);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -90,6 +79,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
 
         return returnValue;
+    }
+
+    private String getSubject(String jwtToken) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getSubject();
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {

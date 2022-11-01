@@ -84,6 +84,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .queryParam("accessToken", accessToken)
 //                .queryParam("refreshToken",refreshToken)
                 .queryParam("register", isRegister)
+                .queryParam("userId", member.getId())
                 .build().toUriString();
     }
 
