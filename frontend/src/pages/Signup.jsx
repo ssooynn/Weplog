@@ -62,9 +62,26 @@ export const Signup = () => {
   }, [check1, check2, check3]);
 
   return (
-    <Box direction="column" height="auto" justify="between" style={{minHeight:"700px"}}>
+    <Box
+      direction="column"
+      height="auto"
+      justify="between"
+      style={{ minHeight: "700px" }}
+    >
       {/* 제목 Header */}
-      <Box pad="18px" width="100%" height="60px" justify="center" align="center" border={{ color: "#EAEAEA", size: "2px", styled: "solid", side: "bottom" }}>
+      <Box
+        pad="18px"
+        width="100%"
+        height="60px"
+        justify="center"
+        align="center"
+        border={{
+          color: "#EAEAEA",
+          size: "2px",
+          styled: "solid",
+          side: "bottom",
+        }}
+      >
         <Text size="16px" weight="500">
           {" "}
           회원가입
@@ -85,7 +102,7 @@ export const Signup = () => {
             }}
           >
             <label htmlFor="image">
-              <img src={gallery} width="30px" height="30px"  alt="프로필 편집" />
+              <img src={gallery} width="30px" height="30px" alt="프로필 편집" />
             </label>
             <input
               id="image"
@@ -168,32 +185,86 @@ export const Signup = () => {
           <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
             약관 동의
           </Text>
-          <Box alignSelf="center" width="100%" height="170px" border={{ color: "#D9D9D9", size: "1px", style: "solid", side: "all" }} margin={{ top: "10px" }} pad="medium">
+          <Box
+            alignSelf="center"
+            width="100%"
+            height="170px"
+            border={{
+              color: "#D9D9D9",
+              size: "1px",
+              style: "solid",
+              side: "all",
+            }}
+            margin={{ top: "10px" }}
+            pad="medium"
+          >
             <Box direction="row" align="center" margin="5px">
-              <input type="checkbox" name="Term" value="이용약관" checked={checkAll} style={{ alignSelf: "center", transform:"scale(1)" }} onChange={(e) => CheckAllChange()} />
-                <Text size="14px" weight="400" margin={{ left: "10px" }}>
-                  모두 동의
-                </Text>
+              <input
+                type="checkbox"
+                name="Term"
+                value="이용약관"
+                checked={checkAll}
+                style={{ alignSelf: "center", transform: "scale(1)" }}
+                onChange={(e) => CheckAllChange()}
+              />
+              <Text size="14px" weight="400" margin={{ left: "10px" }}>
+                모두 동의
+              </Text>
             </Box>
             <hr style={{ border: "1px solid #EAEAEA", width: "98%" }} />
             <Box direction="row" align="center" margin="10px 5px">
-              <input type="checkbox" name="Term" value="쇼핑몰 이용약관" checked={check1} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check1Change()} />
-                <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
-                  쇼핑몰 이용약관
-                </Text>
+              <input
+                type="checkbox"
+                name="Term"
+                value="쇼핑몰 이용약관"
+                checked={check1}
+                style={{ alignSelf: "center", transform: "scale(0.9)" }}
+                onChange={(e) => Check1Change()}
+              />
+              <Text
+                color="#7E7E7E"
+                size="12px"
+                weight="400"
+                margin={{ left: "10px" }}
+              >
+                쇼핑몰 이용약관
+              </Text>
             </Box>
             <Box direction="row" align="center" margin="10px 5px">
-              <input type="checkbox" name="Term" value="개인정보처리방침" checked={check2} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check2Change()} />
-                <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
-                  개인정보처리방침
-                </Text>
-
+              <input
+                type="checkbox"
+                name="Term"
+                value="개인정보처리방침"
+                checked={check2}
+                style={{ alignSelf: "center", transform: "scale(0.9)" }}
+                onChange={(e) => Check2Change()}
+              />
+              <Text
+                color="#7E7E7E"
+                size="12px"
+                weight="400"
+                margin={{ left: "10px" }}
+              >
+                개인정보처리방침
+              </Text>
             </Box>
             <Box direction="row" align="center" margin="10px 5px 5px 5px">
-              <input type="checkbox" name="Term" value="개인정보 처리의 위탁" checked={check3} style={{ alignSelf: "center", transform:"scale(0.9)" }} onChange={(e) => Check3Change()} />
-                <Text color="#7E7E7E" size="12px" weight="400" margin={{ left: "10px" }}>
-                  개인정보 처리의 위탁
-                </Text>
+              <input
+                type="checkbox"
+                name="Term"
+                value="개인정보 처리의 위탁"
+                checked={check3}
+                style={{ alignSelf: "center", transform: "scale(0.9)" }}
+                onChange={(e) => Check3Change()}
+              />
+              <Text
+                color="#7E7E7E"
+                size="12px"
+                weight="400"
+                margin={{ left: "10px" }}
+              >
+                개인정보 처리의 위탁
+              </Text>
             </Box>
           </Box>
         </Box>
