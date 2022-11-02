@@ -1,12 +1,15 @@
 package com.ssafy.challengeservice.controller;
 
 import com.ssafy.challengeservice.dto.ChallengeDetailRes;
+import com.ssafy.challengeservice.dto.ChallengeRankingDto;
 import com.ssafy.challengeservice.dto.ChallengeReq;
 import com.ssafy.challengeservice.dto.ChallengeRes;
 import com.ssafy.challengeservice.dto.response.CreateChallengeRes;
+import com.ssafy.challengeservice.global.common.base.CacheKey;
 import com.ssafy.challengeservice.service.challenge.ChallengeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+
+import static com.ssafy.challengeservice.global.common.base.CacheKey.CHALLENGE_RANKING;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,10 +72,9 @@ public class ChallengeController {
 
 	@ApiOperation(value = "챌린지 내부 랭킹 조회")
 	@GetMapping("/rank/{challengeId}")
-	public ResponseEntity<?> getRankInChallenge(@PathVariable("challengeId") String challengeId) {
-
-
-		return null;
+	@Cacheable(value = CHALLENGE_RANKING, key = "#challengeId", unless = "#result == null", cacheManager = "cacheManager")
+	public ResponseEntity<List<ChallengeRankingDto>> getRankInChallenge(@PathVariable("challengeId") Long challengeId) {
+		return ResponseEntity.ok(challengeService.getRankChallenge(challengeId));
 	}
 
 	@ApiOperation(value = "현 시간 기준 종료시간 끝난 챌린지 종료시키기(임시)")

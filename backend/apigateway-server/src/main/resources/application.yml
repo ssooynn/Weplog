@@ -41,6 +41,24 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
 
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: achievement-service
+          uri: lb://ACHIEVEMENT-SERVICE
+          predicates:
+            - Path=/achievement-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/achievement-service/(?<segment>.*), /$\{segment}
+
         - id: achievement-service
           uri: lb://ACHIEVEMENT-SERVICE
           predicates:
@@ -53,11 +71,29 @@ spring:
         - id: challenge-service
           uri: lb://CHALLENGE-SERVICE
           predicates:
+            - Path=/challenge-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/challenge-service/(?<segment>.*), /$\{segment}
+
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
             - Path=/challenge-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/challenge-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
+        - id: plogging-service
+          uri: lb://PLOGGING-SERVICE
+          predicates:
+            - Path=/plogging-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/plogging-service/(?<segment>.*), /$\{segment}
 
         - id: plogging-service
           uri: lb://PLOGGING-SERVICE
