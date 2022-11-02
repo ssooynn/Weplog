@@ -21,7 +21,7 @@ public class Pet extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private String category;
+    private PetCategory category;
 
     private Integer level;
     private String fileUrl;
