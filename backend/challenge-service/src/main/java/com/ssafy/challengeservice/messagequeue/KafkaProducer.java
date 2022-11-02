@@ -1,8 +1,8 @@
-package com.ssafy.achievementservice.messagequeue;
+package com.ssafy.challengeservice.messagequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.achievementservice.dto.common.AddRewardPointDto;
+import com.ssafy.challengeservice.dto.AddRewardPointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,7 +16,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaProducer {
-
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public List<AddRewardPointDto> sendRewardPoint(String topic, List<AddRewardPointDto> addRewardPointDtoList) {
@@ -37,4 +36,19 @@ public class KafkaProducer {
         return addRewardPointDtoList;
     }
 
+    public void sendAchievement(String topic, List<String> memberIdList) {
+        Map<String, Object> kafkaData = new HashMap<>();
+        kafkaData.put("memberIdList", memberIdList);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = "";
+        try {
+            jsonInString = mapper.writeValueAsString(kafkaData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        kafkaTemplate.send(topic, jsonInString);
+        log.info("Kafka Producer sent reward point from the Member microservice!!:" + kafkaData);
+    }
 }

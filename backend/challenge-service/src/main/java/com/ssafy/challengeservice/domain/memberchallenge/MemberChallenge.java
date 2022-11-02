@@ -26,9 +26,23 @@ public class MemberChallenge extends BaseEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    private Long totalAmount;
+    private String nickname;
+    private String profileImageUrl;
+
     @Builder
     public MemberChallenge(Member member, Challenge challenge){
         this.member = member;
         this.challenge = challenge;
+    }
+
+    public void updateAfterPlogging(Integer distance, Integer time) {
+        if (this.challenge.getType().equals("DISTANCE")) {
+            this.totalAmount += distance;
+        } else if (this.challenge.getType().equals("TIME")) {
+            this.totalAmount += time;
+        } else if (this.challenge.getType().equals("PLOGGING_CNT")) {
+            this.totalAmount += 1;
+        }
     }
 }
