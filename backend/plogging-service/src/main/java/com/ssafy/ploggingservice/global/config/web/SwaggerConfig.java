@@ -68,11 +68,9 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(true)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.weplog.domain"))
+                .apis(RequestHandlerSelectors.basePackage("com.ssafy.ploggingservice.controller"))
                 .paths(PathSelectors.any())
-                .build()
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()));
+                .build();
     }
 
     private ApiInfo apiInfo() {
@@ -81,22 +79,6 @@ public class SwaggerConfig {
                 .version("1.0.0")
                 .description("Weplog API 문서")
                 .build();
-    }
-
-    private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header");
-    }
-
-    // JWT 인증
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth()).build();
-    }
-
-    List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
     }
 
     @Data
