@@ -2,6 +2,7 @@ package com.ssafy.memberservice.domain.memberpet.domain;
 
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.pet.domain.Pet;
+import com.ssafy.memberservice.domain.pet.domain.PetCategory;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 
@@ -22,8 +23,9 @@ public class MemberPet extends BaseEntity {
     private Integer currentExp;
     private Integer maxExp;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 10)
-    private String name;
+    private PetCategory name;
 
     private String fileUrl;
     private Integer imageLevel;
