@@ -3,6 +3,7 @@ package com.ssafy.memberservice.global.security.handler;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
+import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import com.ssafy.memberservice.global.security.repository.CookieAuthorizationRequestRepository;
 import com.ssafy.memberservice.global.security.util.CookieUtil;
 import com.ssafy.memberservice.global.security.util.JwtTokenProvider;
@@ -73,17 +74,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = tokenProvider.createAccessToken(authentication);
         tokenProvider.createRefreshToken(authentication, response);
 
-        Member member = memberRepository.findByEmail(authentication.getName())
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        log.info("memberId -> {}",principal.getId());
+        log.info("{}",principal.getUsername());
+
+        Member member = memberRepository.findById(principal.getId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        boolean isRegister = member.getNickname() == null;
+        boolean isNeedMoreInfo = member.getNickname() == null;
 
         log.info("access token: {} ", accessToken);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", accessToken)
 //                .queryParam("refreshToken",refreshToken)
-                .queryParam("register", isRegister)
+                .queryParam("needMoreInfo", isNeedMoreInfo)
                 .queryParam("memberId", member.getId())
                 .build().toUriString();
     }

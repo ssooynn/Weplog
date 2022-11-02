@@ -42,19 +42,24 @@ public class JwtTokenProvider {
     public String createAccessToken(Authentication authentication) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
+        log.info("jwt entry");
 
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         String userId = user.getName();
+        String nickname = user.getUsername();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+        log.info("jwt name -> {}", nickname);
+
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .setSubject(userId)
+//                .setSubject(nickname)
                 .claim(AUTHORITIES_KEY, role)
-                .setIssuer("weplug")
+                .setIssuer("weplog")
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .compact();
@@ -101,7 +106,8 @@ public class JwtTokenProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), "", authorities);
+
+        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()),"", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
