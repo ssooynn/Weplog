@@ -18,7 +18,7 @@ public class MemberPetRes {
         this.imageLevel = memberPet.getImageLevel();
         this.current_exp = memberPet.getCurrentExp();
         this.max_exp = memberPet.getMaxExp();
-        this.name = memberPet.getName();
+        this.name = memberPet.getName().name();
         this.file_url = memberPet.getFileUrl();
         this.description = memberPet.getPet().getDescription();
     }

@@ -14,7 +14,7 @@ public class PetRes{
 
     @Builder
     public PetRes(Pet pet){
-        this.name = pet.getCategory();
+        this.name = pet.getCategory().name();
         this.level = pet.getLevel();
         this.fileUrl = pet.getFileUrl();
         this.maxExp = pet.getMaxExp();
