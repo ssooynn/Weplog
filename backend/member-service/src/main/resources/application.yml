@@ -5,34 +5,7 @@ server:
 
 spring:
   application:
-    name: user-service
-
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #  ????
-    #    url: jdbc:mysql://localhost:3306/weplog?useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
-    #    username: ssafy
-    #    password: ssafy
-
-    # ec2 DB? ??
-    url: jdbc:mysql://k7a1061.p.ssafy.io:3306/weplog?useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=UTC
-    username: ssafy
-    password: yfass1234
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties:
-      hibernate:
-        default_batch_fetch_size: 500
-        #        show_sql: false
-        format_sql: true
-        show_sql: true
-
-    open-in-view: false
+    name: member-service
 
   security:
     oauth2:
@@ -96,9 +69,3 @@ oauth2:
   # ????? ??
   #  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
   authorizedRedirectUri: http://localost:3000/oauth2/redirect
-
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: refresh, health, beans

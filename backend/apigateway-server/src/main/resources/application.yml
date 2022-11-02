@@ -22,8 +22,8 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/user-service/member/**
             - Method=POST,GET
@@ -32,7 +32,7 @@ spring:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
 
-        - id: user-service
+        - id: member-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/oauth2/**
@@ -40,6 +40,33 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: achievement-service
+          uri: lb://ACHIEVEMENT-SERVICE
+          predicates:
+            - Path=/achievement-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/achievement-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/challenge-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/challenge-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
+        - id: plogging-service
+          uri: lb://PLOGGING-SERVICE
+          predicates:
+            - Path=/plogging-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/plogging-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
 #        - id: user-service
 #          uri: lb://USER-SERVICE
@@ -49,6 +76,7 @@ spring:
 #          filters:
 #            - RemoveRequestHeader=Cookie
 #            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
 
 
 token:
