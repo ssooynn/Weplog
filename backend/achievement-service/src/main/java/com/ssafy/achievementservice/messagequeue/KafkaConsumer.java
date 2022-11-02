@@ -116,6 +116,7 @@ public class KafkaConsumer {
         }
 
         List<UUID> memberIdList = (List<UUID>) map.get("memberIdList");
+
         List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdListAndTypeListWithAchievement(memberIdList, CHALLENGE_COMPLETE_CNT);
         List<AddRewardPointDto> rewardList = new ArrayList<>();
         for (MemberAchievement memberAchievement : achievementList) {

@@ -1,12 +1,15 @@
 package com.ssafy.challengeservice.service.challenge;
 
 import com.ssafy.challengeservice.dto.ChallengeDetailRes;
+import com.ssafy.challengeservice.dto.ChallengeRankingDto;
 import com.ssafy.challengeservice.dto.ChallengeReq;
 import com.ssafy.challengeservice.dto.ChallengeRes;
 import com.ssafy.challengeservice.dto.response.CreateChallengeRes;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ChallengeService {
 
@@ -19,4 +22,6 @@ public interface ChallengeService {
     ChallengeDetailRes getChallengeDetail(Long id);
 
     void finishChallenge();
+
+    List<ChallengeRankingDto> getRankChallenge(Long challengeId);
 }

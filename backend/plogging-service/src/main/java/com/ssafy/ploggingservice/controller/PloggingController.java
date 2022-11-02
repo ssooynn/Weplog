@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("plogging")
 public class PloggingController
 {
-    private static PloggingService ploggingService;
+    private final PloggingService ploggingService;
 
     @ApiOperation(value = "내 플로깅 리스트 조회")
     @GetMapping("")
