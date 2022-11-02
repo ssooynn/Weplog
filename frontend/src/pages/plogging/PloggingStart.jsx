@@ -88,7 +88,7 @@ export const PloggingStart = () => {
           경기도 용인시 기흥구 신갈동
         </Box>
         {/* 챌린지 선택 박스 */}
-        <Box width="75%" direction="row" justify="end">
+        {/* <Box width="75%" direction="row" justify="end">
           <Box
             width="60%"
             height="34px"
@@ -101,7 +101,7 @@ export const PloggingStart = () => {
           >
             챌린지 도전 중
           </Box>
-        </Box>
+        </Box> */}
       </Box>
       {/* 플로깅 시작 버튼 */}
       <Box

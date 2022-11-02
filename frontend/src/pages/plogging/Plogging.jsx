@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  createRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import useInterval from "../../hooks/UseInterval";
 import { useGeolocated } from "react-geolocated";
 import {
@@ -21,7 +27,7 @@ import {
   getDistanceFromLatLonInKm,
   timeToString,
 } from "../../utils/util";
-import { Avatar, Box, Image } from "grommet";
+import { Avatar, Box, FormField, Image, TextInput } from "grommet";
 import { StyledText } from "../../components/Common";
 import StopBtn from "../../assets/images/stop.png";
 import PauseBtn from "../../assets/images/pause.png";
@@ -54,6 +60,7 @@ const item = {
 };
 
 export const Plogging = () => {
+  const inputReferance = createRef();
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [tic, setTic] = useState(3);
@@ -230,7 +237,7 @@ export const Plogging = () => {
 
         const gps = {
           lat: coords.latitude + 0.0001 * time,
-          lng: coords.longitude,
+          lng: coords.longitude - 0.0001 * time,
         };
 
         // console.log("gps : ", gps);
@@ -455,7 +462,7 @@ export const Plogging = () => {
             width="80%"
             height="65%"
             style={{
-              boxShadow: "4px 4px -4px 4px rgb(172 172 172 / 0.3)",
+              boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
             }}
           >
             <Box width="100%" height="80%" overflow="scroll">
@@ -464,6 +471,21 @@ export const Plogging = () => {
             <Box width="100%" height="20%" direction="row">
               {/* 채팅 구역 */}
               {/* 채팅 버튼 */}
+              <Box width="70%" height="100%" align="end" justify="end"></Box>
+              <motion.button
+                style={{
+                  boxShadow: "none",
+                  textTransform: "none",
+                  fontSize: 12,
+                  fontWeight: "bold",
+                  color: "white",
+                  width: "30%",
+                  height: "100%",
+                  border: "none",
+                  fontFamily: `shsnMedium, sans-serif`,
+                  backgroundColor: "#57BA83",
+                }}
+              ></motion.button>
             </Box>
           </Box>
           {/* 정지, 일시정지 버튼 */}
