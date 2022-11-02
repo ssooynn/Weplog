@@ -29,20 +29,20 @@ public class MemberController {
 
     @ApiOperation(value = "회원정보입력")
    @PostMapping("/info")
-    public ResponseEntity<?> postMemberInfo(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")UUID memberId) {
         return null;
     }
 
     @ApiOperation(value = "동물 선택")
     @PostMapping("/pet")
-    public ResponseEntity<?> getPet(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<?> getPet(@ApiIgnore @RequestHeader("memberId")UUID memberId) {
         return ResponseEntity.ok("ANIMAL");
     }
 
     @ApiOperation(value = "닉네임 중복 검사")
     @GetMapping("/check/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname,
-                                           @RequestHeader("memberId")UUID memberId) {
+                                           @ApiIgnore @RequestHeader("memberId")UUID memberId) {
         return ResponseEntity.ok(memberId);
     }
 }
