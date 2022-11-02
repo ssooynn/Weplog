@@ -31,7 +31,7 @@ export function PersonModel(props) {
   }, [index, actions, names])
   return (
     <group ref={ref} {...props} dispose={null}>
-      <group rotation={[Math.PI / 2, 0, 0]} scale={0.1} position={[25, 6.3, -10]}>
+      <group rotation={[Math.PI / 2, 0, 0]} scale={0.05} position={[-15, 14, 18]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           castShadow
