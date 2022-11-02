@@ -9,5 +9,5 @@ public class CacheKey {
 
     public static final int RANKING_EXPIRE_SEC = 60 * 60 * 24 * 1; // 하루
 
-    public static final String CHALLENGE_RANKING = "challenge_rank";
+    public static final String CHALLENGE_RANKING = "challenge_ranking";
 }

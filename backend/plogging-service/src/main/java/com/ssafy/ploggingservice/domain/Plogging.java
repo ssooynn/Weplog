@@ -25,7 +25,6 @@ public class Plogging extends BaseEntity {
     private String startLoc;
 
     private String imageUrl;
-    private Boolean certFlag;
 
     @Column(length = 15)
     private double startLat;
