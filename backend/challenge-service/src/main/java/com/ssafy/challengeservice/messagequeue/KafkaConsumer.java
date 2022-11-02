@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.challengeservice.domain.challenge.Challenge;
+import com.ssafy.challengeservice.domain.memberchallenge.MemberChallenge;
 import com.ssafy.challengeservice.global.common.error.exception.NotFoundException;
 import com.ssafy.challengeservice.repository.ChallengeRepository;
+import com.ssafy.challengeservice.repository.MemberChallengeRepository;
 import com.ssafy.challengeservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ public class KafkaConsumer {
 
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
-
+    private final MemberChallengeRepository memberChallengeRepository;
 
     @KafkaListener(topics = "exit-plogging")
     public void createFirstMemberAchievementList(String kafkaMessage) {
@@ -39,15 +41,17 @@ public class KafkaConsumer {
             e.printStackTrace();
         }
 
-        if(map.get("challengeId") != null) {
-            Long challengeId = (Long) map.get("challengeId");
-            Challenge findChallenge = challengeRepository.findById(challengeId)
-                    .orElseThrow(() -> new NotFoundException(CHALLENGE_NOT_FOUND));
+        String memberId = (String) map.get("memberId");
+        Integer distance = (Integer) map.get("distance");
+        Integer time = (Integer) map.get("time");
+        List<MemberChallenge> findMemberChallenge = memberChallengeRepository.findByMemberIdWithChallengeInProgress(UUID.fromString(memberId));
+        for (MemberChallenge memberChallenge : findMemberChallenge) {
+            // 챌린지에 반영
+            Challenge challenge = memberChallenge.getChallenge();
+            challenge.updateAfterPlogging(distance, time);
 
-            Integer distance =(Integer) map.get("distance");
-            Integer time =(Integer) map.get("time");
-
-            findChallenge.updateAfterPlogging(distance, time);
+            // 멤버 챌린지에도 반영
+            memberChallenge.updateAfterPlogging(distance, time);
         }
 
         log.info("Kafka 플로깅 종료 후 챌린지 총 기록 갱신 성공");

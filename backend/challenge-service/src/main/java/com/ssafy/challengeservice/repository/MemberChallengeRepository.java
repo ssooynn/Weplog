@@ -17,7 +17,7 @@ public interface MemberChallengeRepository extends JpaRepository<MemberChallenge
     @Query("select mc from MemberChallenge mc join fetch mc.challenge where mc.challenge.id = :challengeId and mc.member.id = :memberId")
     Optional<MemberChallenge> findByChallengeIdAndMemberId(Long challengeId, UUID memberId);
 
-    @Query("select mc from MemberChallenge mc join fetch mc.challenge c join fetch c.challengeType ct where mc.member.id = :memberId and ct = :challengeType")
+    @Query("select mc from MemberChallenge mc join fetch mc.challenge c join fetch c.challengeType ct where mc.member.id = :memberId and ct = :challengeType and c.finishFlag = false ")
     List<MemberChallenge> findDuplicatedChallengeType(UUID memberId, ChallengeType challengeType);
 
     @Query("select mc from MemberChallenge mc join fetch mc.challenge c where mc.member.id = :memberId and c.finishFlag = false")
