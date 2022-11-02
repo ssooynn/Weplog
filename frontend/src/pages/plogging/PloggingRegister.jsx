@@ -25,13 +25,15 @@ import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
 import { Map, Polyline } from "react-kakao-maps-sdk";
 import { ChromePicker, SketchPicker } from "react-color";
+import { handleColor } from "../../utils/changeColor";
 
 export const PloggingRegister = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const mapLineRef = useRef();
   const [contentColor, setContentColor] = useState("white");
-  const { ploggingType, ploggingData, lineImage, lineImageBlack, address } =
-    location.state;
+  const [imageClicked, setIamgeClicked] = useState(false);
+  const { ploggingType, ploggingData, address, pathData } = location.state;
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -64,7 +66,10 @@ export const PloggingRegister = () => {
     }
   };
   const handleChange = (color) => {
-    console.log(color);
+    // console.log(color);
+    // const changedColor = handleColor(color.rgb);
+    // const lineMap = mapLineRef.current;
+    // lineMap.style = changedColor;
     setContentColor(color.hex);
   };
 
@@ -144,10 +149,10 @@ export const PloggingRegister = () => {
           zIndex: 1,
         }}
         ref={imageRef}
-        // onClick={() => {
-        //   if (contentColor === "white") setContentColor("black");
-        //   else setContentColor("white");
-        // }}
+        onClick={() => {
+          if (!imageClicked) setIamgeClicked(true);
+          else setIamgeClicked(false);
+        }}
       >
         <Box
           width="100%"
@@ -162,16 +167,36 @@ export const PloggingRegister = () => {
           }}
         >
           {format.find((element) => element === 1) !== undefined && (
-            <img
-              src={contentColor === "white" ? lineImage : lineImageBlack}
+            // <img
+            //   ref={mapLineRef}
+            //   src={lineImage}
+            //   style={{
+            //     position: "absolute",
+            //     width: "100%",
+            //     height: "100%",
+            //     zIndex: 1,
+            //     fill: "cover",
+            //   }}
+            // />
+            <svg
+              viewBox="0 0 2060 2880"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
               style={{
+                zIndex: 2,
                 position: "absolute",
-                width: "100%",
-                height: "100%",
-                zIndex: 1,
-                fill: "cover",
               }}
-            />
+            >
+              <path
+                fill={contentColor}
+                stroke={contentColor}
+                d={pathData}
+                strokeOpacity="0.7"
+                strokeWidth="35px"
+                strokeLinecap="round"
+              />
+            </svg>
           )}
           {/* 헤더 */}
           <Box
@@ -237,6 +262,20 @@ export const PloggingRegister = () => {
             </Box>
           )}
         </Box>
+        {imageClicked && (
+          <Box
+            width="100%"
+            height="100%"
+            align="center"
+            justify="center"
+            style={{
+              background: "rgba(0, 0, 0, 0.53)",
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
+          ></Box>
+        )}
         <img
           src={prev === null ? "/assets/images/defaultPic.png" : prev}
           style={{
@@ -349,7 +388,7 @@ export const PloggingRegister = () => {
             border: "none",
             fontFamily: `shsnMedium, sans-serif`,
             margin: "10px",
-            backgroundColor: "none",
+            backgroundColor: "white",
           }}
           onClick={() => {
             setOpen(true);
