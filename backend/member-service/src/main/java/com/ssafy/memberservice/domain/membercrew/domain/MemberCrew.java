@@ -21,11 +21,6 @@ public class MemberCrew extends BaseEntity {
     @Column(name = "member_crew_id")
     private Long id;
 
-    @Column(length = 15)
-    private String name;
-
-    private String imageUrl;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -33,4 +28,10 @@ public class MemberCrew extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
+
+    private long totalDistance;
+
+    private long totalTime;
+
+    private int totalCnt;
 }
