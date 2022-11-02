@@ -1,24 +1,23 @@
-package com.ssafy.memberservice.domain.membercrew.domain;
+package com.ssafy.memberservice.domain.calendar.domain;
+
 
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.domain.Member;
-import com.ssafy.memberservice.global.common.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class MemberCrew extends BaseEntity {
+@Builder
+public class Calendar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_crew_id")
+    @Column(name = "calendar_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,14 +28,10 @@ public class MemberCrew extends BaseEntity {
     @JoinColumn(name = "crew_id")
     private Crew crew;
 
-    private long totalDistance;
+    private LocalDateTime scheduleDate;
 
-    private long totalTime;
+    private String content;
 
-    private int totalCnt;
+    private String location;
 
-    @Column(unique = true, length = 10)
-    private String nickname;
-
-    private String profileImageUrl;
 }
