@@ -7,6 +7,7 @@ import { Crew } from "./pages/crew/Crew.jsx";
 // import { Footer, LogoHeader, NavBar } from "./components/Common.jsx";
 import { useNavigate } from "react-router-dom";
 import { Main } from "./pages/Main.jsx";
+import { MainExplore } from "./pages/MainExplore.jsx";
 import { PloggingStart } from "./pages/plogging/PloggingStart.jsx";
 import { Rank } from "./pages/ranking/Rank.jsx";
 import { Login } from "./pages/Login.jsx";
@@ -20,6 +21,7 @@ import { ChallengeDetail } from "./pages/challenge/ChallengeDetail.jsx";
 import { ChallengeRegister } from "./pages/challenge/ChallengeRegister.jsx";
 import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
+
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -80,8 +82,9 @@ export const Router = () => {
       <Route path="/" element={<LayoutNoLogo />}>
         <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/main" element={<Main/>}/>
+        <Route path="/mainexplore" element={<MainExplore/>}/>
         <Route path="/challenge/list" element={<ChallengeList />} />
-        <Route index element={<Main/>}/>
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />

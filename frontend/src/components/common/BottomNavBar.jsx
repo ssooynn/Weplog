@@ -82,14 +82,14 @@ export const NavBar = () => {
   return (
     <NavBarDiv isShow={show} opacity={opacity}>
       <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Link to="/main" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">
             <img
               width="25px"
               height="25px"
-              src={pathname === "/" ? HomeActive : Home}
+              src={pathname === "/main" ? HomeActive : Home}
             />
-            <NavBarText text="홈" active={pathname === "/" ? true : false} />
+            <NavBarText text="홈" active={pathname === "/main" ? true : false} />
           </Box>
         </Link>
       </motion.div>
