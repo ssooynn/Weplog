@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface MemberService {
     void updateMemberInfo(UUID id, MemberReq memberReq);
     boolean checkDoubleNickname(UUID id, String nickname);
-    void postMyPet(Long id);
+    void postMyPet(UUID memberId, Long petId);
 }
