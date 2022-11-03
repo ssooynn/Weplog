@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const DrawingCharacter = () => {
-    return (
-        <div>DrawingCharacter</div>
-    )
-}
+  return <div>DrawingCharacter</div>;
+};
