@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
@@ -17,4 +18,7 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
 
     @Query("select m from MemberPet m where m.member.id=:id and m.pet.id=:petId")
     MemberPet getMemberPetByMemberId(UUID id, Long petId);
+
+    @Query("select mp from MemberPet mp where mp.member.id = :memberId and mp.currentLevel = 1")
+    Optional<MemberPet> findGrowingPetByMemberId(UUID memberId);
 }

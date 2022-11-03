@@ -39,4 +39,10 @@ public class MemberCrew extends BaseEntity {
     private String nickname;
 
     private String profileImageUrl;
+
+    public void updateRecord(Integer distance, Integer time) {
+        this.totalCnt += 1;
+        this.totalDistance += distance;
+        this.totalTime += time;
+    }
 }
