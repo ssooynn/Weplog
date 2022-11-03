@@ -6,7 +6,6 @@ server:
 spring:
   application:
     name: member-service
-
   security:
     oauth2:
       client:
