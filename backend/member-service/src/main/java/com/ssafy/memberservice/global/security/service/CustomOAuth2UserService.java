@@ -5,7 +5,7 @@ import com.ssafy.memberservice.domain.member.domain.AuthProvider;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.member.domain.MemberRole;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
-import com.ssafy.memberservice.domain.memberdetail.repository.MemberDetailRepository;
+import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
 import com.ssafy.memberservice.global.common.error.exception.OAuthProcessingException;
 import com.ssafy.memberservice.global.messagequeue.KafkaProducer;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;

@@ -1,12 +1,16 @@
 package com.ssafy.memberservice.domain.memberdetail.dto;
 
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MyPageDetailRes {
     private String name;
     private String nickname;
