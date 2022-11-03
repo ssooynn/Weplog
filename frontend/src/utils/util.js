@@ -13,19 +13,20 @@ export const container = {
 };
 
 export const timeToString = (time) => {
-  if (time < 60) return `00:${time < 10 ? "0" + time : time}`;
+  if (time < 60) return `00:00:${time < 10 ? "0" + time : time}`;
   else if (time < 3600) {
     let minute = parseInt(time / 60);
     let second = time - minute * 60;
-    return `${minute < 10 ? "0" + minute : minute}:${
+    return `00:${minute < 10 ? "0" + minute : minute}:${
       second < 10 ? "0" + second : second
     }`;
   } else {
     let hour = parseInt(time / 3600);
-    let minute = time - hour * 3600;
+    let minute = parseInt((time - hour * 3600) / 60);
+    let second = parseInt(time - hour * 3600 - minute * 60);
     return `${hour < 10 ? "0" + hour : hour}:${
       minute < 10 ? "0" + minute : minute
-    }`;
+    }:${second < 10 ? "0" + second : second}`;
   }
 };
 

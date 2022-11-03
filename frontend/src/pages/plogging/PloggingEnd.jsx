@@ -11,10 +11,11 @@ import { Map, Polyline } from "react-kakao-maps-sdk";
 import { Box, Spinner } from "grommet";
 import { DataBox } from "./Plogging";
 import Charact from "../../assets/images/char.gif";
-import domtoimage from "dom-to-image";
-import { saveAs } from "file-saver";
 import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
 import { StyledText } from "../../components/Common";
+import $ from "jquery";
+window.jQuery = $;
+window.$ = $;
 
 export const PloggingEnd = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export const PloggingEnd = () => {
   const [address, setAddress] = useState();
   const lineRef = useRef();
   const { kakao } = window;
+  const [pathData, setPathData] = useState();
   const geocoder = new kakao.maps.services.Geocoder();
   // ploggingType: "",
   //     ploggingData: {
@@ -82,85 +84,118 @@ export const PloggingEnd = () => {
       var coord = new kakao.maps.LatLng(data.latlng[0].lat, data.latlng[0].lng);
       geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
     }
+
     return () => {
       setLoading(false);
     };
   }, []);
 
+  // const filter = (line) => {
+  //   // if (line.style) {
+  //   //   line.style.background = "none";
+  //   //   if (line.style.stroke) {
+  //   //     line.style.stroke = "rgb(255, 255, 255)";
+  //   //   }
+  //   //   if (line.style.color) {
+  //   //     line.style.color = "rgb(255, 255, 255)";
+  //   //   }
+  //   //   if (line.style.height === "6px") {
+  //   //     line.style = {};
+  //   //   }
+  //   //   if (line.style.fontFamily) {
+  //   //     line.style.fontSize = 0;
+  //   //   }
+  //   // }
+  //   // console.log(line);
+  //   // console.log(line.toString());
+  //   if (line.toString() === "[object SVGPathElement]") {
+  //     console.log(line);
+  //     setPathData((prev) => (prev = line));
+  //     return line;
+  //   }
+  //   return line;
+  //   // return line.tagName === "svg" || line.tagName === "path";
+  // };
+
   const handlePageChange = () => {
-    const line = lineRef.current;
+    const line = $("#daum-maps-shape-0")[0].attributes[2].value;
+    console.log(line);
 
-    line.style.background = "none";
-    const filter = (line) => {
-      if (line.style) {
-        line.style.background = "none";
-        if (line.style.stroke) {
-          line.style.stroke = "rgb(255, 255, 255)";
-        }
-        if (line.style.color) {
-          line.style.color = "rgb(255, 255, 255)";
-        }
-        if (line.style.height === "6px") {
-          line.style = {};
-        }
-        if (line.style.fontFamily) {
-          line.style.fontSize = 0;
-        }
-      }
-      return line.tagName !== "IMG" && line.tagName !== "SVG";
-    };
-    // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
-    //   console.log(blob);
-    //   setLineImage(blob);
-    //   saveAs(blob, "card.png");
-    //   // navigate("/plogging/register", {
-    //   //   state: {
-    //   //     ploggingType: ploggingType,
-    //   //     ploggingData: ploggingData,
-    //   //     lineImage: lineImage,
-    //   //   },
-    //   // });
-    // });
-
-    const lineBlack = lineRef.current;
-    lineBlack.style.background = "none";
-    const filterBlack = (lineBlack) => {
-      if (lineBlack.style) {
-        lineBlack.style.background = "none";
-        if (lineBlack.style.stroke) {
-          lineBlack.style.stroke = "rgb(0, 0, 0)";
-        }
-        if (lineBlack.style.color) {
-          lineBlack.style.color = "rgb(0, 0, 0)";
-        }
-        if (lineBlack.style.height === "6px") {
-          lineBlack.style = {};
-        }
-        if (lineBlack.style.fontFamily) {
-          lineBlack.style.fontSize = 0;
-        }
-      }
-      return lineBlack.tagName !== "IMG" && lineBlack.tagName !== "SVG";
-    };
-
-    domtoimage.toSvg(line, { filter: filter }).then(function (dataUrl) {
-      /* do something */
-      // console.log(dataUrl);
-      setLineImage(dataUrl);
-      domtoimage
-        .toSvg(lineBlack, { filter: filterBlack })
-        .then(function (dataUrlBlack) {
-          navigate("/plogging/register", {
-            state: {
-              ploggingType: ploggingType,
-              ploggingData: ploggingData,
-              lineImage: dataUrl,
-              lineImageBlack: dataUrlBlack,
-              address: address,
-            },
-          });
-        });
+    navigate("/plogging/register", {
+      state: {
+        ploggingType: ploggingType,
+        ploggingData: ploggingData,
+        address: address,
+        pathData: line,
+      },
     });
+    // line.style.background = "none";
+    // // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
+    // //   console.log(blob);
+    // //   setLineImage(blob);
+    // //   saveAs(blob, "card.png");
+    // //   // navigate("/plogging/register", {
+    // //   //   state: {
+    // //   //     ploggingType: ploggingType,
+    // //   //     ploggingData: ploggingData,
+    // //   //     lineImage: lineImage,
+    // //   //   },
+    // //   // });
+    // // });
+
+    // const lineBlack = lineRef.current;
+    // lineBlack.style.background = "none";
+    // const filterBlack = (lineBlack) => {
+    //   if (lineBlack.style) {
+    //     lineBlack.style.background = "none";
+    //     if (lineBlack.style.stroke) {
+    //       lineBlack.style.stroke = "rgb(0, 0, 0)";
+    //     }
+    //     if (lineBlack.style.color) {
+    //       lineBlack.style.color = "rgb(0, 0, 0)";
+    //     }
+    //     if (lineBlack.style.height === "6px") {
+    //       lineBlack.style = {};
+    //     }
+    //     if (lineBlack.style.fontFamily) {
+    //       lineBlack.style.fontSize = 0;
+    //     }
+    //   }
+    //   return lineBlack.tagName !== "IMG" && lineBlack.tagName !== "SVG";
+    // };
+
+    // domtoimage.toSvg(line, { filter: filter }).then(function (dataUrl) {
+    //   /* do something */
+    //   // console.log(dataUrl);
+    //   setLineImage(dataUrl);
+    //   // saveAs(dataUrl, "card.svg");
+    //   // console.log(pathData);
+    //   navigate("/plogging/register", {
+    //     state: {
+    //       ploggingType: ploggingType,
+    //       ploggingData: ploggingData,
+    //       lineImage: lineImage,
+    //       address: address,
+    //       PathData: pathData,
+    //     },
+    //   });
+    //   // domtoimage
+    //   //   .toSvg(lineBlack, { filter: filterBlack })
+    //   //   .then(function (dataUrlBlack) {
+    //   //     console.log(line.toString());
+    //   //     const mapref = ReactDOMServer.renderToString(line);
+    //   //     navigate("/plogging/register", {
+    //   //       state: {
+    //   //         ploggingType: ploggingType,
+    //   //         ploggingData: ploggingData,
+    //   //         lineImage: dataUrl,
+    //   //         lineImageBlack: dataUrlBlack,
+    //   //         address: address,
+    //   //         MapRef: mapref,
+    //   //       },
+    //   //     });
+    //   //   });
+    // });
   };
   if (loading) return <Spinner />;
   else
@@ -185,7 +220,7 @@ export const PloggingEnd = () => {
             }}
           />
         </Box>
-        <Box width="100%" height="63%" ref={lineRef}>
+        <Box width="100%" height="63%">
           <Map
             level={mapLevel}
             center={mapCenter}
@@ -200,16 +235,7 @@ export const PloggingEnd = () => {
                 strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
                 strokeStyle={"solid"} // 선의 스타일입니다
                 zIndex={100}
-              />
-            )}
-            {ploggingData.latlng && (
-              <Polyline
-                path={[ploggingData.latlng]}
-                strokeWeight={5} // 선의 두께 입니다
-                strokeColor={"#ffffff"} // 선의 색깔입니다
-                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                strokeStyle={"solid"} // 선의 스타일입니다
-                zIndex={1}
+                ref={lineRef}
               />
             )}
           </Map>
