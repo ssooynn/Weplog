@@ -1,11 +1,17 @@
 import { motion } from "framer-motion";
 import { container } from "../utils/util";
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useLocation, Link, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "grommet";
 import { MainMYContents } from "../components/main/MainMYContents";
-
+import { DetailDialog } from "../components/AlertDialog";
 const MainCategoryContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -121,7 +127,7 @@ const ArticleProfileTime = styled.div`
 
 export const Main = () => {
   // const location = useLocation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isMyCategory, setIsMyCategory] = useState(true);
   const OnPressExplore = () => setIsMyCategory(false);
   const OnPressMy = () => setIsMyCategory(true);
@@ -134,7 +140,7 @@ export const Main = () => {
   });
 
   return (
-    <div
+    <motion.div
       style={{
         width: "100%",
         justify: "center",
@@ -145,9 +151,7 @@ export const Main = () => {
       }}
     >
       <MainCategoryContainer>
-        <MainMyCategory onClick={() => navigate("/main")}>
-          MY
-        </MainMyCategory>
+        <MainMyCategory onClick={() => navigate("/main")}>MY</MainMyCategory>
         <MainExploreCategory
           isMyCategory={isMyCategory}
           onClick={OnPressExplore}
