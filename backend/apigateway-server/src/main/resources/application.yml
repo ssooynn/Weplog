@@ -48,7 +48,7 @@ spring:
             - Method=GET, POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
 
         - id: achievement-service
           uri: lb://ACHIEVEMENT-SERVICE
