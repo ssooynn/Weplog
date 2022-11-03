@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
+import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
 import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
+import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
+import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
 import com.ssafy.memberservice.global.messagequeue.dto.AddRewardPointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,8 @@ public class KafkaConsumer {
 
     private final MemberDetailRepository memberDetailRepository;
     private final MemberCrewRepository memberCrewRepository;
+    private final MemberPetRepository memberPetRepository;
+    private final KafkaProducer kafkaProducer;
 
     @KafkaListener(topics = "update-reward-point")
     public void createFirstMemberAchievementList(String kafkaMessage) {
@@ -39,8 +44,17 @@ public class KafkaConsumer {
         List<AddRewardPointDto> rewardPointDtoList = (List<AddRewardPointDto>) map.get("updateMember");
 
         for (AddRewardPointDto addRewardPointDto : rewardPointDtoList) {
-            MemberDetail findMemberDetail = memberDetailRepository.findByMemberId(UUID.fromString(addRewardPointDto.getMemberId())).get();
+            UUID memberId = UUID.fromString(addRewardPointDto.getMemberId());
+            MemberDetail findMemberDetail = memberDetailRepository.findByMemberId(memberId).get();
             findMemberDetail.addRewardPoint(addRewardPointDto.getRewardPoint());
+
+            // 키우고 있는 플로몬 경험치 주고 경험치 꽉차면 레벨업
+            MemberPet findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId).get();
+            boolean evolutionFlag = findMemberPet.addExp(addRewardPointDto.getRewardPoint());
+            // 레벨업 했으면 카프카로 보내서 도전과제 갱신
+            if (evolutionFlag) {
+                kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+            }
         }
 
         log.info("Kafka 회원 리워드 포인트 반영 성공");
@@ -83,14 +97,25 @@ public class KafkaConsumer {
         Integer distance = (Integer) map.get("distance");
         Integer time = (Integer) map.get("time");
         Long crewId = map.get("crewId") == null ? null : (Long) map.get("crewId");
+        
+        int rewardPoint = distance * 1; // m당 1점
 
-        // 멤버 리워드 갱신
+        // 멤버 리워드 갱신(플로몬 경험치 같이주기)
+        MemberDetail memberDetail = memberDetailRepository.findByMemberId(memberId).get();
+        memberDetail.addRewardPoint(rewardPoint); 
 
-
+        // 키우고 있는 플로몬 경험치 주고 경험치 꽉차면 레벨업
+        MemberPet findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId).get();
+        boolean evolutionFlag = findMemberPet.addExp(rewardPoint);
+        // 레벨업 했으면 카프카로 보내서 도전과제 갱신
+        if (evolutionFlag) {
+            kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+        }
 
         // 크루 플로깅이면 크루 플로깅 기록 갱신
         if (crewId != null) {
-
+            MemberCrew findMemberCrew = memberCrewRepository.findMemberCrewByMemberIdAndCrewId(memberId, crewId).get();
+            findMemberCrew.updateRecord(distance, time);
         }
 
     }
