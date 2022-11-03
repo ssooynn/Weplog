@@ -11,12 +11,14 @@
   border: 4px solid #cabcdc !important;
   border-radius: 0px !important;
 }
-.cs-message-input__content-editor-wrapper, .cs-message-input__content-editor, .cs-message-input__content-editor-container {
+.cs-message-input__content-editor-wrapper,
+.cs-message-input__content-editor,
+.cs-message-input__content-editor-container {
   background-color: #fff;
 }
 
 .cs-button--send {
-  color:#57BA83;
+  color: #57ba83;
 }
 .cs-message--outgoing {
   background-color: white;
@@ -25,7 +27,8 @@
 .cs-message--incoming .cs-message__content {
   background-color: rgba(235, 235, 235, 1);
 }
-.cs-message__content,.cs-message--outgoing .cs-message__content {
+.cs-message__content,
+.cs-message--outgoing .cs-message__content {
   background-color: rgba(87, 186, 131, 0.32);
 }
 .ps__thumb-y {
@@ -125,7 +128,7 @@
   height: 44px;
   border-radius: 22px;
   color: white;
-  text-align: csnter;
+  text-align: center;
   background-repeat: no-repeat;
   background-position: csnter;
   background-size: 48px;
@@ -214,4 +217,8 @@
   top: 1px;
   position: relative;
   font-size: 14px;
+}
+
+.cs-message {
+  align-items: center;
 }
