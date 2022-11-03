@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import shareIcon from '../../assets/icons/shareIcon.svg';
 import { CrewDetailWeplog } from '../../components/crew/crewDetail/CrewDetailWeplog.jsx';
 import { CrewDetailMember } from '../../components/crew/crewDetail/CrewDetailMember.jsx';
-import { CrewDetailOurPeed } from '../../components/crew/crewDetail/CrewDetailOurPeed.jsx';
+import { CrewDetailOurFeed } from '../../components/crew/crewDetail/CrewDetailOurFeed.jsx';
 import { CrewDetailTalk } from '../../components/crew/crewDetail/CrewDetailTalk.jsx';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
@@ -56,13 +56,13 @@ export const CrewDetail = () => {
                 <Box direction='row' margin='20px 0px' justify='between' width='250px'>
                     <Text size='14px' weight='500' color='#AEAEAE' style={clicked === 0 ? clickedStyle : {}} onClick={() => setClicked(0)}>Weplog </Text>
                     <Text size='14px' weight='400' color='#AEAEAE' style={clicked === 1 ? clickedStyle : {}} onClick={() => setClicked(1)}>TALK</Text>
-                    <Text size='14px' weight='400' color='#AEAEAE' style={clicked === 2 ? clickedStyle : {}} onClick={() => setClicked(2)}>Our Peed</Text>
+                    <Text size='14px' weight='400' color='#AEAEAE' style={clicked === 2 ? clickedStyle : {}} onClick={() => setClicked(2)}>Our Feed</Text>
                     <Text size='14px' weight='400' color='#AEAEAE' style={clicked === 3 ? clickedStyle : {}} onClick={() => setClicked(3)}>Member</Text>
                 </Box>
                 <Box direction='column'>
                     {clicked === 0 && <CrewDetailWeplog />}
                     {clicked === 1 && <CrewDetailTalk />}
-                    {clicked === 2 && <CrewDetailOurPeed />}
+                    {clicked === 2 && <CrewDetailOurFeed />}
                     {clicked === 3 && <CrewDetailMember />}
                 </Box>
             </Box>
