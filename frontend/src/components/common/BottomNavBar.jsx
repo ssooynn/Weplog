@@ -57,6 +57,9 @@ export const NavBar = () => {
     window.addEventListener("scroll", () => {
       if (mounted) {
         nowScrollTop = window.scrollY;
+        console.log(nowScrollTop);
+        console.log('innerHeight : ' + window.innerHeight)
+        console.log('offsetHeight ' + document.body.offsetHeight);
         let fixBoxHeight = "50";
         if (nowScrollTop > lastScrollTop && nowScrollTop > fixBoxHeight) {
           handleShow("hidden");
