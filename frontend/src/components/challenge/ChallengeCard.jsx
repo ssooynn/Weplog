@@ -2,7 +2,6 @@ import { Box, Text } from "grommet";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { ChallengeRankCard } from "../rank/ChallengeRankCard";
 
 const ProgressBar = styled.progress`
   appearance: none;
