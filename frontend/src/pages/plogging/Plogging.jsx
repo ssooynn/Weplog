@@ -27,7 +27,7 @@ import {
   getDistanceFromLatLonInKm,
   timeToString,
 } from "../../utils/util";
-import { Avatar, Box, FormField, Image, TextInput } from "grommet";
+import { Box, FormField, Image, TextInput } from "grommet";
 import { StyledText } from "../../components/Common";
 import StopBtn from "../../assets/images/stop.png";
 import PauseBtn from "../../assets/images/pause.png";
@@ -40,6 +40,24 @@ import { PloggingButton } from "../../components/common/Buttons";
 import { AlertDialog, MarkerDialog } from "../../components/AlertDialog";
 import { ReactComponent as MarkerIcon } from "../../assets/icons/marker.svg";
 import Button from "../../components/Button";
+import {
+  Avatar,
+  MainContainer,
+  Sidebar,
+  ConversationList,
+  Conversation,
+  ChatContainer,
+  ConversationHeader,
+  MessageGroup,
+  Message,
+  MessageList,
+  MessageInput,
+  TypingIndicator,
+} from "@chatscope/chat-ui-kit-react";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import "./plogging.css";
+import userIcon from "../../assets/icons/userIcon.svg";
+
 export const DataBox = ({ label, data }) => {
   return (
     <Box align="center" justify="center">
@@ -60,6 +78,7 @@ const item = {
 };
 
 export const Plogging = () => {
+  // -------------------변수----------------------------------
   const inputReferance = createRef();
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
@@ -101,6 +120,10 @@ export const Plogging = () => {
       },
       watchPosition: true,
     });
+
+  const [messages, setMessages] = useState([]);
+
+  // ------------------함수-----------------------------
 
   const preventClose = (e) => {
     e.preventDefault();
@@ -205,6 +228,12 @@ export const Plogging = () => {
       },
     });
   };
+
+  const handleMessageSend = (text) => {
+    setMessages((prev) => [...prev, text]);
+  };
+
+  // ----------------------hooks------------------------
 
   // 3초 후 시작
   useInterval(
@@ -463,15 +492,52 @@ export const Plogging = () => {
             height="65%"
             style={{
               boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
+              textAlign: "start",
             }}
           >
-            <Box width="100%" height="80%" overflow="scroll">
-              {/* 채팅 컴포넌트들 */}
-            </Box>
-            <Box width="100%" height="20%" direction="row">
-              {/* 채팅 구역 */}
-              {/* 채팅 버튼 */}
-              <Box width="70%" height="100%" align="end" justify="end"></Box>
+            {/* 채팅 구역 */}
+            <ChatContainer>
+              <MessageList>
+                <Message
+                  model={{
+                    message: "hihi",
+                    sentTime: "15 mins ago",
+                    sener: "dwdw",
+                    direction: "incoming",
+                    position: "single",
+                  }}
+                >
+                  <Avatar src={userIcon} name="Joe" />
+                  <Message.Footer sender="Emily" sentTime="just now" />
+                </Message>
+                {messages.map((mes, index) => {
+                  return (
+                    <Message
+                      key={index}
+                      model={{
+                        message: mes,
+                        sentTime: "15 mins ago",
+                        sener: "localSender",
+                        direction: "outgoing",
+                        position: "single",
+                      }}
+                    />
+                  );
+                })}
+              </MessageList>
+              <MessageInput
+                placeholder="Type message here"
+                attachButton={false}
+                onSend={(innerHtml, textContent, innerText, nodes) => {
+                  handleMessageSend(textContent);
+                }}
+                style={{
+                  background: "#fff",
+                }}
+              />
+            </ChatContainer>
+            {/* 채팅 버튼 */}
+            {/* <Box width="70%" height="100%" align="end" justify="end"></Box>
               <motion.button
                 style={{
                   boxShadow: "none",
@@ -485,8 +551,7 @@ export const Plogging = () => {
                   fontFamily: `shsnMedium, sans-serif`,
                   backgroundColor: "#57BA83",
                 }}
-              ></motion.button>
-            </Box>
+              ></motion.button> */}
           </Box>
           {/* 정지, 일시정지 버튼 */}
           {/* <Box width="100%" direction="row" justify="center" gap="25px">
