@@ -36,15 +36,16 @@ public class KafkaConsumer {
     public void createFirstMemberAchievementList(String kafkaMessage) {
         log.info("Counsume member-sign-up Kafka Message: -> {}", kafkaMessage);
 
-        Map<Object, Object> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
+            map = mapper.readValue(kafkaMessage, new TypeReference<Map<String, String>>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        Member findMember = memberRepository.findById((UUID) map.get("memberId")).get();
+        String memberId = map.get("memberId");
+        Member findMember = memberRepository.findById(UUID.fromString(memberId)).get();
         List<Achievement> allAchievementList = achievementRepository.findAll();
 
         memberAchievementRepository.saveAll(MemberAchievement.createFirstList(allAchievementList, findMember));
@@ -70,7 +71,7 @@ public class KafkaConsumer {
         typeList.add(FLOGGING_CNT);
         typeList.add(AchievementType.GROUP_FLOGGING_CNT);
 
-        UUID memberId = (UUID) map.get("memberId");
+        UUID memberId = UUID.fromString((String) map.get("memberId"));
         Integer distance = (Integer) map.get("distance");
         Integer time = (Integer) map.get("time");
         Boolean isGroupPlogging = (Boolean) map.get("isGroupPlogging");
@@ -115,7 +116,7 @@ public class KafkaConsumer {
             e.printStackTrace();
         }
 
-        List<UUID> memberIdList = (List<UUID>) map.get("memberIdList");
+        List<String> memberIdList = (List<String>) map.get("memberIdList");
 
         List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdListAndTypeListWithAchievement(memberIdList, CHALLENGE_COMPLETE_CNT);
         List<AddRewardPointDto> rewardList = new ArrayList<>();
@@ -146,7 +147,7 @@ public class KafkaConsumer {
             e.printStackTrace();
         }
 
-        UUID memberId = (UUID) map.get("memberId");
+        UUID memberId = UUID.fromString((String) map.get("memberId"));
         List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdAndTypeWithAchievement(memberId, PET_RAISE_COMPLETE_CNT);
 
         int addRewardPoint = 0;
