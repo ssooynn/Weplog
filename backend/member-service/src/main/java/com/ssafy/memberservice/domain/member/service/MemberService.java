@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface MemberService {
     void updateMemberInfo(UUID id, MemberReq memberReq);
-    boolean checkDoubleNickname(UUID id, String nickname);
+    boolean checkDoubleNickname(String nickname);
     void postMyPet(UUID memberId, Long petId);
 }
