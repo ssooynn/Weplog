@@ -9,6 +9,8 @@ import org.springframework.data.geo.Point;
 import java.awt.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CoordinateDto {
     double lat;
     double lng;
@@ -19,8 +21,8 @@ public class CoordinateDto {
     }
 
     public CoordinateDto(Point point){
-        this.lat = point.getX();
-        this.lng = point.getY();
+        this.lng = point.getX();
+        this.lat = point.getY();
     }
 
 }

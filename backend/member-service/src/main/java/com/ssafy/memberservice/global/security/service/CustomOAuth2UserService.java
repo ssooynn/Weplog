@@ -7,6 +7,7 @@ import com.ssafy.memberservice.domain.member.domain.MemberRole;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
 import com.ssafy.memberservice.domain.memberdetail.repository.MemberDetailRepository;
 import com.ssafy.memberservice.global.common.error.exception.OAuthProcessingException;
+import com.ssafy.memberservice.global.messagequeue.KafkaProducer;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import com.ssafy.memberservice.global.security.auth.OAuth2UserInfo;
 import com.ssafy.memberservice.global.security.auth.OAuth2UserInfoFactory;
@@ -28,6 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
     private final MemberDetailRepository memberDetailRepository;
+    private final KafkaProducer kafkaProducer;
 
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
@@ -81,6 +83,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .build();
 
         memberDetailRepository.save(memberDetail);
+
+        // 카프카(topic: member-sign-up)로 전달. 도전과제 첫 세팅용
+        kafkaProducer.sendInitAchievement("member-sign-up", save.getId().toString());
+
         return save;
     }
 }
