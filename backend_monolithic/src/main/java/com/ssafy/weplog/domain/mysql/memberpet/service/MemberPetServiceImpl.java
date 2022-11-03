@@ -5,7 +5,7 @@ import com.ssafy.weplog.domain.mysql.member.domain.Member;
 import com.ssafy.weplog.domain.mysql.memberpet.dao.MemberPetRepository;
 import com.ssafy.weplog.domain.mysql.memberpet.domain.MemberPet;
 import com.ssafy.weplog.domain.mysql.memberpet.dto.MemberPetRes;
-import com.ssafy.weplog.domain.mysql.pet.dao.PetRepository;
+import com.ssafy.weplog.domain.mysql.pet.controller.dao.PetRepository;
 import com.ssafy.weplog.domain.mysql.pet.domain.Pet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

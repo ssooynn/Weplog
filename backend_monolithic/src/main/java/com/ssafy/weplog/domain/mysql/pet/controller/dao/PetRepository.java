@@ -1,4 +1,4 @@
-package com.ssafy.weplog.domain.mysql.pet.dao;
+package com.ssafy.weplog.domain.mysql.pet.controller.dao;
 
 import com.ssafy.weplog.domain.mysql.pet.domain.Pet;
 import org.springframework.data.jpa.repository.JpaRepository;
