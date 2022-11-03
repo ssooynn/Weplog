@@ -37,7 +37,7 @@ export function SnowIsland(props) {
               <group name="Sphere_2" rotation={[Math.PI / 2, 0, 0]}>
                 <mesh name="Object_4" geometry={nodes.Object_4.geometry} material={materials['Material.001']} />
               </group>
-              <group name="TembokBelakang_Cube004_3" position={[0.02, 3.18, 0.7]} rotation={[Math.PI / 2, 0, -1.55]} scale={0.12}>
+              {/* <group name="TembokBelakang_Cube004_3" position={[0.02, 3.18, 0.7]} rotation={[Math.PI / 2, 0, -1.55]} scale={0.12}>
                 <mesh name="Object_6" geometry={nodes.Object_6.geometry} material={materials['Material.002']} />
                 <mesh name="Object_7" geometry={nodes.Object_7.geometry} material={materials['Material.003']} />
                 <mesh name="Object_8" geometry={nodes.Object_8.geometry} material={materials['Material.007']} />
@@ -63,7 +63,7 @@ export function SnowIsland(props) {
               </group>
               <group name="Cube009_6" position={[0, 3.34, 0.96]} rotation={[-1.67, 0.01, 1.42]} scale={0.05}>
                 <mesh name="Object_27" geometry={nodes.Object_27.geometry} material={materials['Material.019']} />
-              </group>
+              </group> */}
               <group name="Cylinder_7" position={[1.34, 2.47, 0]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
                 <mesh name="Object_29" geometry={nodes.Object_29.geometry} material={materials['Material.020']} />
               </group>
@@ -166,7 +166,7 @@ export function SnowIsland(props) {
               <group name="Cylinder001_Cylinder016_40" position={[0.93, 2.3, 1.62]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
                 <mesh name="Object_95" geometry={nodes.Object_95.geometry} material={materials['Material.021']} />
               </group>
-              <group name="Cylinder017_41" position={[-0.03, 3.23, 0.98]} rotation={[1.44, -0.18, 0.05]} scale={0.01}>
+              {/* <group name="Cylinder017_41" position={[-0.03, 3.23, 0.98]} rotation={[1.44, -0.18, 0.05]} scale={0.01}>
                 <mesh name="Object_97" geometry={nodes.Object_97.geometry} material={materials.None} />
               </group>
               <group name="Cube_Cube003_42" position={[-0.03, 3.23, 0.98]} rotation={[1.44, -0.18, 0.05]} scale={0.01}>
@@ -195,7 +195,7 @@ export function SnowIsland(props) {
               </group>
               <group name="Cube007_52" position={[-0.02, 3.29, 0.6]} rotation={[Math.PI / 2, 0, -2.59]} scale={0.03}>
                 <mesh name="Object_119" geometry={nodes.Object_119.geometry} material={materials['Material.022']} />
-              </group>
+              </group> */}
             </group>
           </group>
         </group>
