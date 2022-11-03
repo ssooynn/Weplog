@@ -1,8 +1,6 @@
 package com.ssafy.ploggingservice.controller;
 
-import com.ssafy.ploggingservice.dto.CoordinateDto;
-import com.ssafy.ploggingservice.dto.PloggingReq;
-import com.ssafy.ploggingservice.dto.PloggingRes;
+import com.ssafy.ploggingservice.dto.*;
 import com.ssafy.ploggingservice.service.PloggingService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +24,16 @@ public class PloggingController
 
     @ApiOperation(value = "내 플로깅 리스트 조회")
     @GetMapping("")
-    public ResponseEntity<?> getPloggingList(@RequestHeader("memberId") String memberId,
+    public ResponseEntity<Slice<PloggingRes>> getPloggingList(@RequestHeader("memberId") String memberId,
                                              Pageable pageable){
         Slice<PloggingRes> list = ploggingService.getPloggingList(UUID.fromString(memberId), pageable);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "플로깅 조회")
+    @ApiOperation(value = "플로깅 상세 조회")
     @GetMapping("/{ploggingId}")
-    public ResponseEntity<?> getPloggingList(@PathVariable("ploggingId")Long ploggingId){
-        PloggingRes plogging = ploggingService.getPloggingInfo(ploggingId);
+    public ResponseEntity<PloggingDetailRes> getPloggingList(@PathVariable("ploggingId")Long ploggingId){
+        PloggingDetailRes plogging = ploggingService.getPloggingInfo(ploggingId);
         return new ResponseEntity<>(plogging, HttpStatus.OK);
     }
 
@@ -53,12 +51,30 @@ public class PloggingController
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "플로깅 등록")
-    @PostMapping("")
+    @ApiOperation(value = "플로깅 사진 등록")
+    @PostMapping("/picture/{ploggingId}")
     public ResponseEntity<?> postPloggingRecording(@RequestHeader("memberId") String memberId,
-                                                   @RequestBody PloggingReq ploggingReq,
-                                                   @RequestParam("image") MultipartFile image){
-        ploggingService.postPlogging(UUID.fromString(memberId), ploggingReq, image);
-        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+                                                   @PathVariable Long ploggingId,
+                                                   @RequestPart MultipartFile image){
+        return ResponseEntity.ok(ploggingService.postPloggingPicture(UUID.fromString(memberId), ploggingId, image));
+    }
+
+    @ApiOperation(value = "플로깅 종료")
+    @PostMapping("/exit")
+    public ResponseEntity<CreatePloggingRes> createPloggingRecord(@RequestHeader("memberId") String memberId,
+                                                                  @RequestBody PloggingReq ploggingReq) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ploggingService.createPloggingRecord(memberId, ploggingReq));
+    }
+
+    @ApiOperation(value = "최근 피드 리스트 조회")
+    @GetMapping("/feed")
+    public ResponseEntity<List<PloggingFeedRes>> getPloggingFeed() {
+        return ResponseEntity.ok(ploggingService.getPloggingFeed());
+    }
+
+    @ApiOperation(value = "크루 플로깅 피드 리스트 조회")
+    @GetMapping("/feed/crew/{crewId}")
+    public ResponseEntity<List<PloggingFeedRes>> getPloggingFeedByCrew(@PathVariable Long crewId) {
+        return ResponseEntity.ok(ploggingService.getPloggingCrewFeed(crewId));
     }
 }

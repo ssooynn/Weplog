@@ -23,4 +23,12 @@ public class Coordinate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plogging_id")
     private Plogging plogging;
+
+    public static Coordinate create(Plogging plogging, double lon, double lng) {
+        Coordinate coordinate = new Coordinate();
+        coordinate.plogging = plogging;
+        coordinate.ploggingLoc = new Point(lon, lng);
+
+        return coordinate;
+    }
 }
