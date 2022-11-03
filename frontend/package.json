@@ -48,6 +48,7 @@
     "styled-components": "^5.3.5",
     "three": "^0.146.0",
     "tsparticles": "^2.4.0",
+    "tsparticles-interaction-light": "^2.5.1",
     "vivid-icons": "^1.0.10",
     "web-vitals": "^2.1.4"
   },
