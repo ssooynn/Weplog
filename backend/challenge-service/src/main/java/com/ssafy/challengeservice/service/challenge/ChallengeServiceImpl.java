@@ -2,11 +2,9 @@ package com.ssafy.challengeservice.service.challenge;
 
 
 import com.ssafy.challengeservice.domain.challenge.Challenge;
-import com.ssafy.challengeservice.domain.challengeranking.ChallengeRanking;
 import com.ssafy.challengeservice.domain.challengetype.ChallengeType;
 import com.ssafy.challengeservice.domain.member.Member;
 import com.ssafy.challengeservice.domain.memberchallenge.MemberChallenge;
-import com.ssafy.challengeservice.domain.redis.RedisChallengeRanking;
 import com.ssafy.challengeservice.dto.*;
 import com.ssafy.challengeservice.dto.response.CreateChallengeRes;
 import com.ssafy.challengeservice.global.common.error.exception.DuplicateException;
@@ -44,9 +42,6 @@ public class ChallengeServiceImpl implements ChallengeService{
     private final MemberChallengeRepository memberChallengeRepository;
     private final MemberRepository memberRepository;
     private final S3Upload s3Upload;
-    private final ChallengeLimitRepository challengeLimitRepository;
-    private RedisChallengeRankingRepository redisChallengeRankingRepository;
-    private final ChallengeRankingRepository challengeRankingRepository;
     private final KafkaProducer kafkaProducer;
 
     // 챌린지 생성
@@ -127,37 +122,28 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 챌린지 finishFlag = true로 update
         challengeRepository.updateFinishChallenge();
 
-        // 최종 랭킹 데이터 mysql에 넣기
+        // 챌린지 종료 후 달성과제 갱신용 데이터
         List<String> memberIdList = new ArrayList<>();
-        List<ChallengeRanking> mysqlRankingData = new ArrayList<>(); // mysql에 들어갈 데이터 추가
 
         for (Challenge challenge : finishChallengeList) {
             memberIdList.add(challenge.getMember().getId().toString());  // 리워드 갱신되어야할 멤버들 (카프카로 전달할 내용)
 
-            // 챌린지 별로 랭킹 조회해서 mysql에 저장
-            List<ChallengeRankingDto> rankChallenge = this.getRankChallenge(challenge.getId());
-
+            List<MemberChallenge> memberChallengeList = challenge.getMemberChallengeList();
             List<AddRewardPointDto> addRewardPointDtoList = new ArrayList<>();
-            for (ChallengeRankingDto challengeRankingDto : rankChallenge) {
-                Member findMember = memberRepository.findById(UUID.fromString(challengeRankingDto.getMemberId())).get();
-                Challenge findChallenge = challengeRepository.findById(challengeRankingDto.getChallengeId()).get();
-                mysqlRankingData.add(ChallengeRanking.create(challengeRankingDto, findMember, findChallenge));
-
+            for (MemberChallenge memberChallenge : memberChallengeList) {
                 // 해당 챌린지가 달성됐으면 멤버에게 리워드 제공(카프카 전송)
                 if (challenge.getProgress() >= challenge.getGoal()) {
-                    addRewardPointDtoList.add(AddRewardPointDto.create(findMember.getId()
-                            , challenge.getRewardPoint() * (1 + challengeRankingDto.getContribution() * 0.01)));
+                    addRewardPointDtoList.add(AddRewardPointDto.create(memberChallenge.getMember().getId()
+                            , challenge.getRewardPoint() * (1 + (memberChallenge.getTotalAmount() / challenge.getGoal()))));
                 }
             }
 
             // 챌린지 달성에 따른 리워드 포인트 제공
             kafkaProducer.sendRewardPoint("update-reward-point", addRewardPointDtoList);
         }
-        challengeRankingRepository.saveAll(mysqlRankingData); // mysql에 저장
 
         // 챌린지 종료에 따른 도전과제 달성도 반영
         kafkaProducer.sendAchievement("exit-challenge", memberIdList);
-
     }
 
     // 챌린지 랭킹 조회
@@ -166,26 +152,11 @@ public class ChallengeServiceImpl implements ChallengeService{
         Challenge findChallenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new NotFoundException(CHALLENGE_NOT_FOUND));
 
-        // 챌린지가 끝났으면 mysql에서 가져오기
-        if (findChallenge.getFinishFlag()) {
-            List<ChallengeRanking> challengeRankingByChallengeIdOrderByRankingWithMember
-                    = challengeRankingRepository.getChallengeRankingByChallengeIdOrderByRankingWithMember(challengeId);
+            List<ChallengeRankingDtoInterface> challengeRankingByChallengeIdOrderByRankingWithMember
+                    = challengeRepository.getRankingByChallengeId(challengeId);
 
             return challengeRankingByChallengeIdOrderByRankingWithMember
                     .stream().map(ranking -> ChallengeRankingDto.from(ranking))
                     .collect(Collectors.toList());
-        } else { // 챌린지가 안끝났으면 레디스나 데이터 갱신해서 가져오기
-            List<ChallengeRankingDtoInterface> rankingByChallengeId = new ArrayList<>();
-            if (findChallenge.getType().equals("DISTANCE")) {
-                rankingByChallengeId =  challengeRepository.getDistanceRankingByChallengeId(challengeId);
-            } else if (findChallenge.getType().equals("TIME")) {
-                rankingByChallengeId =  challengeRepository.getTimeRankingByChallengeId(challengeId);
-            } else if (findChallenge.getType().equals("PLOGGING_CNT")) {
-                rankingByChallengeId =  challengeRepository.getCntRankingByChallengeId(challengeId);
-            }
-
-            return rankingByChallengeId.stream().map(dtoInterface -> ChallengeRankingDto.from(dtoInterface))
-                    .collect(Collectors.toList());
-        }
     }
 }
