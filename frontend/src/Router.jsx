@@ -21,6 +21,7 @@ import { ChallengeDetail } from "./pages/challenge/ChallengeDetail.jsx";
 import { ChallengeRegister } from "./pages/challenge/ChallengeRegister.jsx";
 import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
+import { CrewDetail } from "./pages/crew/CrewDetail.jsx";
 
 
 const Layout = () => {
@@ -70,6 +71,7 @@ export const Router = () => {
         <Route path="/plogging/start" element={<PloggingStart />} />
         <Route path="/challenge/detail/:challengeId" element={<ChallengeDetail />} />
         <Route path="/challenge/register" element={<ChallengeRegister />} />
+        <Route path="/crew/detail/:crewId" element={<CrewDetail />} />
 
       </Route>
       {/* 로고 */}

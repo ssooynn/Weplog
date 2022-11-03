@@ -16,6 +16,21 @@ export const BootstrapButton = styled(motion.button)({
   backgroundColor: "#57BA83",
   borderRadius: "10px",
 });
+export const PloggingButtonCrew = styled(motion.button)({
+  boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
+  textTransform: "none",
+  fontSize: 18,
+  fontWeight: "bold",
+  padding: "6px 12px",
+  color: "white",
+  width: "100%",
+  height: "60px",
+  margin: "10px",
+  border: "none",
+  fontFamily: `shsnMedium, sans-serif`,
+  backgroundColor: "#57BA83",
+  borderRadius: "10px",
+});
 
 export const PloggingButton = styled(motion.button)({
   textTransform: "none",
