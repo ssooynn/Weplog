@@ -11,4 +11,7 @@ public interface MemberDetailRepository extends JpaRepository<MemberDetail, Long
 
     @Query("select md from MemberDetail md where md.member.id = :memberId")
     Optional<MemberDetail> findByMemberId(UUID memberId);
+
+    @Query("select m from MemberDetail m where m.member.id = :uuid")
+    MemberDetail findByUUId(UUID uuid);
 }

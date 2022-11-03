@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableJpaRepositories
 public class MemberServiceApplication {
 
     public static void main(String[] args) {
