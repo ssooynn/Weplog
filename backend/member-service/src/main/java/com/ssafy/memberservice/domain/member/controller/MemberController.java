@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.member.controller;
 
+import com.ssafy.memberservice.domain.member.dto.MemberReq;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -15,25 +16,15 @@ import java.util.UUID;
 @RequestMapping("/member")
 public class MemberController {
 
-//    @ApiOperation(value = "회원가입")
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> registerMember(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
-//        return null;
-//    }
-//
-//    @ApiOperation(value = "로그인")
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginMember(@ApiIgnore @AuthenticationPrincipal CustomUserDetails member) {
-//        return null;
-//    }
-
     @ApiOperation(value = "회원정보입력")
    @PostMapping("/info")
-    public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")UUID memberId) {
+    public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")UUID memberId,
+                                            @RequestBody MemberReq memberReq) {
+
         return null;
     }
 
-    @ApiOperation(value = "동물 선택")
+    @ApiOperation(value = "선택된 동물 등록")
     @PostMapping("/pet")
     public ResponseEntity<?> getPet(@ApiIgnore @RequestHeader("memberId")UUID memberId) {
         return ResponseEntity.ok("ANIMAL");
