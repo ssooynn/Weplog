@@ -28,6 +28,6 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     Optional<Member> findBySocialId(String socialId);
 
-
+    @Query("select m from Member m where m.nickname=:nickname")
     Optional<Member> findByNickname(String nickname);
 }
