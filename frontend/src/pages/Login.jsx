@@ -53,30 +53,30 @@ export const Login = () => {
               <Text
                 color="white"
                 size="small"
-                weight="300"
+                weight={300}
                 onClick={(e) => GoSignup()}
                 margin={{ right: "5px" }}
               >
                 회원가입
               </Text>
-              <Text color="white" size="small" weight="300">
+              <Text color="white" size="small" weight={300}>
                 |
               </Text>
               <Text
                 color="white"
                 size="small"
-                weight="300"
+                weight={300}
                 margin={{ left: "5px", right: "5px" }}
               >
                 아이디찾기
               </Text>
-              <Text color="white" size="small" weight="300">
+              <Text color="white" size="small" weight={300}>
                 /
               </Text>
               <Text
                 color="white"
                 size="small"
-                weight="300"
+                weight={300}
                 margin={{ left: "5px" }}
               >
                 비밀번호 찾기

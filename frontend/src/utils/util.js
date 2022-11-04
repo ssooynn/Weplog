@@ -1,3 +1,6 @@
+import { ReactComponent as Success } from "../assets/icons/success.svg";
+import { ReactComponent as Fail } from "../assets/icons/fail.svg";
+
 export const util = () => {};
 
 export const container = {
@@ -63,4 +66,38 @@ const deg2rad = (deg) => {
 // 거리에 따라 카카오맵의 레벨을 설정
 export const calcMapLevel = (distance) => {
   return Math.ceil(Math.log((2 * distance) / 125) / Math.log(2));
+};
+
+export const GrommetTheme = {
+  notification: {
+    toast: {
+      time: 500,
+      container: {
+        width: "small",
+      },
+    },
+    normal: {
+      toast: {
+        background: {
+          color: "white",
+          opacity: "strong",
+        },
+      },
+      icon: () => <Success />,
+    },
+    critical: {
+      toast: {
+        background: {
+          color: "white",
+          opacity: "strong",
+        },
+      },
+      icon: () => <Fail />,
+    },
+  },
+  carousel: {
+    animation: {
+      duration: 300,
+    },
+  },
 };

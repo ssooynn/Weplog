@@ -118,7 +118,7 @@ export const PloggingEnd = () => {
   // };
 
   const handlePageChange = () => {
-    const line = $("#daum-maps-shape-1")[0].attributes[2].value;
+    const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
     console.log(line);
 
     navigate("/plogging/register", {

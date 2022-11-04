@@ -43,6 +43,7 @@ export const PloggingStart = () => {
       animate="visible"
       variants={container}
       style={{
+        position: "relative",
         width: "100%",
         textAlign: "center",
         height: "calc(94vh - 50px)",
