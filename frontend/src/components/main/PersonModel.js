@@ -27,7 +27,7 @@ export function PersonModel(props) {
     // Reset and fade in animation after an index has been changed
     actions[names[index]].reset().fadeIn(0.5).play()
     // In the clean-up phase, fade it out
-    return () => actions[names[index]].fadeOut(0.5)
+    return () => actions[names[index]]
   }, [index, actions, names])
   return (
     <group ref={ref} {...props} dispose={null}>
