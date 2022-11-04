@@ -14,7 +14,7 @@ spring:
             client-id: 4d5deb7bab2f81566af27762cf47c6e8
             client-secret: UrdRXqMCQrmlWHC9fCcgoHMXD2HoFWtw
             #            redirect-uri: https://j7a603.p.ssafy.io/api/oauth2/callback/kakao
-            redirect-uri: http://localhost:8081/oauth2/callback/kakao
+            redirect-uri: ${login-host}/oauth2/callback/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
@@ -24,7 +24,7 @@ spring:
           naver:
             client-id: OQue5nz4eWJjpO9PSNY3
             client-secret: T98vh3ToEn
-            redirect-uri: http://localhost:8081/oauth2/callback/naver
+            redirect-uri: ${login-host}/oauth2/callback/naver
             authorization-grant-type: authorization_code
             scope:
               - email
@@ -32,7 +32,7 @@ spring:
           google:
             client-id: 867056260420-qm92mop4qnqtjl3dtt5bjfutpqbqoksa.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://localhost:8081/oauth2/callback/google
+            redirect-uri: ${login-host}/oauth2/callback/google
             scope:
               - profile
               - email
@@ -72,3 +72,5 @@ oauth2:
   authorizedRedirectUri: http://localost:3000/oauth2/redirect
 
 kafka-ip: 127.0.0.1:9092
+
+login-host: http://localhost:8081
