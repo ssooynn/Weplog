@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface PetService {
 
-	public List<PetRes> getPetsByLevel(int level);
-
+	List<PetRes> getPetsByLevel(int level);
+	PetRes getPetInfo(Long petId);
 }

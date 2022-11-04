@@ -6,7 +6,6 @@ import lombok.Data;
 import org.springframework.data.geo.Point;
 
 @Data
-@Builder
 public class MyPageDetailRes {
     private String name;
     private String nickname;
