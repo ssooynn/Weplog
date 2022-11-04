@@ -12,7 +12,7 @@ const StyledProfile = styled.img`
     bottom:-11px;
 `
 
-export const ProfileList = (data) => {
+const ProfileList = (data) => {
     return (
         <div style={{ position: 'relative' }}>
             <StyledProfile src='https://picsum.photos/100/100?random=42' left='0px' />
@@ -25,12 +25,12 @@ export const ProfileList = (data) => {
 
 export const CrewCard = (data) => {
     const navigate = useNavigate();
-    const goPage = (crewId) => {
-        navigate(`/crew/detail/${crewId}`);
+    const goPage = (clanId) => {
+
     }
     return (
-        <Box background={{ image: `url(https://picsum.photos/200/120?random=41)`, opacity: "0.4" }} round='small' elevation='small' pad='18px 12px' justify='column' width='180px' height='120px' margin='10px 4px'
-            onClick={(e) => { goPage(data.crewId) }}>
+        <Box background={{ image: `url(https://picsum.photos/200/120?random=41)`, opacity: "0.1" }} round='small' elevation='small' pad='18px 12px' justify='column' width='180px' height='120px' margin='10px 4px'
+            onClick={(e) => { goPage(data.clanId) }}>
             <Box direction='column' width='100%' height='70px'>
                 <Text size='14x' weight='500' >싸피 최강 비들리</Text>
                 <Text size='12px'>클랜에 관한 설명</Text>

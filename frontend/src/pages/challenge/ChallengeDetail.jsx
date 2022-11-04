@@ -28,6 +28,14 @@ const ProgressBar = styled.progress`
 export const ChallengeDetail = () => {
   //challengeId
   const { challengeId } = useParams();
+
+  const sharePage = () => {
+    window.navigator.share({
+      title: `Beedly`,
+      text: `히히`,
+      url: window.location.href,
+    });
+  };
   return (
     <motion.div>
       <div style={{ position: "relative" }}>
@@ -38,7 +46,7 @@ export const ChallengeDetail = () => {
           <Box style={{ position: "absolute", top: "110px", left: "10%", margin: "auto" }} background={{ color: "white" }} width="90%" height="250px" elevation="medium" pad="30px" justify='between'>
             <Box direction='row' justify='between' align='center'>
               <Text size="20px" weight="500">오늘도 지구와 함께</Text>
-              <img src={shareIcon} alt="공유" width="22px" height="22px"></img>
+              <img src={shareIcon} alt="공유" width="22px" height="22px" onClick={sharePage}></img>
             </Box>
             <Box>
               <Text size="12px" weight="400">Goal - 10Km 플로깅</Text>
