@@ -71,3 +71,4 @@ oauth2:
   #  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
   authorizedRedirectUri: http://localost:3000/oauth2/redirect
 
+kafka-ip: 127.0.0.1:9092

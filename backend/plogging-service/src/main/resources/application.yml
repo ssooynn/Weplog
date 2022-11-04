@@ -1,9 +1,16 @@
 server:
-  port: 0
+  port: 8083
 
 spring:
   application:
     name: plogging-service
+
+  # rabbitmq
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   instance:
@@ -17,3 +24,5 @@ eureka:
 logging:
   level:
     com.ssafy.ploggingservice: DEBUG
+
+kafka-ip: 127.0.0.1:9092
