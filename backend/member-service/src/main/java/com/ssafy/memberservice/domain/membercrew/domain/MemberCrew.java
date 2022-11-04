@@ -3,10 +3,7 @@ package com.ssafy.memberservice.domain.membercrew.domain;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class MemberCrew extends BaseEntity {
 
     @Id
@@ -39,6 +37,18 @@ public class MemberCrew extends BaseEntity {
     private String nickname;
 
     private String profileImageUrl;
+
+    public static MemberCrew create(Member findMember, Crew saveCrew) {
+        return MemberCrew.builder()
+                .member(findMember)
+                .crew(saveCrew)
+                .totalDistance(0)
+                .totalTime(0)
+                .totalCnt(0)
+                .nickname(findMember.getNickname())
+                .profileImageUrl(findMember.getProfileImageUrl())
+                .build();
+    }
 
     public void updateRecord(Integer distance, Integer time) {
         this.totalCnt += 1;
