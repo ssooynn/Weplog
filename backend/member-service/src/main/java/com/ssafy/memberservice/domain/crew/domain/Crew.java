@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.awt.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,12 +34,20 @@ public class Crew extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member crewMaster;
 
+    private int maxParticipantCnt = 30;
+
+    private Point crewLoc;
+
+    private String activityArea;
+
     public static Crew createCrew(CreateCrewRequest request, String imageUrl, Member member) {
         Crew crew = new Crew();
         crew.name = request.getName();
         crew.description = request.getDescription();
         crew.imageUrl = imageUrl;
         crew.crewMaster = member;
+        // TODO: crewLoc 백에서 처리할지 프론트에서 할지 정해야 함
+        crew.activityArea = request.getActivityArea();
 
         return crew;
     }

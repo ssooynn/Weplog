@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-    private static MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void updateMemberInfo(UUID id, MemberReq memberReq) {

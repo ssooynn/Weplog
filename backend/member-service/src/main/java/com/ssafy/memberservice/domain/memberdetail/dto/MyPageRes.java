@@ -9,6 +9,7 @@ import net.bytebuddy.utility.nullability.NeverNull;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class MyPageRes {
     private String name;
