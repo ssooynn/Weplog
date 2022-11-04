@@ -3,6 +3,7 @@ package com.ssafy.memberservice.domain.joinwaiting.domain;
 
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.domain.Member;
+import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Builder
-public class JoinWaiting {
+public class JoinWaiting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +35,14 @@ public class JoinWaiting {
     private String profileImageUrl;
 
     private String comment;
+
+    public static JoinWaiting create(Member member, Crew crew, String comment) {
+        return JoinWaiting.builder()
+                .member(member)
+                .crew(crew)
+                .comment(comment)
+                .nickname(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
+                .build();
+    }
 }

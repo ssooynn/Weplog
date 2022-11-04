@@ -73,7 +73,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             return false;
         }
 
-        String userId = request.getHeaders().get("userId").get(0);
+        String userId = request.getHeaders().get("memberId").get(0);
         if (!userId.equals(subject)) {
             returnValue = false;
         }
