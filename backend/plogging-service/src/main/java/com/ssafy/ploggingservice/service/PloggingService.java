@@ -1,8 +1,6 @@
 package com.ssafy.ploggingservice.service;
 
-import com.ssafy.ploggingservice.dto.CoordinateDto;
-import com.ssafy.ploggingservice.dto.PloggingReq;
-import com.ssafy.ploggingservice.dto.PloggingRes;
+import com.ssafy.ploggingservice.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,11 +11,16 @@ import java.util.UUID;
 
 public interface PloggingService {
 
-    void postPlogging(UUID memberId, PloggingReq ploggingReq, MultipartFile image);
+    CreatePloggingRes postPloggingPicture(UUID memberId, Long ploggingId, MultipartFile image);
     Slice<PloggingRes> getPloggingList(UUID memberId, Pageable pageable);
     List<CoordinateDto> getTrashCansLoc(double lat, double lng);
     ArrayList<ArrayList<CoordinateDto>> getPloggingLoc(double lat, double lng);
-    PloggingRes getPloggingInfo(Long id);
+    PloggingDetailRes getPloggingInfo(Long id);
 
 
+    CreatePloggingRes createPloggingRecord(String memberId, PloggingReq ploggingReq);
+
+    List<PloggingFeedRes> getPloggingFeed();
+
+    List<PloggingFeedRes> getPloggingCrewFeed(Long crewId);
 }

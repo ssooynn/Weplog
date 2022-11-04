@@ -18,6 +18,7 @@ import java.util.Map;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
+    /* topic: update-reward-point */
     public List<AddRewardPointDto> sendRewardPoint(String topic, List<AddRewardPointDto> addRewardPointDtoList) {
         Map<String, Object> kafkaData = new HashMap<>();
         kafkaData.put("updateMember", addRewardPointDtoList);
@@ -36,6 +37,7 @@ public class KafkaProducer {
         return addRewardPointDtoList;
     }
 
+    /* topic: exit-challenge */
     public void sendAchievement(String topic, List<String> memberIdList) {
         Map<String, Object> kafkaData = new HashMap<>();
         kafkaData.put("memberIdList", memberIdList);

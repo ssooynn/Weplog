@@ -72,7 +72,7 @@ public class ChallengeController {
 
 	@ApiOperation(value = "챌린지 내부 랭킹 조회")
 	@GetMapping("/rank/{challengeId}")
-	@Cacheable(value = CHALLENGE_RANKING, key = "#challengeId", unless = "#result == null", cacheManager = "cacheManager")
+//	@Cacheable(value = CHALLENGE_RANKING, key = "#challengeId", unless = "#result == null", cacheManager = "cacheManager")
 	public ResponseEntity<List<ChallengeRankingDto>> getRankInChallenge(@PathVariable("challengeId") Long challengeId) {
 		return ResponseEntity.ok(challengeService.getRankChallenge(challengeId));
 	}

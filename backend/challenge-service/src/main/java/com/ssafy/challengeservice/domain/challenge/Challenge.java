@@ -2,11 +2,14 @@ package com.ssafy.challengeservice.domain.challenge;
 
 import com.ssafy.challengeservice.domain.challengetype.ChallengeType;
 import com.ssafy.challengeservice.domain.member.Member;
+import com.ssafy.challengeservice.domain.memberchallenge.MemberChallenge;
 import com.ssafy.challengeservice.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,6 +49,9 @@ public class Challenge extends BaseEntity {
     private Integer totalDistance;
     private Integer totalPloggingCnt;
     private Integer totalTime;
+
+    @OneToMany(mappedBy = "challenge")
+    private List<MemberChallenge> memberChallengeList = new ArrayList<>();
 
     public void updateParticipantsCnt() {
         this.participantsCnt += 1;

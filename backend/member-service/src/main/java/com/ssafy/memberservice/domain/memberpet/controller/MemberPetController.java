@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 public class MemberPetController {
 
-    MemberPetService memberPetService;
+    private final MemberPetService memberPetService;
 
     @ApiOperation(value = "나의 모든 펫 조회하기")
     @GetMapping

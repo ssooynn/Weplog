@@ -36,6 +36,11 @@ public class Plogging extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @JoinColumn(name = "challenge_id")
-    private String ChallengeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "crew_id")
+    private Crew crew;
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

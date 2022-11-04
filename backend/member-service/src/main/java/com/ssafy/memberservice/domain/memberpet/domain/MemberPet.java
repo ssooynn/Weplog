@@ -54,12 +54,24 @@ public class MemberPet extends BaseEntity {
     public MemberPet(Member member, Pet pet, int currentLevel, int currentExp, int imageLevel){
         this.member = member;
         this.pet = pet;
-        this.currentExp = currentLevel;
-        this.currentLevel = currentExp;
+        this.currentExp = currentExp;
+        this.currentLevel = currentLevel;
         this.fileUrl = pet.getFileUrl();
         this.imageLevel = imageLevel;
         this.maxExp = pet.getMaxExp();
         this.name = pet.getCategory();
     }
 
+    public boolean addExp(int rewardPoint) {
+        if (this.currentExp + rewardPoint >= maxExp) {
+            this.currentExp = 0;
+            this.currentLevel += 1;
+
+            return true;
+        } else {
+            this.currentExp += rewardPoint;
+
+            return false;
+        }
+    }
 }
