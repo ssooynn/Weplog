@@ -57,13 +57,16 @@ const MainExploreCategory = styled.div`
 `;
 
 const PopUpButton = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // flex-direction: column;
   height: 80px;
+  width: 100vw;
   z-index: 1;
   margin-bottom:45px;
+  // position: fixed;
+  bottom: 0;
 `;
 
 const PopUpButtonArea = styled.div`
@@ -163,9 +166,7 @@ export const Main = () => {
           </MainExploreCategory>
         </MainCategoryContainer>
         <PopUpButton onClick={() => setOpen(true)}>
-          <div
-            style={{ fontSize: "17px", fontWeight: "500", color: "#B2B2B2" }}
-          >
+          <div style={{ fontSize: "17px", fontWeight: "500", color: "#B2B2B2" }}>
             모아보기
           </div>
           <PopUpButtonArea>
@@ -179,7 +180,7 @@ export const Main = () => {
         onDismiss={() => setOpen(false)}
         snapPoints={({ maxHeight }) => 0.93 * maxHeight}
       >
-      <PlomonTableTitle>
+      <PlomonTableTitle onClick={() => setOpen(false)}>
         <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
         모아보기
       </PlomonTableTitle>
