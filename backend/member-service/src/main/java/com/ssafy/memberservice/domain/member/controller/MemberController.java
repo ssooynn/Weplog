@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
-    private static MemberService memberService;
+    private final MemberService memberService;
 
     @ApiOperation(value = "회원정보입력")
    @PutMapping("/info")
@@ -38,7 +38,7 @@ public class MemberController {
     @ApiOperation(value = "닉네임 중복 검사", notes = "false -> 중복되지 않음, true -> 중복됨 ")
     @GetMapping("/check/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname,
-                                           @ApiIgnore @RequestHeader("memberId")UUID memberId) {
+                                           @ApiIgnore @RequestHeader("memberId") String memberId) {
         return new ResponseEntity<>(memberService.checkDoubleNickname(nickname), HttpStatus.OK);
     }
 }
