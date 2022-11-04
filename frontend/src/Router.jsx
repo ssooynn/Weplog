@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { NavBar } from "./components/common/BottomNavBar.jsx";
 import { LogoHeader } from "./components/common/Header.jsx";
 import { ChallengeList } from "./pages/challenge/ChallengeList.jsx";
@@ -23,6 +23,9 @@ import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
 import { CrewDetail } from "./pages/crew/CrewDetail.jsx";
 import { DrawingCharacter } from "./pages/plomon/DrawingCharacter.jsx";
+import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -61,6 +64,22 @@ const LayoutFullScreen = () => {
   );
 };
 
+const isLogin = () => {
+  console.log(!localStorage.getItem("isLogin"))
+  return localStorage.getItem("accessToken");
+};
+
+const PrivateRoute = ({ children }) => {
+  if (!isLogin) {
+    localStorage.setItem("from", "/");
+  }
+  return !isLogin ? <Navigate to='/login' /> : children;
+};
+
+const PublicRoute = ({ children }) => {
+  return isLogin ? <Navigate to='/' /> : children;
+};
+
 export const Router = () => {
   return (
     <Routes>
@@ -93,6 +112,7 @@ export const Router = () => {
         <Route path="/challenge/list" element={<ChallengeList />} />
         <Route index element={<Main />} />
       </Route>
+      <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/mypage/user" element={<MypageUser />} />

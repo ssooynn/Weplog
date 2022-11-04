@@ -13,6 +13,6 @@ const InputStyled = styled.input`
     color:#7e7e7e;
   }
 `;
-export function StyledInput({ chidren, height, width, border, padding, margin, ...props }) {
-  return <InputStyled type="text" height={height} width={width} border={border} padding={padding} margin={margin} {...props}></InputStyled>;
+export function StyledInput({ chidren, height, width, border, padding, margin, type, ...props }) {
+  return <InputStyled type={type ? type : 'text'} height={height} width={width} border={border} padding={padding} margin={margin} {...props}></InputStyled>;
 }
