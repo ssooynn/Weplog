@@ -18,7 +18,7 @@ export function SnowIsland(props) {
     // Reset and fade in animation after an index has been changed
     actions[names[index]].reset().fadeIn(0.5).play()
     // In the clean-up phase, fade it out
-    return () => actions[names[index]].fadeOut(0.5)
+    return () => actions[names[index]]
   }, [index, actions, names])
   
   
@@ -100,7 +100,7 @@ export function SnowIsland(props) {
               <group name="Cylinder001_Cylinder005_18" position={[1.35, 2.51, -1.23]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
                 <mesh name="Object_51" geometry={nodes.Object_51.geometry} material={materials['Material.021']} />
               </group>
-              <group name="Cylinder006_19" position={[1.47, 2.44, -0.4]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
+              {/* <group name="Cylinder006_19" position={[1.47, 2.44, -0.4]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
                 <mesh name="Object_53" geometry={nodes.Object_53.geometry} material={materials['Material.020']} />
               </group>
               <group name="Cylinder001_Cylinder006_20" position={[1.47, 2.44, -0.4]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
@@ -165,7 +165,7 @@ export function SnowIsland(props) {
               </group>
               <group name="Cylinder001_Cylinder016_40" position={[0.93, 2.3, 1.62]} rotation={[Math.PI / 2, 0, 0]} scale={0.17}>
                 <mesh name="Object_95" geometry={nodes.Object_95.geometry} material={materials['Material.021']} />
-              </group>
+              </group> */}
               {/* <group name="Cylinder017_41" position={[-0.03, 3.23, 0.98]} rotation={[1.44, -0.18, 0.05]} scale={0.01}>
                 <mesh name="Object_97" geometry={nodes.Object_97.geometry} material={materials.None} />
               </group>
