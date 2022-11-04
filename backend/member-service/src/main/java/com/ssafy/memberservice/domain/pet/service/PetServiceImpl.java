@@ -20,10 +20,12 @@ public class PetServiceImpl implements PetService {
 
 	@Override
 	public List<PetRes> getPetsByLevel(int level) {
-		List<PetRes> list = petRepository.getPetsByLevel(level).stream().map(m->new PetRes(m))
+		return petRepository.getPetsByLevel(level).stream().map(PetRes::new)
 				.collect(Collectors.toList());
-		return list;
 	}
 
-
+	@Override
+	public PetRes getPetInfo(Long petId) {
+		return new PetRes(petRepository.findById(petId).get());
+	}
 }
