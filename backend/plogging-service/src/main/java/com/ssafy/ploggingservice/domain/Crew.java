@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
 
@@ -30,4 +31,10 @@ public class Crew extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member crewMaster;
+
+    private int maxParticipantCnt = 30;
+
+    private Point crewLoc;
+
+    private String activityArea;
 }
