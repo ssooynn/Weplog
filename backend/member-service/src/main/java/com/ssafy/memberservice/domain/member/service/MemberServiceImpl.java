@@ -30,7 +30,9 @@ public class MemberServiceImpl implements MemberService{
     @Transactional(readOnly = true)
     @Override
     public boolean checkDoubleNickname(String nickname) {
+        log.info("서비스 들어옴" + nickname);
         Optional<Member> member = memberRepository.findByNickname(nickname);
+        log.info("레포지토리 조회함" + member);
         return member.isPresent();
     }
 
