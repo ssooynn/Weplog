@@ -29,15 +29,21 @@ export const ChallengeRegister = () => {
   const changeType = (str) => {
     console.log(str);
     setType(str);
-  }
+  };
   return (
     <motion.div style={{ minHeight: "88vh" }}>
       {/* 커버 사진 설정 */}
       <Box justify="center" align="center">
         {profile === "" ? (
           <label htmlFor="image" style={{ width: "100%" }}>
-            <Box height="250px" width="100%" background={{ color: "rgb(206,206,206)" }} justify="center" align="center">
-              <Text size="14px" weight="500" color="#565656" margin="10px">
+            <Box
+              height="250px"
+              width="100%"
+              background={{ color: "rgb(206,206,206)" }}
+              justify="center"
+              align="center"
+            >
+              <Text size="14px" weight={500} color="#565656" margin="10px">
                 커버 사진 등록하기
               </Text>
               <img src={plus} width="20px" height="20px" alt="프로필 편집" />
@@ -54,9 +60,15 @@ export const ChallengeRegister = () => {
           </label>
         ) : (
           <Box height="280px" width="100%" justify="center" align="center">
-            <img src={profile} height="250px" width="100%" alt="커버 사진" style={{ objectFit: "cover" }} />
+            <img
+              src={profile}
+              height="250px"
+              width="100%"
+              alt="커버 사진"
+              style={{ objectFit: "cover" }}
+            />
             <label htmlFor="image" style={{ alignSelf: "start" }}>
-              <Text size="14px" weight="500" color="#565656" margin="10px">
+              <Text size="14px" weight={500} color="#565656" margin="10px">
                 커버 사진 수정하기
               </Text>
               <img src={gallery} width="15px" height="15px" alt="프로필 편집" />
@@ -73,7 +85,14 @@ export const ChallengeRegister = () => {
           </Box>
         )}
         {/* 데이터 입력 */}
-        <Box direction="column" pad="30px 24px" width="100%" justify="around" align="center" height={{ min: "450px" }}>
+        <Box
+          direction="column"
+          pad="30px 24px"
+          width="100%"
+          justify="around"
+          align="center"
+          height={{ min: "450px" }}
+        >
           <Grid
             width="90%"
             rows={["60px", "60px", "60px", "60px"]}
@@ -91,7 +110,7 @@ export const ChallengeRegister = () => {
             ]}
           >
             <Box gridArea="name" justify="center" align="start">
-              <Text weight="500" size="16px">
+              <Text weight={500} size="16px">
                 챌린지 이름
               </Text>
             </Box>
@@ -108,27 +127,55 @@ export const ChallengeRegister = () => {
               />
             </Box>
             <Box gridArea="type" justify="center" align="start">
-              <Text weight="500" size="16px">
+              <Text weight={500} size="16px">
                 챌린지 유형
               </Text>
             </Box>
-            <Box gridArea="typedata" justify="between" align="center" direction="row" width="80%">
-              <Text weight="500" size="16px" style={{ color: `${type === "distance" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("distance")}>
+            <Box
+              gridArea="typedata"
+              justify="between"
+              align="center"
+              direction="row"
+              width="80%"
+            >
+              <Text
+                weight={500}
+                size="16px"
+                style={{
+                  color: `${type === "distance" ? "#00853B" : "#7E7E7E"}`,
+                }}
+                onClick={(e) => changeType("distance")}
+              >
                 거리
               </Text>
-              <Text weight="500" size="16px" style={{ color: `${type === "count" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("count")}>
+              <Text
+                weight={500}
+                size="16px"
+                style={{ color: `${type === "count" ? "#00853B" : "#7E7E7E"}` }}
+                onClick={(e) => changeType("count")}
+              >
                 횟수
               </Text>
-              <Text weight="500" size="16px" style={{ color: `${type === "time" ? "#00853B" : "#7E7E7E"}` }} onClick={(e) => changeType("time")}>
+              <Text
+                weight={500}
+                size="16px"
+                style={{ color: `${type === "time" ? "#00853B" : "#7E7E7E"}` }}
+                onClick={(e) => changeType("time")}
+              >
                 시간
               </Text>
             </Box>
             <Box gridArea="goal" justify="center" align="start">
-              <Text weight="500" size="16px">
+              <Text weight={500} size="16px">
                 목표
               </Text>
             </Box>
-            <Box gridArea="goaldata" justify="start" align="center" direction="row">
+            <Box
+              gridArea="goaldata"
+              justify="start"
+              align="center"
+              direction="row"
+            >
               <StyledInput
                 placeholder="0"
                 value={name}
@@ -140,13 +187,24 @@ export const ChallengeRegister = () => {
                 margin="0px"
               />
 
-              {(type === "distance" || type === "") && <Text weight="500" size="16px">Km</Text>}
-              {type === "count" && <Text weight="500" size="16px">회</Text>}
-              {type === "time" && <Text weight="500" size="16px">시간</Text>}
-
+              {(type === "distance" || type === "") && (
+                <Text weight={500} size="16px">
+                  Km
+                </Text>
+              )}
+              {type === "count" && (
+                <Text weight={500} size="16px">
+                  회
+                </Text>
+              )}
+              {type === "time" && (
+                <Text weight={500} size="16px">
+                  시간
+                </Text>
+              )}
             </Box>
             <Box gridArea="endDate" justify="center" align="start">
-              <Text weight="500" size="16px">
+              <Text weight={500} size="16px">
                 기한
               </Text>
             </Box>

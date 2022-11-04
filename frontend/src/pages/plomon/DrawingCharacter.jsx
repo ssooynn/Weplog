@@ -9,7 +9,7 @@ import { BootstrapButton } from "../../components/common/Buttons";
 import { PlomonEgg } from "../../components/PlomonEgg";
 import { container } from "../../utils/util";
 import { loadLightInteraction } from "tsparticles-interaction-light";
-import LightEffect from "../../assets/images/light.gif";
+import LightEffect from "../../assets/images/light.png";
 import { tsParticles } from "tsparticles-engine";
 export const DrawingCharacter = () => {
   const [eggs, setEggs] = useState([1, 2, 3]);
@@ -43,19 +43,7 @@ export const DrawingCharacter = () => {
           "linear-gradient(307.96deg, rgba(87, 186, 131, 0.296), rgba(29, 38, 255, 0.088))",
       }}
     >
-      {/* {eggClikced && (
-        <img
-          src={LightEffect}
-          style={{
-            width: "100vw",
-            height: "100vh",
-            position: "absolute",
-            left: 0,
-            zIndex: "3000",
-            fill: "cover",
-          }}
-        />
-      )} */}
+      {/* {eggClikced}/// */}
       <Box
         width="100%"
         height="100%"
