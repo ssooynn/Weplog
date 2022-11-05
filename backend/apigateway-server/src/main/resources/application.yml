@@ -18,7 +18,8 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+#            allowedOrigins: "*"
+            allowed-origin-patterns: "*"
             allow-credentials: true   #추가
             allowedHeaders:
               - x-requested-with
@@ -35,7 +36,7 @@ spring:
               - OPTIONS
               - DELETE
               - PATCH
-
+        add-to-simple-url-handler-mapping: true
 
       default-filters:
         - name: GlobalFilter
