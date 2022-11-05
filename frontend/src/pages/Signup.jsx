@@ -109,7 +109,7 @@ export const Signup = () => {
           side: "bottom",
         }}
       >
-        <Text size="16px" weight="500">
+        <Text size="16px" weight={500}>
           {" "}
           회원가입
         </Text>
@@ -144,7 +144,7 @@ export const Signup = () => {
         </Box>
         {/* 이름 */}
         <Box margin="40px 0px 0px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
+          <Text color="#7E7E7E" weight={400} alignSelf="start" size="14px">
             이름
           </Text>
           <StyledInput
@@ -159,7 +159,7 @@ export const Signup = () => {
         </Box>
         {/* 닉네임 */}
         <Box margin="20px 0px 0px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
+          <Text color="#7E7E7E" weight={400} alignSelf="start" size="14px">
             닉네임
           </Text>
           <Box direction="row" justify="between">
@@ -185,10 +185,10 @@ export const Signup = () => {
         {/* 몸무게 */}
         <Box margin="20px 0px 0px 0px">
           <Box direction="row" justify="between">
-            <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
+            <Text color="#7E7E7E" weight={400} alignSelf="start" size="14px">
               몸무게
             </Text>
-            <Text color="#7E7E7E" weight="400" alignSelf="center" size="8px">
+            <Text color="#7E7E7E" weight={400} alignSelf="center" size="8px">
               * 플로깅 시 칼로리 계산에 이용됩니다.
             </Text>
           </Box>
@@ -203,14 +203,14 @@ export const Signup = () => {
               width="50%"
               type='number'
             />
-            <Text color="#7E7E7E" weight="400" alignSelf="center" size="14px">
+            <Text color="#7E7E7E" weight={400} alignSelf="center" size="14px">
               Kg
             </Text>
           </Box>
         </Box>
         {/* 약관 */}
         <Box margin="20px 0px 20px 0px">
-          <Text color="#7E7E7E" weight="400" alignSelf="start" size="14px">
+          <Text color="#7E7E7E" weight={400} alignSelf="start" size="14px">
             약관 동의
           </Text>
           <Box
@@ -235,7 +235,7 @@ export const Signup = () => {
                 style={{ alignSelf: "center", transform: "scale(1)" }}
                 onChange={(e) => CheckAllChange()}
               />
-              <Text size="14px" weight="400" margin={{ left: "10px" }}>
+              <Text size="14px" weight={400} margin={{ left: "10px" }}>
                 모두 동의
               </Text>
             </Box>
@@ -252,7 +252,7 @@ export const Signup = () => {
               <Text
                 color="#7E7E7E"
                 size="12px"
-                weight="400"
+                weight={400}
                 margin={{ left: "10px" }}
               >
                 쇼핑몰 이용약관
@@ -270,7 +270,7 @@ export const Signup = () => {
               <Text
                 color="#7E7E7E"
                 size="12px"
-                weight="400"
+                weight={400}
                 margin={{ left: "10px" }}
               >
                 개인정보처리방침
@@ -288,7 +288,7 @@ export const Signup = () => {
               <Text
                 color="#7E7E7E"
                 size="12px"
-                weight="400"
+                weight={400}
                 margin={{ left: "10px" }}
               >
                 개인정보 처리의 위탁

@@ -118,7 +118,7 @@ export const PloggingEnd = () => {
   // };
 
   const handlePageChange = () => {
-    const line = $("#daum-maps-shape-0")[0].attributes[2].value;
+    const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
     console.log(line);
 
     navigate("/plogging/register", {
@@ -275,9 +275,7 @@ export const PloggingEnd = () => {
                   height: "50px",
                 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => {
-                  handlePageChange();
-                }}
+                onClick={handlePageChange}
               >
                 {!register ? "다음" : "플로깅 완료!"}
               </BootstrapButton>

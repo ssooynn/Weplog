@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import useInterval from "../../hooks/UseInterval";
@@ -25,9 +26,17 @@ import {
   calcDistance,
   container,
   getDistanceFromLatLonInKm,
+  GrommetTheme,
   timeToString,
 } from "../../utils/util";
-import { Box, FormField, Image, TextInput } from "grommet";
+import {
+  Box,
+  FormField,
+  Grommet,
+  Image,
+  Notification,
+  TextInput,
+} from "grommet";
 import { StyledText } from "../../components/Common";
 import StopBtn from "../../assets/images/stop.png";
 import PauseBtn from "../../assets/images/pause.png";
@@ -36,6 +45,7 @@ import TrashIcon from "../../assets/images/trash.png";
 import DishIcon from "../../assets/images/dish.png";
 import GarbageIcon from "../../assets/images/garbage.png";
 import DesIcon from "../../assets/images/destination.png";
+
 import { PloggingButton } from "../../components/common/Buttons";
 import { AlertDialog, MarkerDialog } from "../../components/AlertDialog";
 import { ReactComponent as MarkerIcon } from "../../assets/icons/marker.svg";
@@ -57,6 +67,9 @@ import {
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./plogging.css";
 import userIcon from "../../assets/icons/userIcon.svg";
+import SockJS from "sockjs-client";
+import * as StompJs from "@stomp/stompjs";
+import ChatSound from "../../assets/sounds/chatNoti.mp3";
 
 export const DataBox = ({ label, data }) => {
   return (
@@ -76,6 +89,7 @@ const item = {
     opacity: 1,
   },
 };
+var client = null;
 
 export const Plogging = () => {
   // -------------------변수----------------------------------
@@ -110,6 +124,10 @@ export const Plogging = () => {
   const [lastLocation, setLastLocation] = useState(null);
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const [markerPosition, setMarkerPosition] = useState();
+  const [markerPositions, setMarkerPositions] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const audioPlayer = useRef(null);
+
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -125,6 +143,13 @@ export const Plogging = () => {
 
   // ------------------함수-----------------------------
 
+  // 소리 재생
+  const playAudio = () => {
+    audioPlayer.current.stop();
+    audioPlayer.current.play();
+  };
+
+  // 나가기 방지
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
@@ -142,16 +167,27 @@ export const Plogging = () => {
 
   // 마커 설정
   const handleMarker = (index) => {
-    setMarker(index);
+    setMarkerPositions((prev) => {
+      return [
+        ...prev,
+        {
+          lat: markerPosition.lat,
+          lng: markerPosition.lng,
+          marker: index,
+        },
+      ];
+    });
     setMarkerOpen(false);
   };
 
   const handleMapClick = (latLng) => {
     setMarkerOpen(true);
     setMarker(undefined);
-    setMarkerPosition({
-      lat: latLng.getLat(),
-      lng: latLng.getLng(),
+    setMarkerPosition((prev) => {
+      return (prev = {
+        lat: latLng.getLat(),
+        lng: latLng.getLng(),
+      });
     });
   };
 
@@ -233,6 +269,135 @@ export const Plogging = () => {
     setMessages((prev) => [...prev, text]);
   };
 
+  // 웹소켓 구독
+  const subscribe = () => {
+    if (client != null) {
+      console.log("subs!!!!!!!!!");
+      client.subscribe("/sub/ride/room/" + "", (response) => {
+        console.log(response);
+        const data = JSON.parse(response.body);
+        // 1. 채팅일 때
+        if (data) {
+        }
+        // 2. 마커 위치일 때
+        else if (data) {
+          setVisible(true);
+          playAudio();
+        }
+        // 3. 사용자들 위치일 때
+        else if (data) {
+        }
+        // rideMembers.members[data.memberId] = data;
+        // setRideMembers({ ...rideMembers });
+      });
+    }
+  };
+
+  //웹소켓 위치 발행
+  const publishLocation = (lat, lng) => {
+    if (client != null) {
+      client.publish({
+        destination: "/pub/ride/group",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({
+          messageType: "CURRENT_POSITION",
+          lat: lat,
+          lng: lng,
+        }),
+      });
+    }
+  };
+
+  //웹소켓 마커 발행
+  const publishMarker = (marker) => {
+    if (client != null) {
+      client.publish({
+        destination: "/pub/ride/group",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({
+          messageType: "CURRENT_MARKER",
+          lat: marker.lat,
+          lng: marker.lng,
+          marker: 0,
+        }),
+      });
+    }
+  };
+
+  //웹소켓 채팅 발행
+  const publishChatting = (text) => {
+    if (client != null) {
+      client.publish({
+        destination: "/pub/ride/group",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({
+          messageType: "CURRENT_CHAT",
+          text: text,
+        }),
+      });
+    }
+  };
+
+  //웹소켓 초기화
+  const initSocketClient = () => {
+    client = new StompJs.Client({
+      brokerURL: "wss://k7a106.p.ssafy.io/api/ws-stomp",
+      connectHeaders: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+      webSocketFactory: () => {
+        return SockJS("https://k7a106.p.ssafy.io/api/ws-stomp");
+      },
+      debug: (str) => {
+        console.log("stomp debug!!!", str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+
+      onStompError: (frame) => {
+        // Will be invoked in case of error encountered at Broker
+        // Bad login/passcode typically will cause an error
+        // Complaint brokers will set `message` header with a brief message. Body may contain details.
+        // Compliant brokers will terminate the connection after any error
+        console.log("Broker reported error: " + frame.headers["message"]);
+        console.log("Additional details: " + frame.body);
+        // client.deactivate();
+      },
+    });
+
+    // 웹소켓 초기 연결
+    client.onConnect = (frame) => {
+      console.log("client init !!! ", frame);
+      if (client != null)
+        client.publish({
+          destination: "/pub/ride/group",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          body: JSON.stringify({
+            messageType: "ENTER",
+          }),
+        });
+      subscribe();
+    };
+
+    client.activate();
+  };
+
+  // 웹소켓 연결해제
+  const disConnect = () => {
+    if (client != null) {
+      if (client.connected) client.deactivate();
+    }
+  };
+
   // ----------------------hooks------------------------
 
   // 3초 후 시작
@@ -265,8 +430,8 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude + 0.0001 * time,
-          lng: coords.longitude - 0.0001 * time,
+          lat: coords.latitude,
+          lng: coords.longitude,
         };
 
         // console.log("gps : ", gps);
@@ -389,62 +554,68 @@ export const Plogging = () => {
         }}
       >
         {/* 지도 박스 */}
-        <Box width="100%" height="60%">
-          {/* 지도 */}
-          <Map
-            center={mapData.center}
-            isPanto={true}
-            style={{ width: "100%", height: "100%" }}
-            onClick={(_t, mouseEvent) => {
-              handleMapClick(mouseEvent.latLng);
+
+        {/* 지도 */}
+        <Map
+          center={mapData.center}
+          isPanto={true}
+          style={{ width: "100%", height: "60%" }}
+          onClick={(_t, mouseEvent) => {
+            handleMapClick(mouseEvent.latLng);
+          }}
+        >
+          {markerPositions.length > 0 &&
+            markerPositions.map((marker, index) => {
+              return (
+                <CustomOverlayMap
+                  key={index}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                >
+                  <Box width="30px" height="60px">
+                    <Image
+                      sizes="30px"
+                      fit="cover"
+                      src={
+                        marker.marker === 0
+                          ? TrashIcon
+                          : marker.marker === 1
+                          ? DishIcon
+                          : marker.marker === 2
+                          ? DesIcon
+                          : GarbageIcon
+                      }
+                    />
+                    <StyledText text="문석희" />
+                  </Box>
+                </CustomOverlayMap>
+              );
+            })}
+          <MapMarker
+            position={
+              !mapData.latlng.length > 0 ? mapData.center : mapData.latlng[0]
+            }
+            image={{
+              src: `/assets/images/start.png`,
+              size: {
+                width: 29,
+                height: 41,
+              }, // 마커이미지의 크기입니다
             }}
-          >
-            {markerPosition && marker !== undefined && (
-              <CustomOverlayMap position={markerPosition}>
-                <Box width="30px" height="30px">
-                  <Image
-                    sizes="30px"
-                    fit="cover"
-                    src={
-                      marker === 0
-                        ? TrashIcon
-                        : marker === 1
-                        ? DishIcon
-                        : marker === 2
-                        ? DesIcon
-                        : GarbageIcon
-                    }
-                  />
-                </Box>
-              </CustomOverlayMap>
-            )}
-            <MapMarker
-              position={
-                !mapData.latlng.length > 0 ? mapData.center : mapData.latlng[0]
-              }
-              image={{
-                src: `/assets/images/start.png`,
-                size: {
-                  width: 29,
-                  height: 41,
-                }, // 마커이미지의 크기입니다
-              }}
+          />
+          {mapData.latlng && (
+            <Polyline
+              path={[mapData.latlng]}
+              strokeWeight={5} // 선의 두께 입니다
+              strokeColor={"#030ff1"} // 선의 색깔입니다
+              strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+              strokeStyle={"solid"} // 선의 스타일입니다
             />
-            {mapData.latlng && (
-              <Polyline
-                path={[mapData.latlng]}
-                strokeWeight={5} // 선의 두께 입니다
-                strokeColor={"#030ff1"} // 선의 색깔입니다
-                strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                strokeStyle={"solid"} // 선의 스타일입니다
-              />
-            )}
-          </Map>
-        </Box>
+          )}
+        </Map>
+
         {/* 종료 버튼 */}
         <Box
           width="100%"
-          height="20%"
           align="end"
           justify="start"
           style={{
@@ -530,6 +701,7 @@ export const Plogging = () => {
                 attachButton={false}
                 onSend={(innerHtml, textContent, innerText, nodes) => {
                   handleMessageSend(textContent);
+                  playAudio();
                 }}
                 style={{
                   background: "#fff",
@@ -613,11 +785,21 @@ export const Plogging = () => {
         <MarkerDialog
           open={markerOpen}
           handleClose={() => {
-            if (marker === undefined) setMarker(undefined);
             setMarkerOpen(false);
           }}
           handleMarker={handleMarker}
         />
+        {visible && (
+          <Grommet theme={GrommetTheme}>
+            <Notification
+              toast={{ position: "center" }}
+              title={"새 마커가 등록되었습니다."}
+              status={"normal"}
+              onClose={() => setVisible(false)}
+            />
+          </Grommet>
+        )}
+        <audio ref={audioPlayer} src={ChatSound} />
       </motion.div>
     );
 };
