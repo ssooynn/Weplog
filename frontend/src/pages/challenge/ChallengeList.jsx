@@ -44,7 +44,7 @@ export const ChallengeList = () => {
           </Box>
           <Text
             alignSelf="start"
-            weight="500"
+            weight={500}
             size="16px"
             margin={{ top: "20px" }}
           >
@@ -53,18 +53,18 @@ export const ChallengeList = () => {
           <ChallengeCard challengeId="2" />
           <Text
             alignSelf="start"
-            weight="600"
+            weight={600}
             size="18px"
             margin={{ top: "10px" }}
           >
             Weplog의
           </Text>
-          <Text alignSelf="start" weight="600" size="18px">
+          <Text alignSelf="start" weight={600} size="18px">
             주인공이 되어주세요!
           </Text>
           <Text
             alignSelf="start"
-            weight="400"
+            weight={400}
             size="13px"
             color="#8A8181"
             margin={{ top: "5px" }}
@@ -81,7 +81,7 @@ export const ChallengeList = () => {
             height="25px"
             style={{ marginTop: "105px" }}
           >
-            <Text weight="400" size="12px" color="#3d3d3d">
+            <Text weight={400} size="12px" color="#3d3d3d">
               1 / 2
             </Text>
           </Box>
@@ -106,7 +106,7 @@ export const ChallengeList = () => {
           </Button>
           <Text
             alignSelf="start"
-            weight="500"
+            weight={500}
             size="16px"
             margin={{ top: "20px" }}
           >
@@ -114,12 +114,12 @@ export const ChallengeList = () => {
           </Text>
           <ChallengeCard bgimage="https://picsum.photos/200/300" />
           <Box direction="row" justify="between" width="100%">
-            <Text weight="500" size="16px" margin={{ top: "20px" }}>
+            <Text weight={500} size="16px" margin={{ top: "20px" }}>
               Challenge Top 3
             </Text>
             <Box direction="row" justify="between" width="90px" alignSelf="end">
               <Text
-                weight="400"
+                weight={400}
                 size="12px"
                 margin={{ top: "20px" }}
                 color="#57BA83"
@@ -127,7 +127,7 @@ export const ChallengeList = () => {
                 총 횟수
               </Text>
               <Text
-                weight="400"
+                weight={400}
                 size="12px"
                 margin={{ top: "20px" }}
                 color="#AEAEAE"
@@ -135,7 +135,7 @@ export const ChallengeList = () => {
                 |
               </Text>
               <Text
-                weight="400"
+                weight={400}
                 size="12px"
                 margin={{ top: "20px" }}
                 color="#AEAEAE"

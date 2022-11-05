@@ -23,6 +23,7 @@ import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
 import { CrewDetail } from "./pages/crew/CrewDetail.jsx";
 import { DrawingCharacter } from "./pages/plomon/DrawingCharacter.jsx";
+import { CrewRegister } from "./pages/crew/CrewRegister.jsx";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
@@ -95,6 +96,7 @@ export const Router = () => {
         />
         <Route path="/challenge/register" element={<ChallengeRegister />} />
         <Route path="/crew/detail/:crewId" element={<CrewDetail />} />
+        <Route path="/crew/register" element={<CrewRegister />} />
       </Route>
       {/* 로고 */}
       <Route path="/" element={<LayoutFullScreen />}>

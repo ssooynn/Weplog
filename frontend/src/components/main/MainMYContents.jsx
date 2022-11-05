@@ -19,32 +19,17 @@ function Island() {
 }
 
 export function MainMYContents() {
-  // const gltf = useLoader(GLTFLoader, "")
-  
   return (
     <Canvas
-    camera={{position: [30, 15, 30]}}
+    camera={{position: [-40, 15, 0]}}
     >
         <Suspense fallback={null}>
           <Island />
           <OrbitControls />
-          <directionalLight color={"white"} position={[2, 10, 2]} />
-          <directionalLight color={"white"} position={[-2, 10, -2]} />
-          <directionalLight color={"white"} position={[2, -10, 2]} />
-          {/* <directionalLight color={"white"} position={[-2, -10, -2]} /> */}
+          <directionalLight color={"white"} position={[10, 20, 10]} />
+          <directionalLight color={"white"} position={[-10, 50, -10]} />
+          <directionalLight color={"white"} position={[0, -20, 0]} />
         </Suspense>
       </Canvas>
-    // <Suspense fallback={null}>
-    //   Hi
-    // </Suspense>
-    // <>
-    //   <Canvas>
-    //     <ambientLight />
-    //     <OrbitControls />
-    //     <Suspense fallback={null} >
-    //       <Island />
-    //     </Suspense>
-    //   </Canvas>
-    // </>
   );
 }

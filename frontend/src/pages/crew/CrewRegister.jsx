@@ -5,8 +5,7 @@ import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
 import Button from "../../components/Button";
-
-export const ChallengeRegister = () => {
+export const CrewRegister = () => {
   const [profile, setProfile] = useState("");
   const [image, setImage] = useState("");
   const WantUpdateProfile = (e) => {
@@ -22,14 +21,10 @@ export const ChallengeRegister = () => {
   };
 
   const [name, setName] = useState("");
-  const [type, setType] = useState("");
-  const [goal, setGoal] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [desc, setDesc] = useState("");
+  const [amount, setAmount] = useState("");
+  const [local, setLocal] = useState("");
 
-  const changeType = (str) => {
-    console.log(str);
-    setType(str);
-  };
   return (
     <motion.div style={{ minHeight: "88vh" }}>
       {/* 커버 사진 설정 */}
@@ -46,7 +41,7 @@ export const ChallengeRegister = () => {
               <Text size="14px" weight={500} color="#565656" margin="10px">
                 커버 사진 등록하기
               </Text>
-              <img src={plus} width="20px" height="20px" alt="프로필 편집" />
+              <img src={plus} width="20px" height="20px" alt="커버 편집" />
               <input
                 id="image"
                 type="file"
@@ -71,7 +66,7 @@ export const ChallengeRegister = () => {
               <Text size="14px" weight={500} color="#565656" margin="10px">
                 커버 사진 수정하기
               </Text>
-              <img src={gallery} width="15px" height="15px" alt="프로필 편집" />
+              <img src={gallery} width="15px" height="15px" alt="커버 편집" />
             </label>
             <input
               id="image"
@@ -101,22 +96,22 @@ export const ChallengeRegister = () => {
             areas={[
               { name: "name", start: [0, 0], end: [0, 0] },
               { name: "namedata", start: [1, 0], end: [1, 0] },
-              { name: "type", start: [0, 1], end: [0, 1] },
-              { name: "typedata", start: [1, 1], end: [1, 1] },
-              { name: "goal", start: [0, 2], end: [0, 2] },
-              { name: "goaldata", start: [1, 2], end: [1, 2] },
-              { name: "endDate", start: [0, 3], end: [0, 3] },
-              { name: "endDateData", start: [1, 3], end: [1, 3] },
+              { name: "desc", start: [0, 1], end: [0, 1] },
+              { name: "descData", start: [1, 1], end: [1, 1] },
+              { name: "amount", start: [0, 2], end: [0, 2] },
+              { name: "amountData", start: [1, 2], end: [1, 2] },
+              { name: "local", start: [0, 3], end: [0, 3] },
+              { name: "localData", start: [1, 3], end: [1, 3] },
             ]}
           >
             <Box gridArea="name" justify="center" align="start">
               <Text weight={500} size="16px">
-                챌린지 이름
+                크루 이름
               </Text>
             </Box>
             <Box gridArea="namedata" justify="center" align="start">
               <StyledInput
-                placeholder="챌린지 이름을 입력하세요."
+                placeholder="크루 이름"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -126,94 +121,111 @@ export const ChallengeRegister = () => {
                 style={{ fontSize: "16px" }}
               />
             </Box>
-            <Box gridArea="type" justify="center" align="start">
+            <Box gridArea="desc" justify="center" align="start">
               <Text weight={500} size="16px">
-                챌린지 유형
+                소개
               </Text>
             </Box>
             <Box
-              gridArea="typedata"
+              gridArea="descData"
               justify="between"
               align="center"
               direction="row"
-              width="80%"
+              width="100%"
             >
-              <Text
-                weight={500}
-                size="16px"
-                style={{
-                  color: `${type === "distance" ? "#00853B" : "#7E7E7E"}`,
+              <StyledInput
+                placeholder="크루에 관한 설명을 해주세요"
+                value={desc}
+                onChange={(e) => {
+                  setDesc(e.target.value);
                 }}
-                onClick={(e) => changeType("distance")}
-              >
-                거리
-              </Text>
-              <Text
-                weight={500}
-                size="16px"
-                style={{ color: `${type === "count" ? "#00853B" : "#7E7E7E"}` }}
-                onClick={(e) => changeType("count")}
-              >
-                횟수
-              </Text>
-              <Text
-                weight={500}
-                size="16px"
-                style={{ color: `${type === "time" ? "#00853B" : "#7E7E7E"}` }}
-                onClick={(e) => changeType("time")}
-              >
-                시간
-              </Text>
+                padding="0px"
+                margin="0px"
+                width="100%"
+                style={{ fontSize: "16px" }}
+              />
             </Box>
-            <Box gridArea="goal" justify="center" align="start">
+            <Box gridArea="amount" justify="center" align="start">
               <Text weight={500} size="16px">
-                목표
+                최대 인원
               </Text>
             </Box>
             <Box
-              gridArea="goaldata"
+              gridArea="amountData"
               justify="start"
               align="center"
               direction="row"
+              gap="medium"
             >
-              <StyledInput
-                placeholder="0"
-                value={name}
-                onChange={(e) => {
-                  setGoal(e.target.value);
-                }}
-                width="30px"
-                padding="0px"
-                margin="0px"
-              />
-
-              {(type === "distance" || type === "") && (
-                <Text weight={500} size="16px">
-                  Km
+              <Box
+                round="small"
+                pad="small"
+                background={amount === 10 ? "#57BA83" : "#E8E8E8"}
+              >
+                <Text
+                  weight={500}
+                  size="11px"
+                  style={{
+                    color: `${amount === 10 ? "#000000" : "#575757"}`,
+                  }}
+                  onClick={(e) => setAmount(10)}
+                >
+                  10명
                 </Text>
-              )}
-              {type === "count" && (
-                <Text weight={500} size="16px">
-                  회
+              </Box>
+              <Box
+                round="small"
+                pad="small"
+                background={amount === 20 ? "#57BA83" : "#E8E8E8"}
+              >
+                <Text
+                  weight={500}
+                  size="11px"
+                  style={{
+                    color: `${amount === 20 ? "#000000" : "#575757"}`,
+                  }}
+                  onClick={(e) => setAmount(20)}
+                >
+                  20명
                 </Text>
-              )}
-              {type === "time" && (
-                <Text weight={500} size="16px">
-                  시간
+              </Box>
+              <Box
+                round="small"
+                pad="small"
+                background={amount === 30 ? "#57BA83" : "#E8E8E8"}
+              >
+                <Text
+                  weight={500}
+                  size="11px"
+                  style={{
+                    color: `${amount === 30 ? "#000000" : "#575757"}`,
+                  }}
+                  onClick={(e) => setAmount(30)}
+                >
+                  30명
                 </Text>
-              )}
+              </Box>
             </Box>
-            <Box gridArea="endDate" justify="center" align="start">
+            <Box gridArea="local" justify="center" align="start">
               <Text weight={500} size="16px">
-                기한
+                주 활동 지역
               </Text>
             </Box>
-            <Box gridArea="endDateData" justify="center" align="start">
-              8
+            <Box gridArea="localData" justify="center" align="start">
+              <StyledInput
+                placeholder="지역"
+                value={local}
+                onChange={(e) => {
+                  setLocal(e.target.value);
+                }}
+                padding="0px"
+                margin="0px"
+                style={{ fontSize: "16px" }}
+              />
             </Box>
           </Grid>
 
-          <Button biggreenround="true">챌린지 등록</Button>
+          <Button biggreenround="true">크루 만들기</Button>
         </Box>
       </Box>
     </motion.div>

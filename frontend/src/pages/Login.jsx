@@ -74,13 +74,13 @@ export const Login = () => {
               >
                 카카오로 회원가입
               </Text>
-              <Text color="white" size="small" weight="300">
+              <Text color="white" size="small" weight={300}>
                 |
               </Text>
               <Text
                 color="white"
                 size="small"
-                weight="300"
+                weight={300}
                 margin={{ left: "5px", right: "5px" }}
                 onClick={(e) => GoSignup('google')}
               >

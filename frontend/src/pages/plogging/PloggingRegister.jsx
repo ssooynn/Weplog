@@ -5,6 +5,7 @@ import { container } from "../../utils/util";
 import { Avatar, Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
+import ColorPickerBtn from "../../assets/images/colorPicker.png";
 import { ReactComponent as PloggingLogo } from "../../assets/icons/logo.svg";
 // import PloggingTitle from "../../assets/images/ploggingTitle.png";
 // import PloggingTitleBlack from "../../assets/images/ploggingTitleBlack.png";
@@ -140,6 +141,7 @@ export const PloggingRegister = () => {
         animate={{ height: "auto" }}
         style={{
           width: "100%",
+          height: "auto",
           // backgroundImage:
           //   prev === null
           //     ? "url('/assets/images/defaultPic.png')"
@@ -378,30 +380,36 @@ export const PloggingRegister = () => {
             }
           ></DataButton>
         </Box>
-        <motion.button
-          style={{
-            boxShadow: "none",
-            textTransform: "none",
-            fontSize: 12,
-            fontWeight: "bold",
-            color: "white",
-            border: "none",
-            fontFamily: `shsnMedium, sans-serif`,
-            margin: "10px",
-            backgroundColor: "white",
-          }}
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          <Avatar background={contentColor} />
-        </motion.button>
+        <Box width="90%" align="end">
+          <motion.button
+            style={{
+              boxShadow: "none",
+              textTransform: "none",
+              fontSize: 12,
+              fontWeight: "bold",
+              border: "none",
+              color: "black",
+              fontFamily: `shsnMedium, sans-serif`,
+              margin: "10px",
+              backgroundColor: "white",
+            }}
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <Box direction="row" justify="center" align="center">
+              <Avatar src={ColorPickerBtn} size="35px" />
+              색상 변경
+            </Box>
+          </motion.button>
+        </Box>
         {open && (
           <motion.div
             style={{
               position: "absolute",
               zIndex: 3,
             }}
+            onClick={handleClose}
           >
             <motion.div
               style={{
@@ -409,7 +417,6 @@ export const PloggingRegister = () => {
                 top: "50%",
                 left: "20%",
               }}
-              onClick={handleClose}
             >
               <ChromePicker color={contentColor} onChange={handleChange} />
             </motion.div>
