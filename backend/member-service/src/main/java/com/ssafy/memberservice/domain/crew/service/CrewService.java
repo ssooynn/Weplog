@@ -2,6 +2,7 @@ package com.ssafy.memberservice.domain.crew.service;
 
 import com.ssafy.memberservice.domain.crew.dto.*;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,4 +22,8 @@ public interface CrewService {
     List<CrewSimpleResponse> getCrewList();
 
     Top3CrewResponse getTop3CrewList();
+
+    List<CrewSimpleResponse> getCrewListNear(Double lat, Double lon);
+
+    List<CrewSimpleResponse> getMyCrewList(UUID memberId);
 }
