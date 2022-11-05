@@ -53,7 +53,7 @@ export const Signup = () => {
     setImage(file);
   };
 
-  const CheckNickname = (e) => {
+  const CheckNickname = () => {
     checkNicknameApi(nickname, (res) => {
       console.log(res);
     }, (err) => {
@@ -174,9 +174,9 @@ export const Signup = () => {
             />
             <Button
               nicknamecheck
-              onClick={(e) => {
-                CheckNickname();
-              }}
+              onClick={
+                CheckNickname
+              }
             >
               중복 체크
             </Button>
