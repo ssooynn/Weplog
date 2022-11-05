@@ -61,17 +61,28 @@ public class CrewController {
         return ResponseEntity.ok(crewService.getCrewDetailInfo(crewId, UUID.fromString(memberId)));
     }
 
-    @ApiOperation(value = "전체 크루 리스트 조회")
+    @ApiOperation(value = "전체 크루 목록 조회")
     @GetMapping
     public ResponseEntity<List<CrewSimpleResponse>> getCrewList() {
         return ResponseEntity.ok(crewService.getCrewList());
     }
 
-    @ApiOperation(value = "TOP3 크루 리스트 가져오기")
+    @ApiOperation(value = "TOP3 크루 목록 조회")
     @GetMapping("/top3")
     public ResponseEntity<Top3CrewResponse> getTop3CrewList() {
         return ResponseEntity.ok(crewService.getTop3CrewList());
     }
 
+    @ApiOperation(value = "내 근처 크루 목록 조회")
+    @GetMapping("/near/{lat}/{lon}")
+    public ResponseEntity<List<CrewSimpleResponse>> getCrewListNear(@PathVariable Double lat, @PathVariable Double lon) {
+        return ResponseEntity.ok(crewService.getCrewListNear(lat, lon));
+    }
+
+    @ApiOperation(value = "내 크루 목록 조회")
+    @GetMapping("/my")
+    public ResponseEntity<List<CrewSimpleResponse>> getMyCrewList(@ApiIgnore @RequestHeader("memberId") String memberId) {
+        return ResponseEntity.ok(crewService.getMyCrewList(UUID.fromString(memberId)));
+    }
 }
 
