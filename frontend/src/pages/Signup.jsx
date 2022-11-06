@@ -14,7 +14,7 @@ export const Signup = () => {
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [nickname, setNickName] = useState("");
-  const [checkNickname, setCheckNickname] = useState(false);
+  const [checkNickname, setCheckNickname] = useState("");
   const [weight, setWeight] = useState("");
   //쇼핑몰 이용약관
   const [check1, setCheck1] = useState(false);
@@ -53,8 +53,16 @@ export const Signup = () => {
     setImage(file);
   };
 
+  //닉네임 중복 검사
   const CheckNickname = () => {
     checkNicknameApi(nickname, (res) => {
+      console.log(res.data);
+      if (!res.data) {
+        //중복 닉네임 없음
+        setCheckNickname(true);
+      } else {
+        setCheckNickname(false);
+      }
       console.log(res);
     }, (err) => {
       console.log(err);
@@ -67,11 +75,11 @@ export const Signup = () => {
       const user = {
         name: name,
         nickname: nickname,
-        weight: weight,
+        weight: Number(weight),
       }
       signupApi(user, (res) => {
         console.log(res);
-        navigate("/");
+        navigate("/plomon");
       }, (err) => {
         console.log(err);
       })
@@ -163,12 +171,14 @@ export const Signup = () => {
             닉네임
           </Text>
           <Box direction="row" justify="between">
+
             <StyledInput
               placeholder="닉네임을 입력하세요."
               value={nickname}
               onChange={(e) => {
                 setNickName(e.target.value);
                 console.log(nickname);
+                setCheckNickname("")
               }}
               width="50%"
             />
@@ -181,6 +191,8 @@ export const Signup = () => {
               중복 체크
             </Button>
           </Box>
+          {checkNickname === true && <Text Text size='10px' color='green' weight={400}>사용가능한 닉네임입니다.</Text>}
+          {checkNickname === false && <Text size='10px' color='red' weight={400}>동일한 닉네임이 있습니다</Text>}
         </Box>
         {/* 몸무게 */}
         <Box margin="20px 0px 0px 0px">

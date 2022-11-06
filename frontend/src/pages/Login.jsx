@@ -4,7 +4,6 @@ import styled from "styled-components";
 import googleLoginIcon from "../assets/icons/googleLoginBtn.png";
 import kakaoLoginIcon from "../assets/icons/kakaoLoginBtn.png";
 import { useNavigate } from "react-router-dom";
-import GoogleLogin from "react-google-login";
 import logo from "../assets/images/logo.png";
 import { AUTH_URL_KAKAO, AUTH_URL_GOOGLE, OAUTH2_REDIRECT_URI } from "../apis/api";
 //투명도 있는 그라데이션
