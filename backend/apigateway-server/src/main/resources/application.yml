@@ -18,8 +18,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
-            allow-credentials: true   #추가
+            allowedOriginPatterns: "*"
             allowedHeaders:
               - x-requested-with
               - authorization
@@ -48,7 +47,6 @@ spring:
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member-service/member/**
-            - Method=POST,GET
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
