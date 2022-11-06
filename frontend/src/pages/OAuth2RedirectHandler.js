@@ -11,17 +11,16 @@ export const OAuth2RedirectHandler = (props) => {
   const params = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const accessToken = params.get("accessToken");
-    // const refreshToken = params.get("refreshToken");
+    // localStorage.setItem("refreshToken", refreshToken);
     const register = params.get("needMoreInfo");
     const memberId = params.get("memberId");
+    const accessToken = params.get("accessToken");
 
     let isRegister = JSON.parse(register);
-    console.log(isRegister);
+    console.log(accessToken);
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("memberId", memberId);
-    // localStorage.setItem("refreshToken", refreshToken);
 
     // 회원가입후 추가 입력 안했으면
     if (isRegister === true) {
@@ -51,5 +50,5 @@ export const OAuth2RedirectHandler = (props) => {
     }
   }, []);
 
-  return <Box>아</Box>;
+  return;
 };
