@@ -24,7 +24,7 @@ public class CrewSimpleResponse {
     public String imageUrl;
     public Integer maxParticipantCnt;
     public Integer participantCnt;
-    public List<MemberSimpleResponse> memberList = new ArrayList<>();
+    public List<MemberSimpleResponse> memberList;
 
     public static CrewSimpleResponse from(Crew crew) {
         List<MemberCrew> memberCrewList = crew.getMemberCrewList();

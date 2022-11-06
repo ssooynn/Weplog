@@ -18,7 +18,6 @@ import java.util.UUID;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-
     @ApiOperation(value = "회원정보입력")
    @PutMapping("/info")
     public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")UUID memberId,
