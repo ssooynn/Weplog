@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.member.domain;
 
 import com.fasterxml.uuid.Generators;
+import com.ssafy.memberservice.domain.member.dto.MemberReq;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
 
 import lombok.*;
