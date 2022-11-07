@@ -46,9 +46,9 @@ public class PloggingController
 
     @ApiOperation(value = "근처 쓰레기통 리스트")
     @GetMapping("garbage/{lat}/{lng}")
-    public ResponseEntity<?> getTrashCansLoc(@PathVariable("lat") double lat, @PathVariable("lng") double lng ){
+    public ResponseEntity<List<CoordinateDto>> getTrashCansLoc(@PathVariable("lat") double lat, @PathVariable("lng") double lng ){
         List<CoordinateDto> list = ploggingService.getTrashCansLoc(lat, lng);
-        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @ApiOperation(value = "플로깅 사진 등록")
