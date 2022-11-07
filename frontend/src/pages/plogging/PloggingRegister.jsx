@@ -194,7 +194,6 @@ export const PloggingRegister = () => {
                 fill={contentColor}
                 stroke={contentColor}
                 d={pathData}
-                strokeOpacity="0.7"
                 strokeWidth="35px"
                 strokeLinecap="round"
               />

@@ -111,7 +111,7 @@ export const PloggingStart = () => {
             background: "#57BA83",
           }}
         >
-          {address}
+          {address ? address : "어디일까요?"}
         </Box>
         {/* 챌린지 선택 박스 */}
         {/* <Box width="75%" direction="row" justify="end">
@@ -138,8 +138,8 @@ export const PloggingStart = () => {
         <BootstrapButton
           whileTap={{ scale: 0.9 }}
           onClick={() => {
-            setOpen(true);
-            // navigate("/plogging");
+            // setOpen(true);
+            navigate("/plogging");
           }}
         >
           Plogging!

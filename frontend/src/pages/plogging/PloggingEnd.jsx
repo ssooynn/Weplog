@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Environment, useFBX } from "@react-three/drei";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   calcMapLevel,
@@ -16,6 +19,11 @@ import { StyledText } from "../../components/Common";
 import $ from "jquery";
 window.jQuery = $;
 window.$ = $;
+
+const Plomon = () => {
+  const fbx = useFBX("/dino02.fbx");
+  return <primitive object={fbx} />;
+};
 
 export const PloggingEnd = () => {
   const navigate = useNavigate();
@@ -44,6 +52,7 @@ export const PloggingEnd = () => {
   //       maxLat: 0,
   //       minLat: 0,
   //     },
+
   const callback = (result, status) => {
     if (status === kakao.maps.services.Status.OK) {
       console.log(result);
@@ -251,7 +260,26 @@ export const PloggingEnd = () => {
             position: "relative",
           }}
         >
-          <img
+          <div
+            style={{
+              width: "200px",
+              position: "absolute",
+              right: 0,
+              top: "-150px",
+              zIndex: "15",
+            }}
+          >
+            {/* <Canvas camera={{ position: [100, 100, 0] }}>
+              <ambientLight intensity={0.5} />
+              <spotLight position={[150, 150, 150]} angle={0.15} penumbra={1} />
+              <pointLight position={[-150, -150, -150]} />
+              <Suspense fallback={null}>
+                <Plomon />
+                <OrbitControls />
+              </Suspense>
+            </Canvas> */}
+          </div>
+          {/* <img
             src={Charact}
             style={{
               width: "200px",
@@ -261,7 +289,7 @@ export const PloggingEnd = () => {
               top: "-150px",
               zIndex: "15",
             }}
-          />
+          /> */}
           <Box width="100%" height="100%" align="center" justify="around">
             <Box direction="row" width="100%" justify="center" gap="55px">
               <DataBox label="킬로미터" data={ploggingData.totalDistance} />
