@@ -46,7 +46,13 @@ public class MemberChallengeServiceImpl implements MemberChallengeService{
             throw new DuplicateException(DUPLICATE_CHALLENGE_TYPE);
         }
 
-        MemberChallenge memberChallenge = MemberChallenge.builder().member(member).challenge(challenge).build();
+        MemberChallenge memberChallenge = MemberChallenge.builder()
+                .member(member)
+                .challenge(challenge)
+                .totalAmount(0L)
+                .nickname(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
+                .build();
         MemberChallenge save = memberChallengeRepository.save(memberChallenge);
         // 참가자 수 늘리기
         challenge.updateParticipantsCnt();

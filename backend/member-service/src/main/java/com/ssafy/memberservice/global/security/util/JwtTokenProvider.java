@@ -107,10 +107,17 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
 
-        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()),"", authorities);
+        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), claims.get("nickname").toString(), authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
+    }
+
+    public String getUserNameFromJwt(String accessToken) {
+        Authentication authentication = getAuthentication(accessToken);
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        return principal.getUsername();
     }
 
     public String getSubject(String jwtToken) {

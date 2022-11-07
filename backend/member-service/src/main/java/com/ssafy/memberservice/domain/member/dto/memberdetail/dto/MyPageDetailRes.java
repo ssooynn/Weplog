@@ -1,11 +1,10 @@
-package com.ssafy.memberservice.domain.memberdetail.dto;
+package com.ssafy.memberservice.domain.member.dto.memberdetail.dto;
 
-import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
+import com.ssafy.memberservice.domain.member.dto.memberdetail.domain.MemberDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
 
 @Data
 @Builder

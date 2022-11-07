@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("select c from Challenge c where c.finishFlag=false")
@@ -19,7 +20,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Slice<Challenge> getChallengeByTitle(String title, Pageable pageable);
 
     @Query("select c.challenge from MemberChallenge c where c.member.id=:id")
-    Slice<Challenge> getChallengeByID(String id, Pageable pageable);
+    Slice<Challenge> getChallengeByID(UUID id, Pageable pageable);
 
     @Query("select c from Challenge c join fetch c.challengeType ct join fetch ct.challengeLimit where c.id = :challengeId")
     Optional<Challenge> findByChallengeIdWithLimit(Long challengeId);

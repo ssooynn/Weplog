@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.memberdetail.domain;
+package com.ssafy.memberservice.domain.member.dto.memberdetail.domain;
 
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.global.common.base.BaseEntity;

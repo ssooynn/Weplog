@@ -18,7 +18,9 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOriginPatterns: "*"
+#            allowedOrigins: "*"
+            allowed-origin-patterns: "*"
+            allow-credentials: true   #추가
             allowedHeaders:
               - x-requested-with
               - authorization
@@ -34,7 +36,7 @@ spring:
               - OPTIONS
               - DELETE
               - PATCH
-
+        add-to-simple-url-handler-mapping: true
 
       default-filters:
         - name: GlobalFilter
@@ -43,15 +45,6 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/member-service/member/**
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
-
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -69,6 +62,15 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
         - id: achievement-service
           uri: lb://ACHIEVEMENT-SERVICE
