@@ -10,14 +10,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ChallengeService {
 
     CreateChallengeRes postChallenge(ChallengeReq challengeReq, MultipartFile image, String memberId);
 
-    void deleteChallenge(Long id, String memberId);
+    void deleteChallenge(Long id, UUID memberId);
     Slice<ChallengeRes> getChallengeList(Pageable pageable);
-    Slice<ChallengeRes> getMyChallengeList(String id, Pageable pageable);
+    Slice<ChallengeRes> getMyChallengeList(UUID id, Pageable pageable);
     Slice<ChallengeRes> getChallengeBySearch(String title, Pageable pageable);
     ChallengeDetailRes getChallengeDetail(Long id);
 

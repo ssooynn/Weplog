@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
-    @Query("select c from Calendar c where c.crew.id=:crewId and c.scheduleDate.getMonthValue=:time.getMothValue")
-    List<Calendar> findAllByDate(LocalDateTime time, Long crewId);
+//    @Query("select c from Calendar c where c.crew.id=:crewId and c.scheduleDate.getMonthValue=:time.getMothValue")
+//    List<Calendar> findAllByDate(LocalDateTime time, Long crewId);
 }

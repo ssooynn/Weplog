@@ -24,7 +24,7 @@ public class CalendarServiceImpl implements CalendarService
     private final CrewRepository crewRepository;
     @Override
     public CalendarRes getCalendarInfo(LocalDateTime time, Long crewId) {
-        calendarRepository.findAllByDate(time, crewId);
+//        calendarRepository.findAllByDate(time, crewId);
         return null;
     }
 
