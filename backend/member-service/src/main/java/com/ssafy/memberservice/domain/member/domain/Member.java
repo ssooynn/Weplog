@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.member.domain;
 
 import com.fasterxml.uuid.Generators;
+import com.ssafy.memberservice.domain.member.dto.MemberReq;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
 
 import lombok.*;
@@ -60,9 +61,10 @@ public class Member extends BaseEntity {
         this.id = uuid;
     }
 
-    public void updateMember(MemberReq memberReq){
+    public void updateMember(MemberReq memberReq, String profileImageUrl){
         this.name = memberReq.getName();
         this.nickname = memberReq.getNickname();
         this.weight = memberReq.getWeight();
+        this.profileImageUrl = profileImageUrl;
     }
 }

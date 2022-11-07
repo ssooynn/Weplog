@@ -31,5 +31,6 @@ public class Achievement extends BaseEntity {
     private String name;
 
     private String imageUrl;
+    private String completeImageUrl;
 
 }

@@ -76,8 +76,8 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     @Transactional
-    public void deleteChallenge(Long challengeId, String memberId) {
-        MemberChallenge memberChallenge = memberChallengeRepository.findByChallengeIdAndMemberId(challengeId, UUID.fromString(memberId))
+    public void deleteChallenge(Long challengeId, UUID memberId) {
+        MemberChallenge memberChallenge = memberChallengeRepository.findByChallengeIdAndMemberId(challengeId, memberId)
                 .orElseThrow(() -> new NotExistException(NO_EXIST_MEMBER_CHALLENGE));
 
         memberChallengeRepository.delete(memberChallenge);
@@ -92,7 +92,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
 
     @Override
-    public Slice<ChallengeRes> getMyChallengeList(String id, Pageable pageable) {
+    public Slice<ChallengeRes> getMyChallengeList(UUID id, Pageable pageable) {
         Slice<ChallengeRes> slice = challengeRepository.getChallengeByID(id, pageable).map(m->new ChallengeRes(m));
         return slice;
     }
