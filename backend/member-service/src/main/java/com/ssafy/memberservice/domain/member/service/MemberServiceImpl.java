@@ -25,10 +25,13 @@ public class MemberServiceImpl implements MemberService{
     private final S3Upload s3Upload;
 
     @Override
-    public void updateMemberInfo(UUID id, MemberReq memberReq, MultipartFile image) {
+    @Transactional
+    public Member updateMemberInfo(UUID id, MemberReq memberReq, MultipartFile image) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotExistException("해당 아이디가 존재하지 않습니다."));
         String profileImageUrl = s3Upload.uploadImageToS3(image);
         member.updateMember(memberReq, profileImageUrl);
+
+        return member;
     }
 
     @Transactional(readOnly = true)

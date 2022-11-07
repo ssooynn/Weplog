@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.member.controller;
 
+import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.member.dto.MemberReq;
 import com.ssafy.memberservice.domain.member.service.MemberService;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
@@ -29,17 +30,18 @@ public class MemberController {
     @PutMapping("/info")
     public ResponseEntity<String> postMemberInfo(@ApiIgnore @RequestHeader("memberId") String memberId, @ApiIgnore @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
                                                  @RequestPart MemberReq request, @RequestPart MultipartFile image) {
-        memberService.updateMemberInfo(UUID.fromString(memberId), request, image);
+        Member member = memberService.updateMemberInfo(UUID.fromString(memberId), request, image);
 
         // 2. 유저정보 얻기
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+//        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+//
+//
+//        principal.setNickname(request.getNickname());
+//        String returnAccessToken = jwtTokenProvider.createAccessToken(authentication);
 
-
-        principal.setNickname(request.getNickname());
-        String returnAccessToken = jwtTokenProvider.createAccessToken(authentication);
-        return ResponseEntity.ok(returnAccessToken);
-
+//        String accessToken1 = jwtTokenProvider.createAccessToken((Authentication) CustomUserDetails.create(member));
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "선택된 동물 등록")
