@@ -60,6 +60,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
     implementation group: 'org.springframework.kafka', name: 'spring-kafka'
+
+    // mysql point
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.12.Final'
 }
 
 dependencyManagement {

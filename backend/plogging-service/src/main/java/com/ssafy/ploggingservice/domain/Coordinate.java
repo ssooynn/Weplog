@@ -3,7 +3,8 @@ package com.ssafy.ploggingservice.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.WKTReader;
 
 import javax.persistence.*;
 
@@ -27,7 +28,12 @@ public class Coordinate {
     public static Coordinate create(Plogging plogging, double lon, double lng) {
         Coordinate coordinate = new Coordinate();
         coordinate.plogging = plogging;
-        coordinate.ploggingLoc = new Point(lon, lng);
+        String pointWKT = String.format("POINT(%s %s)", lon, lng);
+        try {
+            coordinate.ploggingLoc = (Point) new WKTReader().read(pointWKT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return coordinate;
     }

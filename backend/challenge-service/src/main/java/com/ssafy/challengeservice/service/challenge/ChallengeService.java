@@ -20,7 +20,7 @@ public interface ChallengeService {
     Slice<ChallengeRes> getChallengeList(Pageable pageable);
     Slice<ChallengeRes> getMyChallengeList(UUID id, Pageable pageable);
     Slice<ChallengeRes> getChallengeBySearch(String title, Pageable pageable);
-    ChallengeDetailRes getChallengeDetail(Long id);
+    ChallengeDetailRes getChallengeDetail(Long id, UUID memberId);
 
     void finishChallenge();
 
