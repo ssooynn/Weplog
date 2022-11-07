@@ -25,7 +25,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("select c from Challenge c join fetch c.challengeType ct join fetch ct.challengeLimit where c.id = :challengeId")
     Optional<Challenge> findByChallengeIdWithLimit(Long challengeId);
 
-    @Query("select c from Challenge c join fetch c.member where c.id = :challengeId")
+    @Query("select c from Challenge c join fetch c.member join c.memberChallengeList where c.id = :challengeId")
     Optional<Challenge> findByIdWithMember(Long challengeId);
 
     @Query("select c from Challenge c join fetch c.member join c.memberChallengeList where c.endDate < current_date")
