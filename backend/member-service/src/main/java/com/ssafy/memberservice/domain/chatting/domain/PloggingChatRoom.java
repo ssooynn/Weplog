@@ -2,8 +2,7 @@ package com.ssafy.memberservice.domain.chatting.domain;
 
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Map;
 
