@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.calendar.service;
 
+import com.ssafy.memberservice.domain.calendar.domain.Calendar;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarReq;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarRes;
 import com.ssafy.memberservice.domain.calendar.repository.CalendarRepository;
@@ -12,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,7 +27,11 @@ public class CalendarServiceImpl implements CalendarService
     private final CrewRepository crewRepository;
     @Override
     public CalendarRes getCalendarInfo(LocalDateTime time, Long crewId) {
-//        calendarRepository.findAllByDate(time, crewId);
+        LocalDateTime start = time.withDayOfMonth(1);
+        LocalDateTime end = time.withDayOfMonth(time.getMonth().length(time.toLocalDate().isLeapYear()));
+        List<CalendarRes> res = calendarRepository.findAllByDate(start, end, crewId).stream()
+                .map(CalendarRes::new)
+                .collect(Collectors.toList());
         return null;
     }
 
@@ -32,7 +39,5 @@ public class CalendarServiceImpl implements CalendarService
     public void postCalendarInfo(UUID memberId, CalendarReq calendarReq) {
         Member member = memberRepository.findById(memberId).get();
         Crew crew = crewRepository.findById(calendarReq.getCrewId()).get();
-
-
     }
 }

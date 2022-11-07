@@ -1,6 +1,6 @@
-package com.ssafy.memberservice.domain.memberdetail.dao;
+package com.ssafy.memberservice.domain.member.dto.memberdetail.dao;
 
-import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
+import com.ssafy.memberservice.domain.member.dto.memberdetail.domain.MemberDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
