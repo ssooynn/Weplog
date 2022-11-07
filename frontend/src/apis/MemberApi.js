@@ -18,6 +18,7 @@ const authInstance = axios.create({
   },
 });
 
+//닉네임 중복체크
 const checkNicknameApi = async (nickname, success, fail) => {
   instance.defaults.headers.common["Authorization"] =
     `Bearer ` + localStorage.getItem("accessToken");
@@ -27,6 +28,7 @@ const checkNicknameApi = async (nickname, success, fail) => {
   await instance.get(`check/${nickname}`).then(success).catch(fail);
 };
 
+//회원가입(이미 유저 정보 있는 상황에서 데이터 넣기)
 const signupApi = async (user, success, fail) => {
   instance.defaults.headers.common["Authorization"] =
     `Bearer ` + localStorage.getItem("accessToken");
@@ -35,6 +37,7 @@ const signupApi = async (user, success, fail) => {
   await instance.put(`info`, user).then(success).catch(fail);
 };
 
+//펫 등록 api
 const registerPetApi = async (petId, success, fail) => {
   await authInstance.post(`pet/${petId}`).then(success).catch(fail);
 };
