@@ -4,12 +4,14 @@ import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.member.dto.MemberReq;
 import com.ssafy.memberservice.global.common.error.exception.NotExistException;
+import com.ssafy.memberservice.infra.s3.S3Upload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +22,16 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final S3Upload s3Upload;
 
     @Override
-    public void updateMemberInfo(UUID id, MemberReq memberReq) {
+    @Transactional
+    public Member updateMemberInfo(UUID id, MemberReq memberReq, MultipartFile image) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotExistException("해당 아이디가 존재하지 않습니다."));
-        member.updateMember(memberReq);
+        String profileImageUrl = s3Upload.uploadImageToS3(image);
+        member.updateMember(memberReq, profileImageUrl);
+
+        return member;
     }
 
     @Transactional(readOnly = true)

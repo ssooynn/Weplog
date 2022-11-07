@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -132,7 +133,9 @@ public class CrewServiceImpl implements CrewService {
                 .collect(Collectors.toList());
     }
 
+    // TOP3 크루 리스트 조회
     @Override
+    @Transactional(readOnly = true)
     public Top3CrewResponse getTop3CrewList() {
         List<Top3CrewDtoInterface> top3DistanceCrewInterfaceList = memberCrewRepository.findTop3DistanceCrew();
         List<Top3CrewDto> top3Distance = top3DistanceCrewInterfaceList.stream().map(top3CrewDtoInterface -> Top3CrewDto.from(top3CrewDtoInterface))
@@ -143,5 +146,31 @@ public class CrewServiceImpl implements CrewService {
                 .collect(Collectors.toList());
 
         return Top3CrewResponse.from(top3Distance, top3Time);
+    }
+
+    // 내 근처 크루 리스트 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<CrewSimpleResponse> getCrewListNear(Double lat, Double lon) {
+        List<NearCrewListInterface> nearCrewInterface = crewRepository.findAllNear(lat, lon);
+        List<Long> crewIdList = new ArrayList<>();
+        for (NearCrewListInterface nearCrewListInterface : nearCrewInterface) {
+            crewIdList.add(nearCrewListInterface.getCrewId());
+        }
+
+        List<Crew> nearCrewListInfo = crewRepository.findByIdListWithMemberCrewList(crewIdList);
+
+        return nearCrewListInfo.stream().map(crew -> CrewSimpleResponse.from(crew))
+                .collect(Collectors.toList());
+    }
+
+    // 내 크루 리스트 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<CrewSimpleResponse> getMyCrewList(UUID memberId) {
+        List<MemberCrew> memberCrewListByMemberId = memberCrewRepository.findMemberCrewListByMemberId(memberId);
+
+        return memberCrewListByMemberId.stream().map(memberCrew -> CrewSimpleResponse.from(memberCrew.getCrew()))
+                .collect(Collectors.toList());
     }
 }

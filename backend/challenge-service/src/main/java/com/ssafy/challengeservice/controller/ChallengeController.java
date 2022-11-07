@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.ssafy.challengeservice.global.common.base.CacheKey.CHALLENGE_RANKING;
 
@@ -46,7 +47,7 @@ public class ChallengeController {
 	@DeleteMapping("/{challengeId}")
 	public ResponseEntity<?> deleteChallenge(@RequestHeader("memberId") String memberId,
 											 @PathVariable("challengeId") Long challengeId) {
-		challengeService.deleteChallenge(challengeId, memberId);
+		challengeService.deleteChallenge(challengeId, UUID.fromString(memberId));
 		return ResponseEntity.ok().build();
 	}
 
@@ -54,7 +55,7 @@ public class ChallengeController {
 	@GetMapping("/my")
 	public ResponseEntity<Slice<ChallengeRes>> getMyChallengeList(@RequestHeader("memberId") String memberId,
 																  Pageable pageable) {
-		Slice<ChallengeRes> res = challengeService.getMyChallengeList(memberId, pageable);
+		Slice<ChallengeRes> res = challengeService.getMyChallengeList(UUID.fromString(memberId), pageable);
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
