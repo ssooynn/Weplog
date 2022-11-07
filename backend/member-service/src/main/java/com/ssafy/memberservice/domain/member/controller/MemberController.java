@@ -23,8 +23,8 @@ public class MemberController {
     @ApiOperation(value = "회원정보입력")
    @PutMapping("/info")
     public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")String memberId,
-                                            @RequestBody MemberReq memberReq) {
-        memberService.updateMemberInfo(UUID.fromString(memberId), memberReq);
+                                            @RequestPart MemberReq request, @RequestPart MultipartFile image) {
+        memberService.updateMemberInfo(UUID.fromString(memberId), request, image);
         return ResponseEntity.ok("MEMBER INFO IS UPDATED");
     }
 
