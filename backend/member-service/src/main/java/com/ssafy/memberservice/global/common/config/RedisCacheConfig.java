@@ -1,7 +1,7 @@
 package com.ssafy.memberservice.global.common.config;
 
-import com.ssafy.memberservice.domain.chatting.pubsub.service.CrewChatService;
-import com.ssafy.memberservice.domain.chatting.pubsub.service.PloggingChatService;
+import com.ssafy.memberservice.domain.chatting.pubsub.CrewChatSubscriber;
+import com.ssafy.memberservice.domain.chatting.pubsub.PloggingChatSubscriber;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,13 +67,13 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public MessageListenerAdapter crewListenerAdapter(CrewChatService crewChatService) {
-        return new MessageListenerAdapter(crewChatService, "sendChatMessage");
+    public MessageListenerAdapter crewListenerAdapter(CrewChatSubscriber crewChatSubscriber) {
+        return new MessageListenerAdapter(crewChatSubscriber, "sendMessage");
     }
 
     @Bean
-    public MessageListenerAdapter ploggingListenerAdapter(PloggingChatService ploggingChatService) {
-        return new MessageListenerAdapter(ploggingChatService, "sendChatMessage");
+    public MessageListenerAdapter ploggingListenerAdapter(PloggingChatSubscriber ploggingChatSubscriber) {
+        return new MessageListenerAdapter(ploggingChatSubscriber, "sendMessage");
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.chatting.pubsub.service;
+package com.ssafy.memberservice.domain.chatting.service;
 
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
@@ -8,14 +8,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class PloggingChatService {
-
     private final RedisTemplate redisTemplate;
 
     private final ChannelTopic ploggingTopic;
+
 
     public void sendChatMessage(PloggingChatMessage chatMessage) {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));

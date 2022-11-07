@@ -2,8 +2,8 @@ package com.ssafy.memberservice.domain.chatting.controller;
 
 import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
-import com.ssafy.memberservice.domain.chatting.pubsub.service.CrewChatService;
-import com.ssafy.memberservice.domain.chatting.pubsub.service.PloggingChatService;
+import com.ssafy.memberservice.domain.chatting.service.CrewChatService;
+import com.ssafy.memberservice.domain.chatting.service.PloggingChatService;
 import com.ssafy.memberservice.global.security.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.HttpHeaders;
 public class ChatController {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CrewChatService chatService;
+    private final CrewChatService crewChatService;
 
     private final PloggingChatService ploggingChatService;
 
@@ -31,7 +31,7 @@ public class ChatController {
         message.setSender(nickname);
         // 채팅방 인원수 세팅
         // Websocket에 발행된 메시지를 redis로 발행(publish)
-        chatService.sendChatMessage(message);
+        crewChatService.sendChatMessage(message);
     }
 
     @MessageMapping("/plogging/chat/message")
