@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CalendarController {
 
     private static CalendarService calendarService;
-    @ApiOperation("캘린더 등록")
+    @ApiOperation(value = "캘린더 등록", notes = "해당 월에 해당하는 스케쥴을 리스트로 반환")
     @GetMapping("{crewId}/{date}")
     ResponseEntity<?> getCalendarInfo(@PathVariable("crewId")Long crewId, @PathVariable("date")LocalDateTime time){
         CalendarRes calendarRes = calendarService.getCalendarInfo(time, crewId);
@@ -26,8 +26,8 @@ public class CalendarController {
     }
 
     @PostMapping()
-    ResponseEntity<?> postCalendarInfo(@ApiIgnore @RequestHeader("memberId") UUID memberId, @RequestBody CalendarReq calendarReq){
-       calendarService.postCalendarInfo(memberId, calendarReq);
+    ResponseEntity<?> postCalendarInfo(@ApiIgnore @RequestHeader("memberId") String memberId, @RequestBody CalendarReq calendarReq){
+       calendarService.postCalendarInfo(UUID.fromString(memberId), calendarReq);
         return ResponseEntity.ok("Calendar Posted");
     }
 }
