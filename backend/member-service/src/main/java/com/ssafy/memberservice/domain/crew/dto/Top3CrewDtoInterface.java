@@ -5,5 +5,5 @@ public interface Top3CrewDtoInterface {
     Long getCrewId();
     String getName();
     String getImageUrl();
-    Long totalAmount();
+    Long getTotalAmount();
 }

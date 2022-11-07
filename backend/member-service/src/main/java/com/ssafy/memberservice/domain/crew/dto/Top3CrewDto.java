@@ -21,7 +21,7 @@ public class Top3CrewDto {
                 .crewId(top3Interface.getCrewId())
                 .name(top3Interface.getName())
                 .imageUrl(top3Interface.getImageUrl())
-                .totalAmount(top3Interface.totalAmount())
+                .totalAmount(top3Interface.getTotalAmount())
                 .build();
     }
 }
