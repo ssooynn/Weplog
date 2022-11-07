@@ -1,28 +1,43 @@
 import { Box, Text } from "grommet";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import bgGradient from "../../assets/images/bgGradient.png";
 import searchIcon from "../../assets/icons/searchIcon.svg";
-import { ChallengeCard } from "../../components/challenge/ChallengeCard";
+import { ChallengeCard, ChallengeCardList } from "../../components/challenge/ChallengeCard";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
-import { challengeMyApi } from "../../apis/ChallengeApi";
+import { challengeListAPi, challengeMyApi } from "../../apis/ChallengeApi";
+import { List } from "grommet-icons";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
   const goChallengeRegister = () => {
     navigate("/challenge/register");
   };
+  const [challengeList, setChallengeList] = useState([]);
+  const [myChallengeList, setMyChallengeList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    challengeMyApi(0, 10, "ASC", (res) => {
-      console.log(res);
-    }, (err) => {
-      console.log(err);
-    })
-  }, [])
+    if (loading) {
+      challengeListAPi(0, 3, "ASC", (res) => {
+        setChallengeList(res.data.content);
+        console.log(res);
+      }, (err) => {
+        console.log(err);
+      })
+
+      challengeMyApi(0, 3, "ASC", (res) => {
+        setMyChallengeList(res.data.content);
+        console.log(res);
+      }, (err) => {
+        console.log(err);
+      })
+      setLoading(false);
+    }
+  }, [loading])
   return (
     <motion.div>
       <Box direction="column">
@@ -59,8 +74,8 @@ export const ChallengeList = () => {
           >
             내 챌린지
           </Text>
-          <ChallengeCard challengeId="2" />
-          <Text
+          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={myChallengeList}></ChallengeCardList>}
+          {/* <Text
             alignSelf="start"
             weight={600}
             size="18px"
@@ -93,9 +108,9 @@ export const ChallengeList = () => {
             <Text weight={400} size="12px" color="#3d3d3d">
               1 / 2
             </Text>
-          </Box>
+          </Box> */}
         </Box>
-        <img
+        {/* <img
           src={Banner}
           alt="Banner사진"
           style={{
@@ -108,7 +123,7 @@ export const ChallengeList = () => {
             objectFit: "cover",
             boxShadow: "4px 4px 4px rgba(0,0,0,0.3)",
           }}
-        ></img>
+        ></img> */}
         <Box pad="large" direction="column" align="center" justify="start">
           <Button biggreenround="true" onClick={goChallengeRegister}>
             새로운 챌린지 만들기
@@ -119,10 +134,11 @@ export const ChallengeList = () => {
             size="16px"
             margin={{ top: "20px" }}
           >
-            오늘의 추천 챌린지
+            최신 챌린지
           </Text>
-          <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <Box direction="row" justify="between" width="100%">
+          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={challengeList}></ChallengeCardList>}
+
+          {/* <Box direction="row" justify="between" width="100%">
             <Text weight={500} size="16px" margin={{ top: "20px" }}>
               Challenge Top 3
             </Text>
@@ -152,10 +168,10 @@ export const ChallengeList = () => {
                 총 거리
               </Text>
             </Box>
-          </Box>
+          </Box> */}
+          {/* <ChallengeCard bgimage="https://picsum.photos/200/300" />
           <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" />
+          <ChallengeCard bgimage="https://picsum.photos/200/300" /> */}
         </Box>
       </Box>
     </motion.div>
