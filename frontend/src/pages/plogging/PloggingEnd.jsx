@@ -30,8 +30,8 @@ export const PloggingEnd = () => {
   const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState();
   const lineRef = useRef();
-  const { kakao } = window;
   const [pathData, setPathData] = useState();
+  const { kakao } = window;
   const geocoder = new kakao.maps.services.Geocoder();
   // ploggingType: "",
   //     ploggingData: {

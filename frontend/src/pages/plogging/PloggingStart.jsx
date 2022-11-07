@@ -5,7 +5,9 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { Box } from "grommet";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
+import { PloggingTypeBottomSheet } from "../../components/plogging/PloggingTypeBottomSheet";
 export const PloggingStart = () => {
+  //variabales
   const [loc, setLoc] = useState({
     center: {
       lat: 33.450701,
@@ -14,8 +16,26 @@ export const PloggingStart = () => {
     errMsg: null,
     isLoading: true,
   });
-
+  const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState();
   const navigate = useNavigate();
+  const { kakao } = window;
+  const geocoder = new kakao.maps.services.Geocoder();
+  // function
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const callback = (result, status) => {
+    if (status === kakao.maps.services.Status.OK) {
+      console.log(result);
+      const addName = result[0].address.address_name.split(" ");
+      console.log(addName);
+      setAddress((prev) => (prev = addName[1] + ", " + addName[0]));
+    }
+  };
+
+  //hooks
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -27,6 +47,11 @@ export const PloggingStart = () => {
             lng: position.coords.longitude, // 경도
           },
         }));
+        var coord = new kakao.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
       },
       (err) => {
         setLoc((prev) => ({
@@ -70,7 +95,7 @@ export const PloggingStart = () => {
       <Box
         width="100%"
         align="center"
-        style={{ position: "absolute", top: "8%", zIndex: "15" }}
+        style={{ position: "absolute", top: "8%", zIndex: "3" }}
         gap="medium"
       >
         {/* 주소박스 */}
@@ -86,7 +111,7 @@ export const PloggingStart = () => {
             background: "#57BA83",
           }}
         >
-          경기도 용인시 기흥구 신갈동
+          {address}
         </Box>
         {/* 챌린지 선택 박스 */}
         {/* <Box width="75%" direction="row" justify="end">
@@ -108,17 +133,19 @@ export const PloggingStart = () => {
       <Box
         width="100%"
         align="center"
-        style={{ position: "absolute", bottom: "7%", zIndex: "15" }}
+        style={{ position: "absolute", bottom: "7%", zIndex: "3" }}
       >
         <BootstrapButton
           whileTap={{ scale: 0.9 }}
           onClick={() => {
-            navigate("/plogging");
+            setOpen(true);
+            // navigate("/plogging");
           }}
         >
           Plogging!
         </BootstrapButton>
       </Box>
+      <PloggingTypeBottomSheet open={open} onDismiss={handleClose} />
     </motion.div>
   );
 };
