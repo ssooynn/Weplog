@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const API_SERVER = "https://k7a1061.p.ssafy.io/";
+export const API_SERVER = "https://j7a1061.p.ssafy.io/api";
 
 // export const API_SERVER = "http://localhost:8080/api";
 
-// export const CLIENT_URL = "https://k7a601.p.ssafy.io";
+// export const CLIENT_URL = "https://j7a1061.p.ssafy.io";
 
 export const CLIENT_URL = "http://localhost:3000";
 
