@@ -33,7 +33,6 @@ public class MemberController {
         Member member = memberService.updateMemberInfo(UUID.fromString(memberId), request, image);
 
         // 2. 유저정보 얻기
-//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 //        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 //
 //
@@ -54,7 +53,9 @@ public class MemberController {
 
     @ApiOperation(value = "닉네임 중복 검사", notes = "false -> 중복되지 않음, true -> 중복됨 ")
     @GetMapping("/check/{nickname}")
-    public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname) {
+    public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname, @ApiIgnore @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
         return new ResponseEntity<>(memberService.checkDoubleNickname(nickname), HttpStatus.OK);
     }
 }
