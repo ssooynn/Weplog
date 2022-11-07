@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class MemberChallenge extends BaseEntity {
 
     @Id
@@ -29,12 +30,6 @@ public class MemberChallenge extends BaseEntity {
     private Long totalAmount;
     private String nickname;
     private String profileImageUrl;
-
-    @Builder
-    public MemberChallenge(Member member, Challenge challenge){
-        this.member = member;
-        this.challenge = challenge;
-    }
 
     public void updateAfterPlogging(Integer distance, Integer time) {
         if (this.challenge.getType().equals("DISTANCE")) {
