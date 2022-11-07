@@ -67,6 +67,9 @@ public class ChallengeServiceImpl implements ChallengeService{
         MemberChallenge participateChallenge = MemberChallenge.builder()
                 .member(findMember)
                 .challenge(saveChallenge)
+                .totalAmount(0L)
+                .nickname(findMember.getNickname())
+                .profileImageUrl(findMember.getProfileImageUrl())
                 .build();
         memberChallengeRepository.save(participateChallenge);
         saveChallenge.updateParticipantsCnt();

@@ -21,6 +21,7 @@ public class ChallengeRes {
     private double progressRate;
     private boolean finishFlag;
     private String imageUrl;
+    private Long challengeId;
 
     @Builder
     public  ChallengeRes(Challenge challenge){
@@ -30,6 +31,7 @@ public class ChallengeRes {
         this.rewardPoint = challenge.getRewardPoint();
         this.progress = challenge.getProgress();
         this.imageUrl = challenge.getImageUrl();
+        this.challengeId = challenge.getId();
     }
 
     public static ChallengeRes create(Challenge challenge) {

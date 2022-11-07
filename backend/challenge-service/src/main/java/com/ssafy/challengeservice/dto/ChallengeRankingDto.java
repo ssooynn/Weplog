@@ -1,6 +1,7 @@
 package com.ssafy.challengeservice.dto;
 
 import com.ssafy.challengeservice.domain.member.Member;
+import com.ssafy.challengeservice.global.common.uuid.UuidAdapter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class ChallengeRankingDto implements Serializable {
 
     public static ChallengeRankingDto from(ChallengeRankingDtoInterface dtoInterface) {
         return ChallengeRankingDto.builder()
-                .memberId(dtoInterface.getMemberId().toString())
+                .memberId(UuidAdapter.getUUIDFromBytes(dtoInterface.getMemberId()).toString())
                 .name(dtoInterface.getName())
                 .nickname(dtoInterface.getNickname())
                 .profileImageUrl(dtoInterface.getProfileImageUrl())
