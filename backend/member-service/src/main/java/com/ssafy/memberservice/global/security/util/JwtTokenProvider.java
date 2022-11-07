@@ -57,7 +57,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .setSubject(userId)
-//                .setSubject(nickname)
+                .claim("nickname", user.getUsername())
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuer("weplog")
                 .setIssuedAt(now)
@@ -71,7 +71,7 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setIssuer("ride-us")
+                .setIssuer("weplog")
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .compact();
