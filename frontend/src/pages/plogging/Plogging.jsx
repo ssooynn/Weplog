@@ -63,6 +63,7 @@ import {
   MessageList,
   MessageInput,
   TypingIndicator,
+  MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./plogging.css";
@@ -70,6 +71,7 @@ import userIcon from "../../assets/icons/userIcon.svg";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import ChatSound from "../../assets/sounds/chatNoti.mp3";
+import { exitPlogging, getGarbageList } from "../../apis/ploggingApi";
 
 export const DataBox = ({ label, data }) => {
   return (
@@ -127,7 +129,7 @@ export const Plogging = () => {
   const [markerPositions, setMarkerPositions] = useState([]);
   const [visible, setVisible] = useState(false);
   const audioPlayer = useRef(null);
-
+  const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -140,12 +142,12 @@ export const Plogging = () => {
     });
 
   const [messages, setMessages] = useState([]);
-
+  const { ploggingType } = locations.state;
   // ------------------함수-----------------------------
 
   // 소리 재생
   const playAudio = () => {
-    audioPlayer.current.stop();
+    audioPlayer.current.pause();
     audioPlayer.current.play();
   };
 
@@ -248,25 +250,69 @@ export const Plogging = () => {
   }, []);
 
   const handlePloggingFinish = () => {
-    navigate("/plogging/end", {
-      state: {
-        ploggingType: "",
-        ploggingData: {
-          latlng: mapData.latlng,
-          kcal: data.kcal,
-          time: time,
-          totalDistance: handleDistance(),
-          maxLng: mapData.maxLng,
-          minLng: mapData.minLng,
-          maxLat: mapData.maxLat,
-          minLat: mapData.minLat,
+    if (time < 60)
+      navigate("/plogging/end", {
+        state: {
+          ploggingType: ploggingType,
+          ploggingId: null,
+          ploggingData: {
+            latlng: mapData.latlng,
+            kcal: data.kcal,
+            time: time,
+            totalDistance: handleDistance(),
+            maxLng: mapData.maxLng,
+            minLng: mapData.minLng,
+            maxLat: mapData.maxLat,
+            minLat: mapData.minLat,
+          },
         },
-      },
-    });
+      });
+    else
+      exitPlogging(
+        {
+          calorie: data.kcal,
+          coordinates: mapData.latlng,
+          crewId: ploggingType === "single" ? null : null,
+          distance: data.totalDistance,
+          time: time,
+        },
+        (response) => {
+          console.log(response);
+          navigate("/plogging/end", {
+            state: {
+              ploggingType: ploggingType,
+              ploggingId: response.data.ploggingId,
+              ploggingData: {
+                latlng: mapData.latlng,
+                kcal: data.kcal,
+                time: time,
+                totalDistance: handleDistance(),
+                maxLng: mapData.maxLng,
+                minLng: mapData.minLng,
+                maxLat: mapData.maxLat,
+                minLat: mapData.minLat,
+              },
+            },
+          });
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
   };
 
   const handleMessageSend = (text) => {
-    setMessages((prev) => [...prev, text]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: text,
+        sentTime: new Date(),
+        sender: "localSender",
+        direction: "outgoing",
+        position: "single",
+        type: "message",
+      },
+    ]);
   };
 
   // 웹소켓 구독
@@ -278,6 +324,17 @@ export const Plogging = () => {
         const data = JSON.parse(response.body);
         // 1. 채팅일 때
         if (data) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: data.text,
+              sentTime: new Date(),
+              sender: data.nickname,
+              direction: "incoming",
+              position: "single",
+              type: "message",
+            },
+          ]);
         }
         // 2. 마커 위치일 때
         else if (data) {
@@ -286,6 +343,20 @@ export const Plogging = () => {
         }
         // 3. 사용자들 위치일 때
         else if (data) {
+        }
+        // 4. 사용자 입장했을때/퇴장했을 떄
+        else if (data) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: data.nickname + "님이 퇴장하셨습니다.",
+              sentTime: new Date(),
+              sender: data.nickname,
+              direction: "incoming",
+              position: "single",
+              type: "enter",
+            },
+          ]);
         }
         // rideMembers.members[data.memberId] = data;
         // setRideMembers({ ...rideMembers });
@@ -423,6 +494,28 @@ export const Plogging = () => {
     ready && walking ? 1000 : null
   );
 
+  //1분마다 쓰레기통 위치 갱신
+  useInterval(
+    () => {
+      getGarbageList(
+        mapData.center,
+        (response) => {
+          console.log(response);
+          setGarbages((prev) => (prev = response.data));
+          console.log(garbages);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      // setData((prev) => ({
+      //   kcal: handleCalories(),
+      //   totalDistance: prev.totalDistance,
+      // }));
+    },
+    ready && walking ? 1000 * 60 : 3000
+  );
+
   // 실시간 위치를 찍어주는 함수
   useInterval(
     () => {
@@ -452,6 +545,19 @@ export const Plogging = () => {
               minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
+          if (garbages.length < 1) {
+            getGarbageList(
+              gps,
+              (response) => {
+                console.log(response);
+                setGarbages((prev) => (prev = response.data));
+                console.log(garbages);
+              },
+              (fail) => {
+                console.log(fail);
+              }
+            );
+          }
           if (time >= 1) {
             // 위치가 1개 초과로 저장되었을 때 거리 계산
             if (mapData.latlng.length > 1) {
@@ -498,6 +604,7 @@ export const Plogging = () => {
   // 거리, 데이터 핸들 useEffect
   useEffect(() => {
     window.addEventListener("beforeunload", preventClose);
+
     return () => {
       window.removeEventListener("beforeunload", preventClose);
     };
@@ -602,6 +709,24 @@ export const Plogging = () => {
               }, // 마커이미지의 크기입니다
             }}
           />
+
+          {garbages.length > 0 &&
+            garbages.map((gabage, index) => {
+              return (
+                <MapMarker
+                  key={index}
+                  position={{ lat: gabage.lat, lng: gabage.lng }}
+                  image={{
+                    src: `/assets/images/garbage.png`,
+                    size: {
+                      width: 41,
+                      height: 41,
+                    },
+                  }}
+                />
+              );
+            })}
+
           {mapData.latlng && (
             <Polyline
               path={[mapData.latlng]}
@@ -681,19 +806,30 @@ export const Plogging = () => {
                   <Avatar src={userIcon} name="Joe" />
                   <Message.Footer sender="Emily" sentTime="just now" />
                 </Message>
-                {messages.map((mes, index) => {
-                  return (
-                    <Message
-                      key={index}
-                      model={{
-                        message: mes,
-                        sentTime: "15 mins ago",
-                        sener: "localSender",
-                        direction: "outgoing",
-                        position: "single",
-                      }}
-                    />
-                  );
+                {messages.map((message, index) => {
+                  if (message.type === "message")
+                    return (
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.text,
+                          sentTime: message.sentTime,
+                          sender: message.sender,
+                          direction: message.direction,
+                          position: message.position,
+                        }}
+                      />
+                    );
+                  else if (message.type === "enter" || message.type === "exit")
+                    return (
+                      <MessageSeparator
+                        content={
+                          message.sender + "님이 " + message.type === "enter"
+                            ? "참가했습니다."
+                            : "나가셨습니다."
+                        }
+                      />
+                    );
                 })}
               </MessageList>
               <MessageInput
