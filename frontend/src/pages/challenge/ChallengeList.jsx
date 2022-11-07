@@ -1,5 +1,5 @@
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useEffect } from "react";
 import bgGradient from "../../assets/images/bgGradient.png";
 import searchIcon from "../../assets/icons/searchIcon.svg";
 import { ChallengeCard } from "../../components/challenge/ChallengeCard";
@@ -8,12 +8,21 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
+import { challengeMyApi } from "../../apis/ChallengeApi";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
   const goChallengeRegister = () => {
     navigate("/challenge/register");
   };
+
+  useEffect(() => {
+    challengeMyApi(0, 10, "ASC", (res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    })
+  }, [])
   return (
     <motion.div>
       <Box direction="column">
