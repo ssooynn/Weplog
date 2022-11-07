@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -38,6 +39,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            if (request.getMethod().matches(HttpMethod.OPTIONS.toString())) {
+                return chain.filter(exchange);
+            }
 
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "No Authorization Header", HttpStatus.UNAUTHORIZED);

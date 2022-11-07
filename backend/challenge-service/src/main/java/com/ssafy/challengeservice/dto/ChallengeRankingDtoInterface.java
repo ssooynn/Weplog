@@ -1,7 +1,9 @@
 package com.ssafy.challengeservice.dto;
 
+import java.util.UUID;
+
 public interface ChallengeRankingDtoInterface {
-    String getMemberId();
+    UUID getMemberId();
     String getName();
     String getNickname();
     String getProfileImageUrl();

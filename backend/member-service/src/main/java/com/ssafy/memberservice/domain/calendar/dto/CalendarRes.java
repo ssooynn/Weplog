@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.calendar.dto;
 
+import com.ssafy.memberservice.domain.calendar.domain.Calendar;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,14 @@ public class CalendarRes {
     LocalDateTime scheduleDate;
     String content;
     String location;
+
+    public CalendarRes(Calendar calendar){
+        this.id = calendar.getId();
+        this.nickname = calendar.getMember().getNickname();
+        this.imageUrl = calendar.getMember().getProfileImageUrl();
+        this.crewId = calendar.getCrew().getId();
+        this.scheduleDate = calendar.getScheduleDate();
+        this.content = calendar.getContent();
+        this.location = calendar.getLocation();
+    }
 }
