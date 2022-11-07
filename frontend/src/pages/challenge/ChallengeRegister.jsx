@@ -5,10 +5,42 @@ import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
 import Button from "../../components/Button";
+import { challengeRegisterApi } from "../../apis/ChallengeApi";
+import { Calendar } from "react-date-range";
+import * as locales from "react-date-range/dist/locale";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import styled from "styled-components";
+import calendarButton from "../../assets/icons/calendar.png";
+
+
+const LoginModalStyled = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    -ms-overflow-style: none;
+  &::-webkit-scrollbar{
+    display: none;
+  }
+`;
 
 export const ChallengeRegister = () => {
   const [profile, setProfile] = useState("");
   const [image, setImage] = useState("");
+  const [locale, setLocale] = React.useState("ko");
+  const [date, setDate] = useState(new Date());
+  const [showCalender, setShowCalender] = useState(false);
+  const [name, setName] = useState("");
+  const [type, setType] = useState("");
+  const [goal, setGoal] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const WantUpdateProfile = (e) => {
     let file = e.target.files[0];
     let fileURL;
@@ -21,14 +53,55 @@ export const ChallengeRegister = () => {
     setImage(file);
   };
 
-  const [name, setName] = useState("");
-  const [type, setType] = useState("");
-  const [goal, setGoal] = useState("");
-  const [endDate, setEndDate] = useState("");
-
   const changeType = (str) => {
     console.log(str);
     setType(str);
+  };
+
+  const challengeRegister = () => {
+    //유효성 체크
+    if (name && type && goal && endDate) {
+      //api전송을 위한 formData객체
+      const formData = new FormData();
+
+      //user 객체 만들기
+      const request = JSON.stringify({
+        title: name,
+        type: type,
+        goal: goal,
+        end_date: endDate,
+      });
+      console.log(request);
+      //이미지 배열 만들어서 formData에 넣기      
+      formData.append("image", image);
+
+      //user객체 formdata에 넣기
+      const blob = new Blob([request], {
+        type: "application/json",
+      });
+      formData.append("request", blob);
+      challengeRegisterApi(formData, (res) => {
+        console.log(res);
+      }, (err) => {
+        console.log(err);
+      })
+
+    } else {
+      alert('모든 정보를 입력해주세요');
+    }
+  }
+
+  const endDatechoice = (item) => {
+    setDate(item);
+    setShowCalender(!showCalender);
+    const year = item.getFullYear(item);
+    const month =
+      item.getMonth(item) + 1 < 10
+        ? "0" + (item.getMonth(item) + 1)
+        : item.getMonth(item) + 1;
+    const date =
+      item.getDate(item) < 10 ? "0" + item.getDate(item) : item.getDate(item);
+    setEndDate(`${year}-${month}-${date}`);
   };
   return (
     <motion.div style={{ minHeight: "88vh" }}>
@@ -142,25 +215,25 @@ export const ChallengeRegister = () => {
                 weight={500}
                 size="16px"
                 style={{
-                  color: `${type === "distance" ? "#00853B" : "#7E7E7E"}`,
+                  color: `${type === "DISTANCE" ? "#00853B" : "#7E7E7E"}`,
                 }}
-                onClick={(e) => changeType("distance")}
+                onClick={(e) => changeType("DISTANCE")}
               >
                 거리
               </Text>
               <Text
                 weight={500}
                 size="16px"
-                style={{ color: `${type === "count" ? "#00853B" : "#7E7E7E"}` }}
-                onClick={(e) => changeType("count")}
+                style={{ color: `${type === "PLOGGING_CNT" ? "#00853B" : "#7E7E7E"}` }}
+                onClick={(e) => changeType("PLOGGING_CNT")}
               >
                 횟수
               </Text>
               <Text
                 weight={500}
                 size="16px"
-                style={{ color: `${type === "time" ? "#00853B" : "#7E7E7E"}` }}
-                onClick={(e) => changeType("time")}
+                style={{ color: `${type === "TIME" ? "#00853B" : "#7E7E7E"}` }}
+                onClick={(e) => changeType("TIME")}
               >
                 시간
               </Text>
@@ -178,7 +251,7 @@ export const ChallengeRegister = () => {
             >
               <StyledInput
                 placeholder="0"
-                value={name}
+                value={goal}
                 onChange={(e) => {
                   setGoal(e.target.value);
                 }}
@@ -187,17 +260,17 @@ export const ChallengeRegister = () => {
                 margin="0px"
               />
 
-              {(type === "distance" || type === "") && (
+              {(type === "DISTANCE" || type === "") && (
                 <Text weight={500} size="16px">
                   Km
                 </Text>
               )}
-              {type === "count" && (
+              {type === "PLOGGING_CNT" && (
                 <Text weight={500} size="16px">
                   회
                 </Text>
               )}
-              {type === "time" && (
+              {type === "TIME" && (
                 <Text weight={500} size="16px">
                   시간
                 </Text>
@@ -209,11 +282,35 @@ export const ChallengeRegister = () => {
               </Text>
             </Box>
             <Box gridArea="endDateData" justify="center" align="start">
-              8
+              <Box direction="row" justify="between" align='center' width='100%'>
+
+                {endDate}
+                <img src={calendarButton} alt="날짜 선택" onClick={() => {
+                  setShowCalender(!showCalender);
+                  setDate(date);
+                }}
+                  width="20px"
+                />
+              </Box>
             </Box>
+            {showCalender && ( // 클릭 등으로 토글상태 값이 true 이 되면 달력이 보여진다
+              <LoginModalStyled>
+                <div style={{ display: "flex", flexFlow: "column nowrap", position: "absolute" }}>
+                  <Calendar
+                    onChange={(item) => {
+                      endDatechoice(item);
+                    }}
+                    locale={locales[locale]}
+                    date={date}
+                    style={{ width: "300px" }}
+                    color="#ccaa90"
+                  />
+                </div>
+              </LoginModalStyled>
+            )}
           </Grid>
 
-          <Button biggreenround="true">챌린지 등록</Button>
+          <Button biggreenround="true" onClick={challengeRegister}>챌린지 등록</Button>
         </Box>
       </Box>
     </motion.div>

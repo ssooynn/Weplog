@@ -72,12 +72,28 @@ export const Signup = () => {
   const signup = (e) => {
     //유효성 체크
     if (name && nickname && weight && checkNickname && checkAll) {
-      const user = {
+      //api전송을 위한 formData객체
+      const formData = new FormData();
+
+      //user 객체 만들기
+      const user = JSON.stringify({
         name: name,
         nickname: nickname,
         weight: Number(weight),
-      }
-      signupApi(user, (res) => {
+      });
+
+      //이미지 배열 만들어서 formData에 넣기      
+      formData.append("image", image);
+      console.log(user);
+      console.log(profile);
+      //user객체 formdata에 넣기
+      const blob = new Blob([user], {
+        type: "application/json",
+      });
+      formData.append("request", blob);
+
+
+      signupApi(formData, (res) => {
         console.log(res);
         navigate("/plomon");
       }, (err) => {
@@ -87,6 +103,7 @@ export const Signup = () => {
       alert('모든 정보를 입력해주세요');
     }
   }
+
 
   useEffect(() => {
     if (check1 && check2 && check3) {
