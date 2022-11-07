@@ -27,8 +27,8 @@ public class CrewController {
     @PostMapping
     public ResponseEntity<CreateCrewResponse> createClan(@RequestPart CreateCrewRequest request,
                                                          @RequestPart MultipartFile image,
-                                                         @ApiIgnore @RequestHeader("memberId") UUID memberId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(crewService.createCrew(request, image, memberId));
+                                                         @ApiIgnore @RequestHeader("memberId") String memberId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(crewService.createCrew(request, image, UUID.fromString(memberId)));
     }
 
     @ApiOperation(value = "크루 가입 신청하기")
