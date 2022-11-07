@@ -17,13 +17,14 @@ import Charact from "../../assets/images/char.gif";
 import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
 import { StyledText } from "../../components/Common";
 import $ from "jquery";
+import { Plomon } from "../../components/plomon/Plomon";
 window.jQuery = $;
 window.$ = $;
 
-const Plomon = () => {
-  const fbx = useFBX("/dino02.fbx");
-  return <primitive object={fbx} />;
-};
+// const Plomon = () => {
+//   const fbx = useFBX("/dino02.fbx");
+//   return <primitive object={fbx} />;
+// };
 
 export const PloggingEnd = () => {
   const navigate = useNavigate();
@@ -263,21 +264,23 @@ export const PloggingEnd = () => {
           <div
             style={{
               width: "200px",
+              height: "300px",
               position: "absolute",
-              right: 0,
-              top: "-150px",
+              left: "60%",
+              top: "-130px",
               zIndex: "15",
             }}
           >
-            {/* <Canvas camera={{ position: [100, 100, 0] }}>
-              <ambientLight intensity={0.5} />
-              <spotLight position={[150, 150, 150]} angle={0.15} penumbra={1} />
-              <pointLight position={[-150, -150, -150]} />
+            <Canvas camera={{ position: [0, 50, 120] }} flat linear>
+              {/* <ambientLight intensity={0.4} /> */}
+              {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
+              {/* <pointLight position={[0, 60, 400]} /> */}
+              {/* <pointLight position={[0, 150, 250]} /> */}
               <Suspense fallback={null}>
                 <Plomon />
-                <OrbitControls />
+                <Environment preset="sunset" />
               </Suspense>
-            </Canvas> */}
+            </Canvas>
           </div>
           {/* <img
             src={Charact}
