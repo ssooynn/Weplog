@@ -50,6 +50,13 @@ export const CrewDetail = () => {
     textUnderlinePosition: "under",
     textDecorationThickness: "2px",
   };
+  const sharePage = () => {
+    window.navigator.share({
+      title: `Beedly`,
+      text: `히히`,
+      url: window.location.href,
+    });
+  };
   return (
     <div style={{ width: "100%" }}>
       <Box style={{ position: "relative", width: "100%" }} height="250px">
@@ -73,7 +80,7 @@ export const CrewDetail = () => {
           <Text size="20px" weight={500}>
             싸피 7기 최강 Beedly
           </Text>
-          <img src={shareIcon} width="20px" height="20px" alt="공유" />
+          <img src={shareIcon} width="20px" height="20px" alt="공유" onClick={sharePage} />
         </Box>
         <Text size="12px" weight={500} margin="10px 0px 30px 0px">
           크루에 대한 설명입니다.
