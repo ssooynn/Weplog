@@ -27,6 +27,7 @@ import { saveAs } from "file-saver";
 import { Map, Polyline } from "react-kakao-maps-sdk";
 import { ChromePicker, SketchPicker } from "react-color";
 import { handleColor } from "../../utils/changeColor";
+import { postPloggingPicture } from "../../apis/ploggingApi";
 
 export const PloggingRegister = () => {
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ export const PloggingRegister = () => {
   const mapLineRef = useRef();
   const [contentColor, setContentColor] = useState("white");
   const [imageClicked, setIamgeClicked] = useState(false);
-  const { ploggingType, ploggingData, address, pathData } = location.state;
+  const { ploggingType, ploggingData, address, pathData, ploggingId } =
+    location.state;
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -76,6 +78,26 @@ export const PloggingRegister = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleRegister = () => {
+    const ima = imageRef.current;
+    domtoimage.toBlob(ima).then((blob) => {
+      // saveAs(blob, "card.png");
+      const formData = new FormData();
+      formData.append("image", blob);
+      postPloggingPicture(
+        ploggingId,
+        formData,
+        (response) => {
+          console.log(response);
+          navigate("/");
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    });
   };
 
   return (
@@ -438,12 +460,7 @@ export const PloggingRegister = () => {
             height: "50px",
           }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => {
-            const ima = imageRef.current;
-            domtoimage.toBlob(ima).then((blob) => {
-              saveAs(blob, "card.png");
-            });
-          }}
+          onClick={handleRegister}
         >
           {"확인"}
         </BootstrapButton>

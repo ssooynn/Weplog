@@ -29,7 +29,7 @@ window.$ = $;
 export const PloggingEnd = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { ploggingType, ploggingData } = location.state;
+  const { ploggingType, ploggingData, ploggingId } = location.state;
   const [data, setData] = useState(ploggingData);
   const [lineImage, setLineImage] = useState(null);
   const [lineImageBlack, setLineImageBlack] = useState(null);
@@ -135,6 +135,7 @@ export const PloggingEnd = () => {
       state: {
         ploggingType: ploggingType,
         ploggingData: ploggingData,
+        ploggingId: ploggingId,
         address: address,
         pathData: line,
       },
@@ -263,10 +264,10 @@ export const PloggingEnd = () => {
         >
           <div
             style={{
-              width: "200px",
+              width: "50%",
               height: "300px",
               position: "absolute",
-              left: "60%",
+              left: "50%",
               top: "-130px",
               zIndex: "15",
             }}
