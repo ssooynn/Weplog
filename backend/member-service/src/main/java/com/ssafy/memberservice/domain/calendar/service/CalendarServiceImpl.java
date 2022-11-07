@@ -4,7 +4,7 @@ import com.ssafy.memberservice.domain.calendar.domain.Calendar;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarReq;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarRes;
 import com.ssafy.memberservice.domain.calendar.repository.CalendarRepository;
-import com.ssafy.memberservice.domain.crew.dao.CrewRepository;
+import com.ssafy.memberservice.domain.crew.dto.dao.CrewRepository;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
@@ -37,7 +37,14 @@ public class CalendarServiceImpl implements CalendarService
 
     @Override
     public void postCalendarInfo(UUID memberId, CalendarReq calendarReq) {
+        System.out.println("Heyyyy");
         Member member = memberRepository.findById(memberId).get();
         Crew crew = crewRepository.findById(calendarReq.getCrewId()).get();
+        System.out.println(member);
+        System.out.println(crew);
+        Calendar calendar = Calendar.builder()
+                .crew(crew).member(member).location(calendarReq.getLocation()).content(calendarReq.getContent())
+                .build();
+        calendarRepository.save(calendar);
     }
 }
