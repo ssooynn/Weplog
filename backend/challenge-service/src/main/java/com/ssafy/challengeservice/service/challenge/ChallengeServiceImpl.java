@@ -90,29 +90,29 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     public Slice<ChallengeRes> getChallengeList(Pageable pageable) {
-        Slice<ChallengeRes> slice = challengeRepository.getChallengeList(pageable).map(m -> new ChallengeRes(m));
+        Slice<ChallengeRes> slice = challengeRepository.getChallengeList(pageable).map(m -> ChallengeRes.create(m));
         return slice;
     }
 
     @Override
     public Slice<ChallengeRes> getMyChallengeList(UUID id, Pageable pageable) {
-        Slice<ChallengeRes> slice = challengeRepository.getChallengeByID(id, pageable).map(m->new ChallengeRes(m));
+        Slice<ChallengeRes> slice = challengeRepository.getChallengeByID(id, pageable).map(m->ChallengeRes.create(m));
         return slice;
     }
 
     @Override
     public Slice<ChallengeRes> getChallengeBySearch(String title, Pageable pageable) {
         Slice<ChallengeRes> slice = challengeRepository.getChallengeByTitle(title, pageable)
-                .map(m ->new ChallengeRes(m));
+                .map(m ->ChallengeRes.create(m));
         return slice;
     }
 
     @Override
-    public ChallengeDetailRes getChallengeDetail(Long id) {
+    public ChallengeDetailRes getChallengeDetail(Long id, UUID memberId) {
         Challenge challenge = challengeRepository.findByIdWithMember(id)
                 .orElseThrow(() -> new NotFoundException(CHALLENGE_NOT_FOUND));
 
-        return ChallengeDetailRes.from(challenge);
+        return ChallengeDetailRes.from(challenge, memberId);
     }
 
     // end time 끝난 챌린지 종료시키기

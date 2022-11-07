@@ -8,7 +8,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
+import org.hibernate.annotations.Type;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class Crew extends BaseEntity {
 
     // GPS 로 부터 받는 위치 정보를 저장하기 위해 WGS 84 좌표계(SRID=3857, 4326)으로 이중 lon,lat 순서로 하기 위해 3857로 컬럼을 정의
     @Column(columnDefinition = "POINT SRID 3857", nullable = false)
+//    @Type(type = "org.hibernate.spatial.JTSGeometryType")
     private Point crewLoc;
 
     private String activityArea;
@@ -56,7 +60,12 @@ public class Crew extends BaseEntity {
         crew.crewMaster = member;
         // TODO: crewLoc 백에서 처리할지 프론트에서 할지 정해야 함
         crew.activityArea = request.getActivityArea();
-        crew.crewLoc = new Point(request.getLon(), request.getLat());
+        String pointWKT = String.format("POINT(%s %s)", request.getLon(), request.getLat());
+        try {
+            crew.crewLoc = (Point) new WKTReader().read(pointWKT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         crew.maxParticipantCnt = request.getMaxParticipantCnt();
 
         return crew;

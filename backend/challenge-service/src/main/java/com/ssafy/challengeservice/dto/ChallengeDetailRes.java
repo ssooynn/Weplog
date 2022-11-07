@@ -1,12 +1,14 @@
 package com.ssafy.challengeservice.dto;
 
 import com.ssafy.challengeservice.domain.challenge.Challenge;
+import com.ssafy.challengeservice.domain.memberchallenge.MemberChallenge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -27,8 +29,10 @@ public class ChallengeDetailRes {
     private int totalDistance;
     private int totalTime;
     private int totalPloggingCnt;
+    private boolean isMyChallenge;
+    private String type;
 
-    public static ChallengeDetailRes from(Challenge challenge){
+    public static ChallengeDetailRes from(Challenge challenge, UUID loginMemberId){
         ChallengeDetailRes challengeDetailRes = new ChallengeDetailRes();
 
         challengeDetailRes.title = challenge.getTitle();
@@ -44,6 +48,15 @@ public class ChallengeDetailRes {
         challengeDetailRes.totalDistance = challenge.getTotalDistance();
         challengeDetailRes.totalTime = challenge.getTotalTime();
         challengeDetailRes.totalPloggingCnt = challenge.getTotalPloggingCnt();
+        List<MemberChallenge> memberChallengeList = challenge.getMemberChallengeList();
+        boolean isMyChallenge = false;
+        for (MemberChallenge memberChallenge : memberChallengeList) {
+            if (memberChallenge.getMember().getId().equals(loginMemberId)) {
+                isMyChallenge = true;
+            }
+        }
+        challengeDetailRes.isMyChallenge = isMyChallenge;
+        challengeDetailRes.type = challenge.getType();
 
         return challengeDetailRes;
     }
