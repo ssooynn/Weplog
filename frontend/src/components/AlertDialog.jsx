@@ -207,6 +207,41 @@ export const DetailDialog = ({
   );
 };
 
+
+export const PlomonDetail = ({
+  plomonOpen,
+  handleClose,
+  // plogData,
+}) => {
+  return (
+    <Dialog
+      open={plomonOpen}
+      onClose={handleClose}
+      PaperProps={{
+        style: { borderRadius: 15 }
+      }}
+      style={{
+        backgroundColor: "none",
+        
+      }}
+    >
+      메롱
+      <Box
+        direction="row"
+        justify="center"
+        round="15px"
+        style={{
+          fontFamily: "gwmd",
+        }}
+      >
+        메롱
+      </Box>
+    </Dialog>
+  );
+};
+
+
+
 // export const RideDialog = ({ open, handleClose, title }) => {
 //   const navigate = useNavigate();
 //   return (

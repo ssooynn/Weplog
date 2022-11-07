@@ -58,7 +58,7 @@ export const MainExplore = () => {
         background:
           "linear-gradient(307.96deg, rgba(87, 186, 131, 0.296), rgba(29, 38, 255, 0.088))",
         textAlign: "center",
-        height: "94vh",
+        height: "100vh",
       }}
     >
       
