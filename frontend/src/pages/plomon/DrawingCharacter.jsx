@@ -60,8 +60,7 @@ export const DrawingCharacter = () => {
               width="100%"
               height="30%"
               align="center"
-              justify="start"
-              pad={{ top: "107px" }}
+              justify="center"
               background={{
                 size: "contain",
                 image: "url(assets/images/ribbon.png)",
