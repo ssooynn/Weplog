@@ -20,26 +20,26 @@ public class MemberPetController {
 
     @ApiOperation(value = "나의 모든 펫 조회하기")
     @GetMapping
-    public ResponseEntity<?> getMyPets(@ApiIgnore @RequestHeader("memberId") UUID memberId) {
-        return ResponseEntity.ok(memberPetService.getMyPets(memberId));
+    public ResponseEntity<?> getMyPets(@ApiIgnore @RequestHeader("memberId") String memberId) {
+        return ResponseEntity.ok(memberPetService.getMyPets(UUID.fromString(memberId)));
     }
 
     @ApiOperation(value = "나의 펫 조회하기")
     @GetMapping("/{petId}")
-    public ResponseEntity<?> getMyPet(@ApiIgnore @RequestHeader("memberId") UUID memberId, @PathVariable("petId") Long petId) {
-        return ResponseEntity.ok(memberPetService.getMyPet(memberId, petId));
+    public ResponseEntity<?> getMyPet(@ApiIgnore @RequestHeader("memberId") String memberId, @PathVariable("petId") Long petId) {
+        return ResponseEntity.ok(memberPetService.getMyPet(UUID.fromString(memberId), petId));
     }
 
     @ApiOperation(value = "나의펫 종류 조회하기")
     @GetMapping("/kinds")
-    public ResponseEntity<?> getMyPetsKind(@ApiIgnore @RequestHeader("memberId") UUID memberId) {
-        return ResponseEntity.ok(memberPetService.getMyPetsKind(memberId));
+    public ResponseEntity<?> getMyPetsKind(@ApiIgnore @RequestHeader("memberId") String memberId) {
+        return ResponseEntity.ok(memberPetService.getMyPetsKind(UUID.fromString(memberId)));
     }
 
     @ApiOperation(value = "나의펫 등록하기")
     @PostMapping("/{petId}")
-    public ResponseEntity<?> postMyPets(@ApiIgnore @RequestHeader("memberId") UUID memberId, @PathVariable("petId") Long petId) {
-        memberPetService.postMyPet(memberId, petId);
+    public ResponseEntity<?> postMyPets(@ApiIgnore @RequestHeader("memberId") String memberId, @PathVariable("petId") Long petId) {
+        memberPetService.postMyPet(UUID.fromString(memberId), petId);
         return ResponseEntity.ok().build();
     }
 
