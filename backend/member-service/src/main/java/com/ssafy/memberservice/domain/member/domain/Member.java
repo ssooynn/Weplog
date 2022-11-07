@@ -61,9 +61,10 @@ public class Member extends BaseEntity {
         this.id = uuid;
     }
 
-    public void updateMember(MemberReq memberReq){
+    public void updateMember(MemberReq memberReq, String profileImageUrl){
         this.name = memberReq.getName();
         this.nickname = memberReq.getNickname();
         this.weight = memberReq.getWeight();
+        this.profileImageUrl = profileImageUrl;
     }
 }

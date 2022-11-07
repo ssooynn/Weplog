@@ -23,7 +23,7 @@ public class ChallengeRankingDto implements Serializable {
 
     public static ChallengeRankingDto from(ChallengeRankingDtoInterface dtoInterface) {
         return ChallengeRankingDto.builder()
-                .memberId(dtoInterface.getMemberId())
+                .memberId(dtoInterface.getMemberId().toString())
                 .name(dtoInterface.getName())
                 .nickname(dtoInterface.getNickname())
                 .profileImageUrl(dtoInterface.getProfileImageUrl())
