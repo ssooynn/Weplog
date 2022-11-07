@@ -28,6 +28,14 @@ const ProgressBar = styled.progress`
 export const ChallengeDetail = () => {
   //challengeId
   const { challengeId } = useParams();
+
+  const sharePage = () => {
+    window.navigator.share({
+      title: `Beedly`,
+      text: `히히`,
+      url: window.location.href,
+    });
+  };
   return (
     <motion.div>
       <div style={{ position: "relative" }}>
