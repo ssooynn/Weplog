@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.UUID;
@@ -21,9 +22,9 @@ public class MemberController {
 
     @ApiOperation(value = "회원정보입력")
    @PutMapping("/info")
-    public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId")UUID memberId,
-                                            @RequestBody MemberReq memberReq) {
-        memberService.updateMemberInfo(memberId, memberReq);
+    public ResponseEntity<?> postMemberInfo(@ApiIgnore @RequestHeader("memberId") UUID memberId,
+                                            @RequestPart MemberReq request, @RequestPart MultipartFile image) {
+        memberService.updateMemberInfo(memberId, request, image);
         return ResponseEntity.ok("MEMBER INFO IS UPDATED");
     }
 

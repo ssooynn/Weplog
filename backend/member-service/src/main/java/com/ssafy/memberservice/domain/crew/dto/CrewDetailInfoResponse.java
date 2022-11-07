@@ -2,6 +2,7 @@ package com.ssafy.memberservice.domain.crew.dto;
 
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.dto.MemberSimpleResponse;
+import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class CrewDetailInfoResponse {
     public List<MemberSimpleResponse> memberList = new ArrayList<>();
 
     public List<CrewPloggingRecordDate> ploggingDateList = new ArrayList<>();
+    public boolean isMyCrew;
 
     public static CrewDetailInfoResponse from(Crew crew, CrewTotalRecordDtoInterface crewTotalRecord,
                                               List<CrewPloggingRecordDate> dateList, UUID loginMember) {
@@ -50,6 +52,16 @@ public class CrewDetailInfoResponse {
                 .collect(Collectors.toList());
 
         crewDetailInfoResponse.ploggingDateList = dateList;
+
+        // 내가 속한 크루인지 검사
+        boolean isMyCrew = false;
+        for (MemberCrew memberCrew : crew.getMemberCrewList()) {
+            if (memberCrew.getMember().getId().equals(loginMember)) {
+                isMyCrew = true;
+                break;
+            }
+        }
+        crewDetailInfoResponse.isMyCrew = isMyCrew;
 
         return crewDetailInfoResponse;
     }
