@@ -85,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberDetailRepository.save(memberDetail);
 
         // 카프카(topic: member-sign-up)로 전달. 도전과제 첫 세팅용
-        kafkaProducer.sendInitAchievement("member-sign-up", save.getId().toString());
+//        kafkaProducer.sendInitAchievement("member-sign-up", save.getId().toString());
 
         return save;
     }

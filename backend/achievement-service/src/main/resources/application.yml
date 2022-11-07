@@ -25,4 +25,4 @@ logging:
   level:
     com.ssafy.achievementservice: DEBUG
 
-kafka-ip: 127.0.0.1:9092
+kafka-ip: k7a1061.p.ssafy.io:9092
