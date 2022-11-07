@@ -67,8 +67,9 @@ public class ChallengeController {
 
 	@ApiOperation(value = "챌린지 상세 조회")
 	@GetMapping("/{challengeId}")
-	public ResponseEntity<ChallengeDetailRes> getChallengeDetail(@PathVariable("challengeId") Long challengeId) {
-		return new ResponseEntity<>(challengeService.getChallengeDetail(challengeId), HttpStatus.OK);
+	public ResponseEntity<ChallengeDetailRes> getChallengeDetail(@PathVariable("challengeId") Long challengeId,
+																 @RequestHeader(value = "memberId") String memberId) {
+		return new ResponseEntity<>(challengeService.getChallengeDetail(challengeId, UUID.fromString(memberId)), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "챌린지 내부 랭킹 조회")

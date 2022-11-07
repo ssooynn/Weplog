@@ -45,7 +45,9 @@ public class CrewServiceImpl implements CrewService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         String imageUrl = s3Upload.uploadImageToS3(image);
+
         Crew saveCrew = crewRepository.save(Crew.createCrew(request, imageUrl, findMember));
+
 
         // 생성 후 참가시켜주기
         memberCrewRepository.save(MemberCrew.create(findMember, saveCrew));
