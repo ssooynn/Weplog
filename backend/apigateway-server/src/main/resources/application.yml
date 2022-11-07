@@ -48,15 +48,6 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member-service/member/**
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
-
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
             - Path=/member-service/oauth2/**
             - Method=GET
           filters:
@@ -71,6 +62,15 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
         - id: achievement-service
           uri: lb://ACHIEVEMENT-SERVICE
