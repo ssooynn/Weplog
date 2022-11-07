@@ -39,7 +39,7 @@ public class MemberAchievementDto {
                 .level(achievement.getLevel())
                 .goal(achievement.getGoal())
                 .name(achievement.getName())
-                .imageUrl(achievement.getImageUrl())
+                .imageUrl(memberAchievement.getCompleteFlag() ? achievement.getCompleteImageUrl() : achievement.getImageUrl())
                 .build();
     }
 }
