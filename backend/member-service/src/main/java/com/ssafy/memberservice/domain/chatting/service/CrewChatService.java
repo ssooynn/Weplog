@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.chatting.service;
 
+import com.ssafy.memberservice.domain.chatting.dao.CrewChatRepository;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,8 @@ public class CrewChatService {
     private final ChannelTopic crewTopic;
 
     private final RedisTemplate redisTemplate;
-//    private final ChatRoomRepository chatRoomRepository;
+
+    private final CrewChatRepository crewChatRepository;
 
     /**
      * destination정보에서 roomId 추출
