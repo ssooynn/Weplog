@@ -25,7 +25,7 @@ public class PloggingChatRoomResponse {
                 .playerMap(ploggingChatRoom.getPlayerMap())
                 .host(ploggingChatRoom.getHost())
                 .roomId(ploggingChatRoom.getRoomId())
-                .ploggingSeconds(Duration.between(ploggingChatRoom.getCreatedDate(), LocalDateTime.now()).getSeconds())
+                .ploggingSeconds(Duration.between(ploggingChatRoom.getCreatedTime(),LocalDateTime.now()).getSeconds())
                 .build();
     }
 }
