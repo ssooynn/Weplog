@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class CrewChatSubscriber {
 
     private final ObjectMapper objectMapper;
-    private final SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * Redis에서 메시지가 발행(publish)되면 대기하고 있던 Redis Subscriber가 해당 메시지를 받아 처리한다.
