@@ -1,5 +1,6 @@
 package com.ssafy.ploggingservice.controller;
 
+import com.ssafy.ploggingservice.domain.Garbage;
 import com.ssafy.ploggingservice.dto.*;
 import com.ssafy.ploggingservice.service.PloggingService;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +47,8 @@ public class PloggingController
 
     @ApiOperation(value = "근처 쓰레기통 리스트")
     @GetMapping("garbage/{lat}/{lng}")
-    public ResponseEntity<List<CoordinateDto>> getTrashCansLoc(@PathVariable("lat") double lat, @PathVariable("lng") double lng ){
-        List<CoordinateDto> list = ploggingService.getTrashCansLoc(lat, lng);
+    public ResponseEntity<List<GarbageDto>> getTrashCansLoc(@PathVariable("lat") double lat, @PathVariable("lng") double lng ){
+        List<GarbageDto> list = ploggingService.getTrashCansLoc(lat, lng);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
