@@ -194,7 +194,6 @@ export const PloggingRegister = () => {
                 fill={contentColor}
                 stroke={contentColor}
                 d={pathData}
-                strokeOpacity="0.7"
                 strokeWidth="35px"
                 strokeLinecap="round"
               />
@@ -409,7 +408,6 @@ export const PloggingRegister = () => {
               position: "absolute",
               zIndex: 3,
             }}
-            onClick={handleClose}
           >
             <motion.div
               style={{
@@ -418,6 +416,7 @@ export const PloggingRegister = () => {
                 left: "20%",
               }}
             >
+              <button onClick={handleClose}>닫기</button>
               <ChromePicker color={contentColor} onChange={handleChange} />
             </motion.div>
           </motion.div>

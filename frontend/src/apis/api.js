@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_SERVER = "https://k7a1061.p.ssafy.io";
+export const API_SERVER = "https://k7a1061.p.ssafy.io/";
 
 // export const API_SERVER = "http://localhost:8080/api";
 

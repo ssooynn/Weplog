@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Environment, useFBX } from "@react-three/drei";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   calcMapLevel,
@@ -14,8 +17,14 @@ import Charact from "../../assets/images/char.gif";
 import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
 import { StyledText } from "../../components/Common";
 import $ from "jquery";
+import { Plomon } from "../../components/plomon/Plomon";
 window.jQuery = $;
 window.$ = $;
+
+// const Plomon = () => {
+//   const fbx = useFBX("/dino02.fbx");
+//   return <primitive object={fbx} />;
+// };
 
 export const PloggingEnd = () => {
   const navigate = useNavigate();
@@ -44,6 +53,7 @@ export const PloggingEnd = () => {
   //       maxLat: 0,
   //       minLat: 0,
   //     },
+
   const callback = (result, status) => {
     if (status === kakao.maps.services.Status.OK) {
       console.log(result);
@@ -251,7 +261,28 @@ export const PloggingEnd = () => {
             position: "relative",
           }}
         >
-          <img
+          <div
+            style={{
+              width: "200px",
+              height: "300px",
+              position: "absolute",
+              left: "60%",
+              top: "-130px",
+              zIndex: "15",
+            }}
+          >
+            <Canvas camera={{ position: [0, 50, 120] }} flat linear>
+              {/* <ambientLight intensity={0.4} /> */}
+              {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
+              {/* <pointLight position={[0, 60, 400]} /> */}
+              {/* <pointLight position={[0, 150, 250]} /> */}
+              <Suspense fallback={null}>
+                <Plomon />
+                <Environment preset="sunset" />
+              </Suspense>
+            </Canvas>
+          </div>
+          {/* <img
             src={Charact}
             style={{
               width: "200px",
@@ -261,7 +292,7 @@ export const PloggingEnd = () => {
               top: "-150px",
               zIndex: "15",
             }}
-          />
+          /> */}
           <Box width="100%" height="100%" align="center" justify="around">
             <Box direction="row" width="100%" justify="center" gap="55px">
               <DataBox label="킬로미터" data={ploggingData.totalDistance} />
