@@ -17,7 +17,7 @@ public class PloggingChatMessage extends ChatMessage {
 
     @Builder
     public PloggingChatMessage(MessageType type, String roomId, String sender, String message, long userCount, PingType pingType, String lat, String lng) {
-        super(type, roomId, sender, message, userCount);
+        super(type, roomId, sender, message);
         this.pingType = pingType;
         this.lat = lat;
         this.lng = lng;

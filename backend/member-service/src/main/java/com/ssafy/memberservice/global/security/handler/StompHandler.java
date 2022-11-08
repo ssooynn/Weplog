@@ -91,7 +91,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 crewChatService.joinRoom(member, roomId);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, member.getNickname(), "", null));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, member.getNickname(), ""));
             }
             log.info("SUBSCRIBED {}, {}", member.getNickname(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -107,7 +107,7 @@ public class StompHandler implements ChannelInterceptor {
             if (roomOfSession.getRoomType().equals(RoomType.CREW)) {
 
                 crewChatService.quitRoom(roomOfSession.getRoomId(), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), member.getNickname(), "", null));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), member.getNickname(), ""));
 
             } else {
                 ploggingChatService.quitRoom(roomOfSession.getRoomId(), member);
