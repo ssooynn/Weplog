@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
-import { challengeListAPi, challengeMyApi } from "../../apis/ChallengeApi";
+import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
 import { List } from "grommet-icons";
 
 export const ChallengeList = () => {

@@ -5,7 +5,7 @@ import gallery from "../assets/images/gallery.png";
 import { StyledProfile } from "../components/common/ProfileImg";
 import { StyledInput } from "../components/common/TextInput";
 import Button from "../components/Button";
-import { checkNicknameApi, signupApi } from "../apis/MemberApi";
+import { checkNicknameApi, signupApi } from "../apis/memberApi";
 import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
