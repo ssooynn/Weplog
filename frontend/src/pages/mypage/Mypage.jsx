@@ -2,10 +2,10 @@ import { Box, Text } from "grommet";
 import React from "react";
 import styled from "styled-components";
 import rightArrowIcon from "../../assets/icons/rightArrowIcon.svg";
-import ploggingLogIcon from "../../assets/icons/ploggingLogIcon.svg";
-import ploggingQuestIcon from "../../assets/icons/ploggingQuestIcon.svg";
-import ploggingChallengeIcon from "../../assets/icons/ploggingChallengeIcon.svg";
-import ploggingCrewIcon from "../../assets/icons/ploggingChallengeIcon.svg";
+import ploggingLogIcon from "../../assets/icons/ploggingLogIcon.png";
+import ploggingQuestIcon from "../../assets/icons/ploggingQuestIcon.png";
+import ploggingChallengeIcon from "../../assets/icons/ploggingChallengeIcon.png";
+import ploggingCrewIcon from "../../assets/icons/ploggingCrewIcon.png";
 import { ChallengeCard } from "../../components/challenge/ChallengeCard";
 import { useNavigate } from "react-router-dom";
 
@@ -194,7 +194,7 @@ export const Mypage = () => {
             챌린지 모두 보기
           </Text>
         </Box>
-        <ChallengeCard></ChallengeCard>
+        {/* <ChallengeCard></ChallengeCard> */}
       </Box>
 
       {/* 내 크루 */}
@@ -208,7 +208,7 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingChallengeIcon} width="27px" height="27px" />
+            <img src={ploggingCrewIcon} width="27px" height="27px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 크루
             </Text>
@@ -217,7 +217,7 @@ export const Mypage = () => {
             크루 모두 보기
           </Text>
         </Box>
-        <ChallengeCard></ChallengeCard>
+        {/* <ChallengeCard></ChallengeCard> */}
       </Box>
     </Box>
   );

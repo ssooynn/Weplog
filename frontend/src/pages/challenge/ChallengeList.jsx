@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
-import { challengeListAPi, challengeMyApi } from "../../apis/ChallengeApi";
+import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
 import { List } from "grommet-icons";
 
 export const ChallengeList = () => {
@@ -23,8 +23,8 @@ export const ChallengeList = () => {
   useEffect(() => {
     if (loading) {
       challengeListAPi(0, 3, "ASC", (res) => {
-        setChallengeList(res.data.content);
         console.log(res);
+        setChallengeList(res.data.content);
       }, (err) => {
         console.log(err);
       })
@@ -44,7 +44,7 @@ export const ChallengeList = () => {
         <Box
           background={{ image: `url(${bgGradient})` }}
           direction="column"
-          height="460px"
+          height="auto"
           pad="18px 24px"
           align="center"
           justify="start"
@@ -75,55 +75,57 @@ export const ChallengeList = () => {
             내 챌린지
           </Text>
           {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={myChallengeList}></ChallengeCardList>}
-          {/* <Text
-            alignSelf="start"
-            weight={600}
-            size="18px"
-            margin={{ top: "10px" }}
-          >
-            Weplog의
-          </Text>
-          <Text alignSelf="start" weight={600} size="18px">
-            주인공이 되어주세요!
-          </Text>
-          <Text
-            alignSelf="start"
-            weight={400}
-            size="13px"
-            color="#8A8181"
-            margin={{ top: "5px" }}
-          >
-            이달의 Weploger를 찾습니다
-          </Text>
-          <Box
-            alignSelf="start"
-            border={{ color: "#3d3d3d", style: "solid", side: "all" }}
-            round="medium"
-            width="70px"
-            justify="center"
-            align="center"
-            height="25px"
-            style={{ marginTop: "105px" }}
-          >
-            <Text weight={400} size="12px" color="#3d3d3d">
-              1 / 2
+          <Box width="100%" pad="15px 0px">
+            <Text
+              alignSelf="start"
+              weight={600}
+              size="18px"
+              margin={{ top: "10px" }}
+            >
+              Weplog의
             </Text>
-          </Box> */}
+            <Text alignSelf="start" weight={600} size="18px">
+              주인공이 되어주세요!
+            </Text>
+            <Text
+              alignSelf="start"
+              weight={400}
+              size="13px"
+              color="#8A8181"
+              margin={{ top: "5px" }}
+            >
+              이달의 Weploger를 찾습니다
+            </Text>
+            <Box
+              alignSelf="start"
+              border={{ color: "#3d3d3d", style: "solid", side: "all" }}
+              round="medium"
+              width="70px"
+              justify="center"
+              align="center"
+              height="25px"
+              style={{ marginTop: "105px" }}
+            >
+              <Text weight={400} size="12px" color="#3d3d3d">
+                1 / 2
+              </Text>
+            </Box>
+            <img
+              src={Banner}
+              alt="Banner사진"
+              style={{
+                borderRadius: "50%",
+                position: "absolute",
+                width: "180px",
+                height: "180px",
+                marginLeft: "45%",
+                marginTop: "80px",
+                objectFit: "cover",
+                boxShadow: "4px 4px 4px rgba(0,0,0,0.3)",
+              }}
+            ></img>
+          </Box>
         </Box>
-        {/* <img
-          src={Banner}
-          alt="Banner사진"
-          style={{
-            borderRadius: "50%",
-            position: "absolute",
-            width: "180px",
-            height: "180px",
-            marginLeft: "45%",
-            marginTop: "300px",
-            objectFit: "cover",
-            boxShadow: "4px 4px 4px rgba(0,0,0,0.3)",
-          }}
-        ></img> */}
         <Box pad="large" direction="column" align="center" justify="start">
           <Button biggreenround="true" onClick={goChallengeRegister}>
             새로운 챌린지 만들기
