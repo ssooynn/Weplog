@@ -54,10 +54,10 @@ public class PloggingChatService {
 
         Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-
+        PloggingChatRoom ploggingChatRoom = ploggingChatRepository.save(PloggingChatRoom.create(crewId, member));
         // 문제 없으니 방 생성
 
-        return PloggingChatRoomResponse.of(PloggingChatRoom.create(crewId, member));
+        return PloggingChatRoomResponse.of(ploggingChatRoom);
     }
 
     public void joinRoom(Member member, String roomId) {

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Getter
 @RedisHash(value = "crew_chat_room")
-public class CrewChatRoom extends BaseEntity implements Serializable {
+public class CrewChatRoom implements Serializable {
 
     @Id
     private Long roomId;

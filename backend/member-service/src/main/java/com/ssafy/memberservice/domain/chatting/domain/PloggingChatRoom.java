@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash(value = "plogging_chat_room", timeToLive = 60*60*24)
-public class PloggingChatRoom extends BaseEntity implements Serializable {
+public class PloggingChatRoom implements Serializable {
 
     @Id
     private String roomId;
@@ -33,12 +33,15 @@ public class PloggingChatRoom extends BaseEntity implements Serializable {
     @Indexed
     private Long crewId;
 
+    private LocalDateTime createdTime;
+
     public static PloggingChatRoom create(Long crewId, Member member) {
         PloggingChatRoom chatRoom = new PloggingChatRoom();
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.crewId = crewId;
         chatRoom.host = Participant.from(member);
         chatRoom.playerMap = new HashMap<>();
+        chatRoom.createdTime = LocalDateTime.now();
         return chatRoom;
     }
 }
