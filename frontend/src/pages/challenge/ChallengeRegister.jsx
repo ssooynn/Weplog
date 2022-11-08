@@ -5,7 +5,7 @@ import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
 import Button from "../../components/Button";
-import { challengeRegisterApi } from "../../apis/ChallengeApi";
+import { challengeRegisterApi } from "../../apis/challengeApi";
 import { Calendar } from "react-date-range";
 import * as locales from "react-date-range/dist/locale";
 import "react-date-range/dist/styles.css"; // main css file
