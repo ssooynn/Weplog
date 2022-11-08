@@ -1,6 +1,6 @@
 import { API_SERVER, axios } from "./api";
 
-const API_SERVER_USER = API_SERVER + "member-service/member/";
+const API_SERVER_USER = API_SERVER + "/member-service/member/";
 
 const instance = axios.create({
   baseURL: API_SERVER_USER,
