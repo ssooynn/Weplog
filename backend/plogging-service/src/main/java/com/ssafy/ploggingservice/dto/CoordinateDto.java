@@ -1,5 +1,6 @@
 package com.ssafy.ploggingservice.dto;
 
+import com.ssafy.ploggingservice.domain.Coordinate;
 import com.ssafy.ploggingservice.domain.Garbage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +26,8 @@ public class CoordinateDto {
         this.lat = point.getY();
     }
 
+    public CoordinateDto(Coordinate coordinate) {
+        this.lng = coordinate.getPloggingLoc().getX();
+        this.lat = coordinate.getPloggingLoc().getY();
+    }
 }
