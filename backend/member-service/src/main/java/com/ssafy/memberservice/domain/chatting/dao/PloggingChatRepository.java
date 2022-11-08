@@ -1,7 +1,11 @@
 package com.ssafy.memberservice.domain.chatting.dao;
 
-//import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
-//import org.springframework.data.repository.CrudRepository;
+import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
+import org.springframework.data.repository.CrudRepository;
 
-//public class PloggingChatRepository extends CrudRepository<PloggingChatRoom, String> {
-//}
+import java.util.Optional;
+
+public interface PloggingChatRepository extends CrudRepository<PloggingChatRoom, String> {
+
+    Optional<PloggingChatRoom> findByCrewId(Long crewId);
+}
