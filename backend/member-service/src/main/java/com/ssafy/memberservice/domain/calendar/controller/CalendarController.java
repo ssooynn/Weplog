@@ -4,6 +4,7 @@ import com.ssafy.memberservice.domain.calendar.dto.CalendarRes;
 import com.ssafy.memberservice.domain.calendar.service.CalendarService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,9 @@ import java.util.UUID;
 @RequestMapping("calendar")
 public class CalendarController {
 
-    private static CalendarService calendarService;
+    private final CalendarService calendarService;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime time;
     @ApiOperation(value = "캘린더 등록", notes = "해당 월에 해당하는 스케쥴을 리스트로 반환")
     @GetMapping("{crewId}/{date}")
     ResponseEntity<?> getCalendarInfo(@PathVariable("crewId")Long crewId, @PathVariable("date")LocalDateTime time){
@@ -27,6 +30,8 @@ public class CalendarController {
 
     @PostMapping()
     ResponseEntity<?> postCalendarInfo(@ApiIgnore @RequestHeader("memberId") String memberId, @RequestBody CalendarReq calendarReq){
+        System.out.println(calendarReq);
+        System.out.println(memberId);
        calendarService.postCalendarInfo(UUID.fromString(memberId), calendarReq);
         return ResponseEntity.ok("Calendar Posted");
     }

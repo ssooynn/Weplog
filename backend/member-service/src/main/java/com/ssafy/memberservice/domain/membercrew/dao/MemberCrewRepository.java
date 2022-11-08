@@ -28,17 +28,17 @@ public interface MemberCrewRepository extends JpaRepository<MemberCrew, Long> {
     List<CrewPloggingRecordDateInterface> findCrewPloggingDate(Long crewId);
 
     @Query(value = "select totalAmount, mc.crew_id crewId, c.name name, c.image_url imageUrl\n" +
-            "from (select sum(total_distance) totalDistance, crew_id\n" +
+            "from (select sum(total_distance) totalAmount, crew_id\n" +
             "            from member_crew\n" +
             "            group by crew_id\n" +
-            "            order by totalDistance limit 3) mc join crew c on mc.crew_id = c.crew_id", nativeQuery = true)
+            "            order by totalAmount limit 3) mc join crew c on mc.crew_id = c.crew_id", nativeQuery = true)
     List<Top3CrewDtoInterface> findTop3DistanceCrew();
 
     @Query(value = "select totalAmount, mc.crew_id crewId, c.name name, c.image_url imageUrl\n" +
-            "from (select sum(total_time) totalDistance, crew_id\n" +
+            "from (select sum(total_time) totalAmount, crew_id\n" +
             "            from member_crew\n" +
             "            group by crew_id\n" +
-            "            order by totalDistance limit 3) mc join crew c on mc.crew_id = c.crew_id", nativeQuery = true)
+            "            order by totalAmount limit 3) mc join crew c on mc.crew_id = c.crew_id", nativeQuery = true)
     List<Top3CrewDtoInterface> findTop3TimeCrew();
 
     @Query("select mc from MemberCrew mc join fetch mc.crew join fetch mc.member where mc.member.id = :memberId")

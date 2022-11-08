@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +12,8 @@ public interface PloggingService {
 
     CreatePloggingRes postPloggingPicture(UUID memberId, Long ploggingId, MultipartFile image);
     Slice<PloggingRes> getPloggingList(UUID memberId, Pageable pageable);
-    List<CoordinateDto> getTrashCansLoc(double lat, double lng);
-    ArrayList<ArrayList<CoordinateDto>> getPloggingLoc(double lat, double lng);
+    List<GarbageDto> getTrashCansLoc(double lat, double lng);
+    List<List<CoordinateDto>> getPloggingLoc(double lat, double lng);
     PloggingDetailRes getPloggingInfo(Long id);
 
 

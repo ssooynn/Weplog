@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.crew.service;
 
-import com.ssafy.memberservice.domain.crew.dao.CrewRepository;
+import com.ssafy.memberservice.domain.crew.dto.dao.CrewRepository;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.crew.dto.*;
 import com.ssafy.memberservice.domain.joinwaiting.dao.JoinWaitingRepository;
@@ -11,7 +11,6 @@ import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
-import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import com.ssafy.memberservice.infra.s3.S3Upload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
