@@ -36,4 +36,10 @@ public class MemberDetail extends BaseEntity {
     public void addChallengeCnt() {
         this.challengeCnt += 1;
     }
+
+    public void updatePloggingLog(Integer distance, Integer time) {
+        this.ploggingCnt += 1;
+        this.distance += distance;
+        this.time += time;
+    }
 }
