@@ -5,7 +5,6 @@ import com.ssafy.ploggingservice.domain.Crew;
 import com.ssafy.ploggingservice.domain.Member;
 import com.ssafy.ploggingservice.domain.Plogging;
 import com.ssafy.ploggingservice.dto.*;
-import com.ssafy.ploggingservice.global.common.error.exception.NotExistException;
 import com.ssafy.ploggingservice.global.common.error.exception.NotFoundException;
 import com.ssafy.ploggingservice.infra.s3.S3Upload;
 import com.ssafy.ploggingservice.messagequeue.KafkaProducer;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,26 +59,23 @@ public class PloggingServiceImpl implements PloggingService {
     }
 
     @Override
-    public List<CoordinateDto> getTrashCansLoc(double lat, double lng) {
-        List<CoordinateDto> list = garbageRepository.getTrashCansLoc(lat, lng).stream().map(m -> new CoordinateDto(m))
-                .collect(Collectors.toList());
+    public List<GarbageDto> getTrashCansLoc(double lat, double lng) {
+        List<GarbageDto> list = garbageRepository.getTrashCansLoc(lat, lng);
         return list;
     }
 
     @Override
-    public ArrayList<ArrayList<CoordinateDto>> getPloggingLoc(double lat, double lng) {
-        ArrayList<ArrayList<CoordinateDto>> list = new ArrayList<>();
-        ArrayList<CoordinateDto> coor = null;
-        List<Plogging> plogging = ploggingRepository.getPloggingLoc(lat, lng, LocalDateTime.now().minusMinutes(20));
-        for (Plogging plo:plogging) {
-            coor = new ArrayList<>();
-            for(Coordinate coordinate: coordinateRepository.findAllByPloggingId(plo.getId())){
-                Point point = coordinate.getPloggingLoc();
-                coor.add(new CoordinateDto(point));
-            }
-            list.add(coor);
+    public List<List<CoordinateDto>> getPloggingLoc(double lat, double lng) {
+        List<PloggingInterface> plogging = ploggingRepository.getPloggingLoc(lat, lng, LocalDateTime.now().minusMinutes(20));
+        //System.out.println("#######################" + plogging.get(0).getPloggingId());
+        List<List<CoordinateDto>> answer = new ArrayList<>();
+        List<CoordinateDto> list = new ArrayList<>();
+        for (PloggingInterface p: plogging) {
+            Long id = p.getPloggingId();
+            list = coordinateRepository.findAllByPloggingId(id).stream().map(CoordinateDto::new).collect(Collectors.toList());
+            answer.add(list);
         }
-        return list;
+        return answer;
     }
 
     // 플로깅 상세 조회 + 좌표 리스트

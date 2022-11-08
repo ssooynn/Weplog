@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.crew.dao;
+package com.ssafy.memberservice.domain.crew.dto.dao;
 
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.crew.dto.NearCrewListInterface;
