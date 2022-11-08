@@ -102,14 +102,17 @@ public class KafkaConsumer {
 
         // 멤버 리워드 갱신(플로몬 경험치 같이주기)
         MemberDetail memberDetail = memberDetailRepository.findByMemberId(memberId).get();
-        memberDetail.addRewardPoint(rewardPoint); 
+        memberDetail.addRewardPoint(rewardPoint);
+        memberDetail.updatePloggingLog(distance, time);
 
-        // 키우고 있는 플로몬 경험치 주고 경험치 꽉차면 레벨업
-        MemberPet findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId).get();
-        boolean evolutionFlag = findMemberPet.addExp(rewardPoint);
-        // 레벨업 했으면 카프카로 보내서 도전과제 갱신
-        if (evolutionFlag) {
-            kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+        // 키우고 있는 플로몬 있으면 경험치 주고 경험치 꽉차면 레벨업
+        Optional<MemberPet> findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId);
+        if (findMemberPet.isPresent()) {
+            boolean evolutionFlag = findMemberPet.get().addExp(rewardPoint);
+            // 레벨업 했으면 카프카로 보내서 도전과제 갱신
+            if (evolutionFlag) {
+                kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+            }
         }
 
         // 크루 플로깅이면 크루 플로깅 기록 갱신

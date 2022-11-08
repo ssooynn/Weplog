@@ -4,7 +4,7 @@ import com.ssafy.memberservice.domain.calendar.domain.Calendar;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarReq;
 import com.ssafy.memberservice.domain.calendar.dto.CalendarRes;
 import com.ssafy.memberservice.domain.calendar.repository.CalendarRepository;
-import com.ssafy.memberservice.domain.crew.dto.dao.CrewRepository;
+import com.ssafy.memberservice.domain.crew.dao.CrewRepository;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;

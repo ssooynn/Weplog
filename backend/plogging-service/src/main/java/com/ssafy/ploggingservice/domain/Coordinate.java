@@ -30,7 +30,8 @@ public class Coordinate {
         coordinate.plogging = plogging;
         String pointWKT = String.format("POINT(%s %s)", lon, lng);
         try {
-            coordinate.ploggingLoc = (Point) new WKTReader().read(pointWKT);
+            coordinate.ploggingLoc = ((Point) new WKTReader().read(pointWKT));
+            coordinate.ploggingLoc.setSRID(3857);
         } catch (Exception e) {
             e.printStackTrace();
         }
