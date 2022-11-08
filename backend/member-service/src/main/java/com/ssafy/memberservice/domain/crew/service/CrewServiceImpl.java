@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.crew.service;
 
-import com.ssafy.memberservice.domain.crew.dto.dao.CrewRepository;
+import com.ssafy.memberservice.domain.crew.dao.CrewRepository;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.crew.dto.*;
 import com.ssafy.memberservice.domain.joinwaiting.dao.JoinWaitingRepository;
