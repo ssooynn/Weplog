@@ -61,9 +61,8 @@ public class PloggingServiceImpl implements PloggingService {
     }
 
     @Override
-    public List<CoordinateDto> getTrashCansLoc(double lat, double lng) {
-        List<CoordinateDto> list = garbageRepository.getTrashCansLoc(lat, lng).stream().map(m -> new CoordinateDto(m))
-                .collect(Collectors.toList());
+    public List<GarbageDto> getTrashCansLoc(double lat, double lng) {
+        List<GarbageDto> list = garbageRepository.getTrashCansLoc(lat, lng);
         return list;
     }
 
