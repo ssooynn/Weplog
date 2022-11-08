@@ -20,10 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
@@ -64,14 +61,19 @@ public class PloggingChatService {
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
 
 
-        Color newColor = getNewColor(ploggingChatRoom);
         Participant participant = Participant.from(member);
+        Color newColor = getNewColor(ploggingChatRoom);
         participant.setColor(newColor.name());
+        if (ploggingChatRoom.getPlayerMap() == null || ploggingChatRoom.getPlayerMap().size() == 0) {
+//            ploggingChatRoom = new HashMap<>();
+        }
         ploggingChatRoom.getPlayerMap().put(member.getId().toString(), participant);
+        ploggingChatRepository.save(ploggingChatRoom);
     }
 
     private Color getNewColor(PloggingChatRoom ploggingChatRoom) {
         Set<Color> usedColors = new HashSet<>();
+        if (ploggingChatRoom.getPlayerMap() == null ||ploggingChatRoom.getPlayerMap().size() == 0) return Color.RED;
         for (Participant participant : ploggingChatRoom.getPlayerMap().values()) {
             usedColors.add(Color.valueOf(participant.getColor()));
         }
