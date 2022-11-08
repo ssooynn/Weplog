@@ -66,10 +66,10 @@ public class KafkaConsumer {
         }
 
         List<AchievementType> typeList = new ArrayList<>();
-        typeList.add(DISTANCE);
-        typeList.add(TIME);
-        typeList.add(FLOGGING_CNT);
-        typeList.add(AchievementType.GROUP_FLOGGING_CNT);
+        typeList.add(TOTAL_DISTANCE);
+        typeList.add(TOTAL_TIME);
+        typeList.add(PLOGGING_CNT);
+        typeList.add(GROUP_PLOGGING_CNT);
 
         UUID memberId = UUID.fromString((String) map.get("memberId"));
         Integer distance = (Integer) map.get("distance");
@@ -77,17 +77,18 @@ public class KafkaConsumer {
         Boolean isGroupPlogging = (Boolean) map.get("isGroupPlogging");
 
         List<MemberAchievement> memberAchievementList = memberAchievementRepository.findByMemberIdAndTypeListWithAchievement(memberId, typeList);
+        log.info(memberAchievementList.toString());
 
         int addRewardPoint = 0;
         for (MemberAchievement memberAchievement : memberAchievementList) {
             AchievementType type = memberAchievement.getAchievement().getType();
-            if (type.equals(DISTANCE)) {
+            if (type.equals(TOTAL_DISTANCE)) {
                 addRewardPoint += memberAchievement.updateDistance(distance);
-            } else if (type.equals(TIME)) {
+            } else if (type.equals(TOTAL_TIME)) {
                 addRewardPoint += memberAchievement.updateTime(time);
-            } else if (type.equals(FLOGGING_CNT)) {
+            } else if (type.equals(PLOGGING_CNT)) {
                 addRewardPoint += memberAchievement.updateNumber();
-            } else if (type.equals(GROUP_FLOGGING_CNT)) {
+            } else if (type.equals(GROUP_PLOGGING_CNT)) {
                 if (isGroupPlogging) {
                     addRewardPoint += memberAchievement.updateNumber();
                 }
@@ -148,7 +149,7 @@ public class KafkaConsumer {
         }
 
         UUID memberId = UUID.fromString((String) map.get("memberId"));
-        List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdAndTypeWithAchievement(memberId, PET_RAISE_COMPLETE_CNT);
+        List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdAndTypeWithAchievement(memberId, PLOMON_CNT);
 
         int addRewardPoint = 0;
         for (MemberAchievement memberAchievement : achievementList) {
