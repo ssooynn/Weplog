@@ -41,7 +41,7 @@ public class PloggingController
     @ApiOperation(value = "플로깅 전", notes = "현 위치 기준 5km 이내, 20분 이내 기록 리스트 조회")
     @GetMapping("/{lat}/{lng}")
     public ResponseEntity<?> getPloggingLoc(@PathVariable("lat") double lat, @PathVariable("lng") double lng){
-        ArrayList<ArrayList<CoordinateDto>> list = ploggingService.getPloggingLoc(lat, lng);
+        List<List<CoordinateDto>> list = ploggingService.getPloggingLoc(lat, lng);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
