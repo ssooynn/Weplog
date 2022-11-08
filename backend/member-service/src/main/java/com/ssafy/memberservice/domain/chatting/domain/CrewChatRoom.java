@@ -14,7 +14,7 @@ import java.util.Map;
 public class CrewChatRoom extends BaseEntity implements Serializable {
 
     @Id
-    private String roomId;
+    private Long roomId;
 
     private Map<String, Participant> playerMap;
 
