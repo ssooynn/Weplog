@@ -7,7 +7,7 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 
 export function Plomon(props) {
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/재권.glb");
+  const { nodes, materials, animations } = useGLTF("/키치.glb");
   const { ref, actions, names } = useAnimations(animations, group);
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -18,7 +18,13 @@ export function Plomon(props) {
   }, [index, actions, names]);
 
   return (
-    <group ref={group} {...props} dispose={null} position={[0, -20, 0]}>
+    <group
+      ref={group}
+      {...props}
+      dispose={null}
+      position={[0, -20, 0]}
+      scale={1}
+    >
       <group>
         <group name="Dino031">
           <group name="Mesh2">
