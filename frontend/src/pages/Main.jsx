@@ -15,7 +15,11 @@ import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import { PlomonDetail } from "../components/AlertDialog";
+// import { PlomonDetail } from "../components/AlertDialog";
+import PlomonSample1 from "../assets/PlomonSample1.gif";
+import PlomonSample2 from "../assets/PlomonSample2.gif";
+import PlomonSample3 from "../assets/PlomonSample3.gif";
+import PlomonSample4 from "../assets/PlomonSample4.gif";
 
 
 const MainCategoryContainer = styled.div`
@@ -189,25 +193,25 @@ export const Main = () => {
       <PlomonTableArea>
         <>
           <SmallPlomon onClick={() => setPlomonOpen(true)}>
-            <img style={{width:"28vw", height:"28vw"}} src='https://cdn.wadiz.kr/ft/images/green001/2021/1228/20211228095252100_7.gif'/>
-            <PlomonName>해리</PlomonName>
+            <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
+            <PlomonName>재권</PlomonName>
             <PlomonState>Baby</PlomonState>
           </SmallPlomon>
-          <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/>
+          {/* <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/> */}
         </>
 
         <SmallPlomon>
-          <img style={{width:"28vw", height:"28vw"}} src='https://cdn.wadiz.kr/ft/images/green001/2021/1228/20211228095252100_7.gif'/>
+          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample2}/>
           <PlomonName>해리</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
-          <img style={{width:"28vw", height:"28vw"}} src='https://cdn.wadiz.kr/ft/images/green001/2021/1228/20211228095252100_7.gif'/>
+          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample3}/>
           <PlomonName>해리</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
-          <img style={{width:"28vw", height:"28vw"}} src='https://cdn.wadiz.kr/ft/images/green001/2021/1228/20211228095252100_7.gif'/>
+          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample4}/>
           <PlomonName>해리</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
