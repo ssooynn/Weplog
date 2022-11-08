@@ -12,7 +12,7 @@ import javax.persistence.Enumerated;
 
 @Getter
 @Slf4j
-@RedisHash("GameSession")
+@RedisHash("room_of_session")
 @Builder
 public class RoomOfSession {
     @Id

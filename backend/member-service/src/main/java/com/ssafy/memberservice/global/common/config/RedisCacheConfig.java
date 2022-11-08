@@ -10,10 +10,12 @@ import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -38,11 +40,7 @@ public class RedisCacheConfig {
     }
 
     @Bean(name = "cacheManager")
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory,
-                                          MessageListenerAdapter crewListenerAdapter,
-                                          MessageListenerAdapter ploggingListenerAdapter,
-                                          ChannelTopic crewTopic,
-                                          ChannelTopic ploggingTopic) {
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
 
         // 기본 expireTime 180초로 설정
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig(Thread.currentThread().getContextClassLoader())
@@ -50,13 +48,8 @@ public class RedisCacheConfig {
                 .entryTtl(Duration.ofSeconds(180))
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(crewListenerAdapter, crewTopic);
-        container.addMessageListener(ploggingListenerAdapter, ploggingTopic);
 
 //        // personal_auction_board의 경우 300초로 설정
 //        cacheConfigurations.put(CacheKey.PERSONAL_AUCTION_BOARD,RedisCacheConfiguration.defaultCacheConfig()
@@ -70,6 +63,19 @@ public class RedisCacheConfig {
     }
 
     @Bean
+    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory,
+                                                              MessageListenerAdapter crewListenerAdapter,
+                                                              MessageListenerAdapter ploggingListenerAdapter,
+                                                              ChannelTopic crewTopic,
+                                                              ChannelTopic ploggingTopic) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.addMessageListener(crewListenerAdapter, crewTopic);
+        container.addMessageListener(ploggingListenerAdapter, ploggingTopic);
+        return container;
+    }
+
+    @Bean
     public MessageListenerAdapter crewListenerAdapter(CrewChatSubscriber crewChatSubscriber) {
         return new MessageListenerAdapter(crewChatSubscriber, "sendMessage");
     }
@@ -78,5 +84,16 @@ public class RedisCacheConfig {
     public MessageListenerAdapter ploggingListenerAdapter(PloggingChatSubscriber ploggingChatSubscriber) {
         return new MessageListenerAdapter(ploggingChatSubscriber, "sendMessage");
     }
+    @Bean
+    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return redisTemplate;
+    }
+
 
 }

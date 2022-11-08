@@ -1,5 +1,7 @@
 package com.ssafy.memberservice.domain.chatting.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.memberservice.domain.chatting.dao.PloggingChatRepository;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
@@ -39,6 +41,8 @@ public class PloggingChatService {
 
     private final MemberRepository memberRepository;
 
+    private final ObjectMapper mapper;
+
     public PloggingChatRoomResponse makeRoom(String memberId, Long crewId) {
         // 멤버가 해당 크루인지 확인
         MemberCrew memberCrew = memberCrewRepository.findMemberCrewByMemberIdAndCrewId(UUID.fromString(memberId), crewId).orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
@@ -65,7 +69,7 @@ public class PloggingChatService {
         Color newColor = getNewColor(ploggingChatRoom);
         participant.setColor(newColor.name());
         if (ploggingChatRoom.getPlayerMap() == null || ploggingChatRoom.getPlayerMap().size() == 0) {
-//            ploggingChatRoom = new HashMap<>();
+            ploggingChatRoom.setPlayerMap(new LinkedHashMap<>());
         }
         ploggingChatRoom.getPlayerMap().put(member.getId().toString(), participant);
         ploggingChatRepository.save(ploggingChatRoom);
@@ -110,7 +114,10 @@ public class PloggingChatService {
 
             }
         }
-        redisTemplate.convertAndSend(ploggingTopic.getTopic(), chatMessage);
+
+
+            redisTemplate.convertAndSend(ploggingTopic.getTopic(), chatMessage);
+
     }
 
     public void sendChatMessage(PloggingChatMessage chatMessage, String memberId) {

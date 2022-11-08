@@ -2,10 +2,7 @@ package com.ssafy.memberservice.domain.chatting.domain;
 
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.global.common.base.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.index.Indexed;
@@ -13,10 +10,11 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,7 +38,7 @@ public class PloggingChatRoom implements Serializable {
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.crewId = crewId;
         chatRoom.host = Participant.from(member);
-        chatRoom.playerMap = new HashMap<>();
+        chatRoom.playerMap = new LinkedHashMap<>();
         chatRoom.createdTime = LocalDateTime.now();
         return chatRoom;
     }
