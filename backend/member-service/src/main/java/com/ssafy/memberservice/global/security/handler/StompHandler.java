@@ -69,7 +69,8 @@ public class StompHandler implements ChannelInterceptor {
             // 채팅방의 인원수를 +1한다.
 //            chatRoomRepository.plusUserCount(roomId);
             // 클라이언트 입장 메시지를 채팅방에 발송한다.(redis publish)
-            String memberId = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+            String memberId = jwtTokenProvider.getSubject(extractToken(accessor));
+//            String memberId = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
 
             Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
             if ("plogging".equals(uri)) {
@@ -98,7 +99,7 @@ public class StompHandler implements ChannelInterceptor {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             RoomOfSession roomOfSession = roomOfSessionRepository.findById(sessionId).orElseThrow(NoSuchElementException::new);
 
-            String memberId = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+            String memberId = jwtTokenProvider.getSubject(extractToken(accessor));
             Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
             // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
