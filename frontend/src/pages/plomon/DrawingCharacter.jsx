@@ -1,21 +1,22 @@
 import { motion } from "framer-motion";
 import { Box } from "grommet";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { StyledText } from "../../components/Common";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { PlomonEgg } from "../../components/PlomonEgg";
-import { container } from "../../utils/util";
+import { container, petList } from "../../utils/util";
 import { loadLightInteraction } from "tsparticles-interaction-light";
 import LightEffect from "../../assets/images/light.png";
 import { tsParticles } from "tsparticles-engine";
+import { getAllMyPet } from "../../apis/memberPetApi";
 export const DrawingCharacter = () => {
   const [eggs, setEggs] = useState([1, 2, 3]);
   const [select, setSelect] = useState(null);
   const [clicked, setClicked] = useState(false);
-
+  const [myPets, setMyPets] = useState(petList);
   const [eggClikced, setEggClicked] = useState(false);
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
@@ -28,6 +29,19 @@ export const DrawingCharacter = () => {
 
   const particlesLoaded = useCallback(async (container) => {
     await console.log(container);
+  }, []);
+
+  useEffect(() => {
+    getAllMyPet(
+      (response) => {
+        console.log(response);
+        const pets = myPets.filter((pet) => pet !== response.data.find(pet));
+        setMyPets(pets);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
   }, []);
 
   return (

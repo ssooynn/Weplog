@@ -84,20 +84,28 @@ export const PloggingRegister = () => {
     const ima = imageRef.current;
     domtoimage.toBlob(ima).then((blob) => {
       // saveAs(blob, "card.png");
+      console.log(blob);
       const formData = new FormData();
+      var file = new File([blob], "plogging.png");
       formData.append("image", blob);
-      postPloggingPicture(
-        ploggingId,
-        formData,
-        (response) => {
-          console.log(response);
-          navigate("/");
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+      console.log(file);
+      // saveAs(file, "card.png");
+      registerPic(formData);
     });
+  };
+
+  const registerPic = (formData) => {
+    postPloggingPicture(
+      ploggingId,
+      formData,
+      (response) => {
+        console.log(response);
+        navigate("/");
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
   };
 
   return (

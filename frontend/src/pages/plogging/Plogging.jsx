@@ -142,7 +142,7 @@ export const Plogging = () => {
     });
 
   const [messages, setMessages] = useState([]);
-  const { ploggingType } = locations.state;
+  const { ploggingType, roomId } = locations.state;
   // ------------------함수-----------------------------
 
   // 소리 재생
@@ -250,6 +250,7 @@ export const Plogging = () => {
   }, []);
 
   const handlePloggingFinish = () => {
+    disConnect();
     if (time < 60)
       navigate("/plogging/end", {
         state: {
@@ -315,85 +316,37 @@ export const Plogging = () => {
     ]);
   };
 
-  // 웹소켓 구독
-  const subscribe = () => {
-    if (client != null) {
-      console.log("subs!!!!!!!!!");
-      client.subscribe("/sub/ride/room/" + "", (response) => {
-        console.log(response);
-        const data = JSON.parse(response.body);
-        // 1. 채팅일 때
-        if (data) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.text,
-              sentTime: new Date(),
-              sender: data.nickname,
-              direction: "incoming",
-              position: "single",
-              type: "message",
-            },
-          ]);
-        }
-        // 2. 마커 위치일 때
-        else if (data) {
-          setVisible(true);
-          playAudio();
-        }
-        // 3. 사용자들 위치일 때
-        else if (data) {
-        }
-        // 4. 사용자 입장했을때/퇴장했을 떄
-        else if (data) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.nickname + "님이 퇴장하셨습니다.",
-              sentTime: new Date(),
-              sender: data.nickname,
-              direction: "incoming",
-              position: "single",
-              type: "enter",
-            },
-          ]);
-        }
-        // rideMembers.members[data.memberId] = data;
-        // setRideMembers({ ...rideMembers });
-      });
-    }
-  };
-
+  // 쓰레기통, 쓰레기많은거, 목적지, 식당
   //웹소켓 위치 발행
   const publishLocation = (lat, lng) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_POSITION",
+          type: "POS",
           lat: lat,
           lng: lng,
         }),
       });
     }
   };
-
+  // ENTER, QUIT, TALK, PING, POS
   //웹소켓 마커 발행
   const publishMarker = (marker) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_MARKER",
+          type: "PING",
           lat: marker.lat,
           lng: marker.lng,
-          marker: 0,
+          pingType: "THREE",
         }),
       });
     }
@@ -403,13 +356,14 @@ export const Plogging = () => {
   const publishChatting = (text) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_CHAT",
-          text: text,
+          type: "TALK",
+          roomId: roomId,
+          message: text,
         }),
       });
     }
@@ -418,12 +372,12 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k7a106.p.ssafy.io/api/ws-stomp",
+      brokerURL: "ws://localhost:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a106.p.ssafy.io/api/ws-stomp");
+        return SockJS("http://localhost:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -448,13 +402,14 @@ export const Plogging = () => {
       console.log("client init !!! ", frame);
       if (client != null)
         client.publish({
-          destination: "/pub/ride/group",
+          destination: "/pub/plogging/chat/message",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
-          body: JSON.stringify({
-            messageType: "ENTER",
-          }),
+          // body: JSON.stringify({
+          //   type: "ENTER",
+          //   roomId:roomId,
+          // }),
         });
       subscribe();
     };
@@ -462,6 +417,62 @@ export const Plogging = () => {
     client.activate();
   };
 
+  // 웹소켓 구독
+  const subscribe = () => {
+    if (client != null) {
+      console.log("subs!!!!!!!!!");
+      client.subscribe(
+        "/sub/chat/plogging/" + roomId,
+        (response) => {
+          console.log(response);
+          const data = JSON.parse(response.body);
+          // 1. 채팅일 때
+          if (data.type === "TALK") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.text,
+                sentTime: data.time,
+                sender: data.sender,
+                direction: "incoming",
+                position: "single",
+                type: "message",
+              },
+            ]);
+          }
+          // 2. 마커 위치일 때
+          else if (data.type === "PING") {
+            setVisible(true);
+            // 마커 리스트 저장
+            playAudio();
+          }
+          // 3. 사용자들 위치일 때
+          else if (data.type === "POS") {
+            // 라이드어스랑 로직 똑같음
+          }
+          // 4. 사용자 입장했을때/퇴장했을 떄
+          else if (data.type === "ENTER" || data.type === "QUIT") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.message,
+                sentTime: data.time,
+                sender: data.sender,
+                direction: "incoming",
+                position: "single",
+                type: "enter",
+              },
+            ]);
+          }
+          // rideMembers.members[data.memberId] = data;
+          // setRideMembers({ ...rideMembers });
+        },
+        {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        }
+      );
+    }
+  };
   // 웹소켓 연결해제
   const disConnect = () => {
     if (client != null) {
@@ -485,7 +496,7 @@ export const Plogging = () => {
   useInterval(
     () => {
       setTime(time + 1);
-      console.log(mapData);
+      // console.log(mapData);
       // setData((prev) => ({
       //   kcal: handleCalories(),
       //   totalDistance: prev.totalDistance,
@@ -500,9 +511,9 @@ export const Plogging = () => {
       getGarbageList(
         mapData.center,
         (response) => {
-          console.log(response);
+          // console.log(response);
           setGarbages((prev) => (prev = response.data));
-          console.log(garbages);
+          // console.log(garbages);
         },
         (fail) => {
           console.log(fail);
@@ -600,6 +611,19 @@ export const Plogging = () => {
     },
     ready ? 1000 : null
   );
+
+  // 웹소켓 초기화
+  useEffect(() => {
+    if (ploggingType === "crew" && client === null) {
+      initSocketClient();
+    }
+
+    return () => {
+      if (ploggingType === "crew" && client !== null) {
+        disConnect();
+      }
+    };
+  }, []);
 
   // 거리, 데이터 핸들 useEffect
   useEffect(() => {
@@ -783,69 +807,73 @@ export const Plogging = () => {
             <DataBox label="칼로리" data={data.kcal} />
           </Box>
           {/* 채팅 */}
-          <Box
-            width="80%"
-            height="65%"
-            style={{
-              boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
-              textAlign: "start",
-            }}
-          >
-            {/* 채팅 구역 */}
-            <ChatContainer>
-              <MessageList>
-                <Message
-                  model={{
-                    message: "hihi",
-                    sentTime: "15 mins ago",
-                    sener: "dwdw",
-                    direction: "incoming",
-                    position: "single",
+          {ploggingType === "crew" && (
+            <Box
+              width="80%"
+              height="65%"
+              style={{
+                boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
+                textAlign: "start",
+              }}
+            >
+              {/* 채팅 구역 */}
+              <ChatContainer>
+                <MessageList>
+                  <Message
+                    model={{
+                      message: "hihi",
+                      sentTime: "15 mins ago",
+                      sener: "dwdw",
+                      direction: "incoming",
+                      position: "single",
+                    }}
+                  >
+                    <Avatar src={userIcon} name="Joe" />
+                    <Message.Footer sender="Emily" sentTime="just now" />
+                  </Message>
+                  {messages.map((message, index) => {
+                    if (message.type === "message")
+                      return (
+                        <Message
+                          key={index}
+                          model={{
+                            message: message.text,
+                            sentTime: message.sentTime,
+                            sender: message.sender,
+                            direction: message.direction,
+                            position: message.position,
+                          }}
+                        />
+                      );
+                    else if (
+                      message.type === "enter" ||
+                      message.type === "exit"
+                    )
+                      return (
+                        <MessageSeparator
+                          content={
+                            message.sender + "님이 " + message.type === "enter"
+                              ? "참가했습니다."
+                              : "나가셨습니다."
+                          }
+                        />
+                      );
+                  })}
+                </MessageList>
+                <MessageInput
+                  placeholder="Type message here"
+                  attachButton={false}
+                  onSend={(innerHtml, textContent, innerText, nodes) => {
+                    handleMessageSend(textContent);
+                    playAudio();
                   }}
-                >
-                  <Avatar src={userIcon} name="Joe" />
-                  <Message.Footer sender="Emily" sentTime="just now" />
-                </Message>
-                {messages.map((message, index) => {
-                  if (message.type === "message")
-                    return (
-                      <Message
-                        key={index}
-                        model={{
-                          message: message.text,
-                          sentTime: message.sentTime,
-                          sender: message.sender,
-                          direction: message.direction,
-                          position: message.position,
-                        }}
-                      />
-                    );
-                  else if (message.type === "enter" || message.type === "exit")
-                    return (
-                      <MessageSeparator
-                        content={
-                          message.sender + "님이 " + message.type === "enter"
-                            ? "참가했습니다."
-                            : "나가셨습니다."
-                        }
-                      />
-                    );
-                })}
-              </MessageList>
-              <MessageInput
-                placeholder="Type message here"
-                attachButton={false}
-                onSend={(innerHtml, textContent, innerText, nodes) => {
-                  handleMessageSend(textContent);
-                  playAudio();
-                }}
-                style={{
-                  background: "#fff",
-                }}
-              />
-            </ChatContainer>
-            {/* 채팅 버튼 */}
-            {/* <Box width="70%" height="100%" align="end" justify="end"></Box>
+                  style={{
+                    background: "#fff",
+                  }}
+                />
+              </ChatContainer>
+              {/* 채팅 버튼 */}
+              {/* <Box width="70%" height="100%" align="end" justify="end"></Box>
               <motion.button
                 style={{
                   boxShadow: "none",
@@ -860,7 +888,8 @@ export const Plogging = () => {
                   backgroundColor: "#57BA83",
                 }}
               ></motion.button> */}
-          </Box>
+            </Box>
+          )}
           {/* 정지, 일시정지 버튼 */}
           {/* <Box width="100%" direction="row" justify="center" gap="25px">
             <PloggingButton

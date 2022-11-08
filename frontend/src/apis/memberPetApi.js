@@ -19,10 +19,10 @@ const authInstance = axios.create({
 });
 
 const authFormInstance = axios.create({
-  baseURL: API_SERVER_PERSONAL,
+  baseURL: API_SERVER_USER,
   headers: {
     "Content-type": "multipart/form-data",
-    Authorization: `Bearer ` + localStorage.getItem("token"),
+    Authorization: `Bearer ` + localStorage.getItem("accessToken"),
     memberId: localStorage.getItem("memberId"),
   },
 });
