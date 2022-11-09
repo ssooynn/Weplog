@@ -20,6 +20,8 @@ public class RoomOfSession {
 
     private final String roomId;
 
+    private final String memberId;
+
     @Enumerated(EnumType.STRING)
     private final RoomType roomType;
 }
