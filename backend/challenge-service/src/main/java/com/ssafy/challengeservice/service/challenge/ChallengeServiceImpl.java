@@ -129,11 +129,13 @@ public class ChallengeServiceImpl implements ChallengeService{
         List<String> memberIdList = new ArrayList<>();
 
         for (Challenge challenge : finishChallengeList) {
-            memberIdList.add(challenge.getMember().getId().toString());  // 리워드 갱신되어야할 멤버들 (카프카로 전달할 내용)
+
 
             List<MemberChallenge> memberChallengeList = challenge.getMemberChallengeList();
             List<AddRewardPointDto> addRewardPointDtoList = new ArrayList<>();
             for (MemberChallenge memberChallenge : memberChallengeList) {
+                memberIdList.add(memberChallenge.getMember().getId().toString());  // 리워드 갱신되어야할 멤버들 (카프카로 전달할 내용)
+
                 // 해당 챌린지가 달성됐으면 멤버에게 리워드 제공(카프카 전송)
                 if (challenge.getProgress() >= challenge.getGoal()) {
                     addRewardPointDtoList.add(AddRewardPointDto.create(memberChallenge.getMember().getId()
@@ -142,7 +144,8 @@ public class ChallengeServiceImpl implements ChallengeService{
             }
 
             // 챌린지 달성에 따른 리워드 포인트 제공
-            kafkaProducer.sendRewardPoint("update-reward-point", addRewardPointDtoList);
+            if (!addRewardPointDtoList.isEmpty())
+                kafkaProducer.sendRewardPoint("update-reward-point", addRewardPointDtoList);
         }
 
         // 챌린지 종료에 따른 도전과제 달성도 반영

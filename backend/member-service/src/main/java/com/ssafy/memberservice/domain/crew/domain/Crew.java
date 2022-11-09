@@ -63,6 +63,7 @@ public class Crew extends BaseEntity {
         String pointWKT = String.format("POINT(%s %s)", request.getLon(), request.getLat());
         try {
             crew.crewLoc = (Point) new WKTReader().read(pointWKT);
+            crew.crewLoc.setSRID(3857);
         } catch (Exception e) {
             e.printStackTrace();
         }

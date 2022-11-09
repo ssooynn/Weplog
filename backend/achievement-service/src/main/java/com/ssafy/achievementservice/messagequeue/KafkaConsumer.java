@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.ssafy.achievementservice.domain.achievement.AchievementType.*;
 
@@ -118,8 +119,12 @@ public class KafkaConsumer {
         }
 
         List<String> memberIdList = (List<String>) map.get("memberIdList");
+        List<UUID> memberIdToUUIDList = memberIdList.stream().map(s -> UUID.fromString(s)).collect(Collectors.toList());
 
-        List<MemberAchievement> achievementList = memberAchievementRepository.findByMemberIdListAndTypeListWithAchievement(memberIdList, CHALLENGE_COMPLETE_CNT);
+        List<MemberAchievement> achievementList =
+                memberAchievementRepository.findByMemberIdListAndTypeListWithAchievement(memberIdToUUIDList, CHALLENGE_COMPLETE_CNT);
+        log.info("멤버 도전과제 리스트 출력 -> {}", achievementList);
+
         List<AddRewardPointDto> rewardList = new ArrayList<>();
         for (MemberAchievement memberAchievement : achievementList) {
             int addRewardPoint = memberAchievement.updateNumber();
