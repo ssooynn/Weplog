@@ -79,11 +79,20 @@
 
 ## 🗣️ 협업 관리
 
+**Git Flow**
+[Git](README.assets/협업툴 Git.png)
+
+---
+
 **Jira BurnDown Chart**
+[JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S07P31A106/boards/100)
+![JIRA](README.assets/협업툴 JIRA.png)
 
 ---
 
 **Notion**
+[Notion](https://www.notion.so/A106-3bc641fa277a46b6a82aae0976fea8c4)
+![Notion](README.assets/협업툴 Notion.png)
 
 ## 👩‍👩‍👧 개발 멤버 소개
 
