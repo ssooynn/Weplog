@@ -6,6 +6,7 @@ import { Box } from "grommet";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
 import { PloggingTypeBottomSheet } from "../../components/plogging/PloggingTypeBottomSheet";
+import { getNearRecentPloggingList } from "../../apis/ploggingApi";
 export const PloggingStart = () => {
   //variabales
   const [loc, setLoc] = useState({
@@ -52,6 +53,15 @@ export const PloggingStart = () => {
           position.coords.longitude
         );
         geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+        getNearRecentPloggingList(
+          { lat: position.coords.latitude, lng: position.coords.longitude },
+          (response) => {
+            console.log(response);
+          },
+          (fail) => {
+            console.log(fail);
+          }
+        );
       },
       (err) => {
         setLoc((prev) => ({
@@ -95,7 +105,7 @@ export const PloggingStart = () => {
       <Box
         width="100%"
         align="center"
-        style={{ position: "absolute", top: "8%", zIndex: "3" }}
+        style={{ position: "absolute", top: "5%", zIndex: "3" }}
         gap="medium"
       >
         {/* 주소박스 */}
@@ -139,7 +149,18 @@ export const PloggingStart = () => {
           whileTap={{ scale: 0.9 }}
           onClick={() => {
             // setOpen(true);
-            navigate("/plogging");
+            navigate("/plogging", {
+              state: {
+                ploggingType: "single",
+                roomId: null,
+              },
+            });
+            // navigate("/plogging", {
+            //   state: {
+            //     ploggingType: "crew",
+            //     roomId: "029eb15a-078e-4e32-8e22-68c080e44d65",
+            //   },
+            // });
           }}
         >
           Plogging!
