@@ -47,8 +47,8 @@ public class ChatController {
         return ResponseEntity.ok(ploggingChatService.getCrewPloggingListFromMemberId(memberId));
     }
 
-    @GetMapping("/crew/room/{crewId}")
-    public ResponseEntity<?> getCrewChats(@PathVariable("crewId") Long crewId) {
+    @GetMapping("/crew/chat/{crewId}")
+    public ResponseEntity<?> getCrewChats(@PathVariable("crewId") Long crewId, @RequestHeader("memberId") String memberId) {
         return ResponseEntity.ok(crewChatService.getCrewChats(crewId));
     }
 
