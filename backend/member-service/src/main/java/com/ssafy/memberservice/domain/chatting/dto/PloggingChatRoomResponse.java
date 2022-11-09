@@ -1,7 +1,7 @@
 package com.ssafy.memberservice.domain.chatting.dto;
 
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
-import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
+import com.ssafy.memberservice.domain.chatting.domain.redis.PloggingChatRoom;
 import lombok.Builder;
 import lombok.Data;
 
