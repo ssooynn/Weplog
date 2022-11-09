@@ -117,7 +117,7 @@ public class StompHandler implements ChannelInterceptor {
 
             log.info("DISCONNECTED {}, {}", sessionId, roomOfSession.getRoomId());
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
-            roomOfSessionRepository.delete(roomOfSession);
+            roomOfSessionRepository.deleteById(roomOfSession.getSessionId());
         }
         return message;
     }
