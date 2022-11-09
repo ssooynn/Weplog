@@ -15,7 +15,7 @@ import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-// import { PlomonDetail } from "../components/AlertDialog";
+import { PlomonDetail } from "../components/AlertDialog";
 import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
@@ -136,7 +136,7 @@ const PlomonState = styled.div`
   font-size: 10px;
   font-weight: 500;
   margin-top: 2vw;
-  padding: 0 8px 2px 8px;
+  padding: 0 8px 1px 8px;
   border-radius: 15px;
 `
 
@@ -198,22 +198,22 @@ export const Main = () => {
             <PlomonName>재권</PlomonName>
             <PlomonState>Baby</PlomonState>
           </SmallPlomon>
-          {/* <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/> */}
+          <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/>
         </>
 
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample2}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>피스</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample3}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>키치</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample4}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>레이</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
       </PlomonTableArea>
