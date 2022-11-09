@@ -5,6 +5,10 @@ import {OrbitControls, useGLTF, Environment} from '@react-three/drei';
 import { VolcanoModel } from "./VolcanoModel";
 import { PersonModel } from "./PersonModel";
 import { SnowIsland } from "./Snow_island";
+import { DinoModel1 } from "./DinoModel1";
+import { DinoModel2 } from "./DinoModel2";
+import { DinoModel3 } from "./DinoModel3";
+import { DinoModel4 } from "./DinoModel4";
 
 function Island() {
   const mesh = useRef(null);
@@ -12,7 +16,10 @@ function Island() {
   return (
     <mesh ref={mesh} scale={0.5}>
       <SnowIsland />
-      <PersonModel />
+        <DinoModel1 scale={0.05} position={[0, 23, 11]}/>
+        <DinoModel2 scale={0.05} position={[-8, 15.2, 26]}/>
+        <DinoModel3 scale={0.05} position={[-15, 15.2, -14]} rotation={[0, -90, 0]}/>
+        <DinoModel4 scale={0.05} position={[-22, 14, 6]} rotation={[0, 80, 0]}/>
       <meshLambertMaterial attach="material" />
     </mesh>
   );
