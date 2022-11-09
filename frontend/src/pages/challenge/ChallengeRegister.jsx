@@ -75,7 +75,7 @@ export const ChallengeRegister = () => {
         title: name,
         type: type,
         goal: goal,
-        end_date: endDate,
+        endDate: endDate,
       });
       console.log(request);
       //이미지 배열 만들어서 formData에 넣기      
