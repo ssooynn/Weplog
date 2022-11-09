@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,12 +21,13 @@ import java.util.UUID;
 public class CalendarController {
 
     private final CalendarService calendarService;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
-    @ApiOperation(value = "캘린더 등록", notes = "해당 월에 해당하는 스케쥴을 리스트로 반환")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime time;
+    @ApiOperation(value = "캘린더 가져오기", notes = "해당 월에 해당하는 스케쥴을 리스트로 반환")
     @GetMapping("{crewId}/{date}")
-    ResponseEntity<?> getCalendarInfo(@PathVariable("crewId")Long crewId, @PathVariable("date")LocalDateTime time){
-        CalendarRes calendarRes = calendarService.getCalendarInfo(time, crewId);
+    ResponseEntity<?> getCalendarInfo(@PathVariable("crewId")Long crewId, @PathVariable("date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate time){
+        List<CalendarRes> calendarRes = calendarService.getCalendarInfo(time, crewId);
         return new ResponseEntity<>(calendarRes, HttpStatus.OK);
     }
 
