@@ -2,7 +2,6 @@
 import { createAction, handleActions } from "redux-actions";
 // import { useNavigate } from "react-router-dom";
 import produce from "immer";
-// import { loginApi } from "../../utils/apis/UserAPI";
 
 const SET_USER = "SET_USER";
 
@@ -10,13 +9,11 @@ export const setUser = createAction(SET_USER, (user) => user);
 
 const initialState = {
   user: {
-    email: "",
-    id: 0,
+    memberId: "",
     name: "",
     nickname: "",
     weight: "",
     profileImageUrl: "",
-    role: "",
   },
 };
 

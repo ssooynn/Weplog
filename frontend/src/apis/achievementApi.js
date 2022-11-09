@@ -1,6 +1,6 @@
 import { API_SERVER, axios } from "./api";
 
-const API_SERVER_USER = API_SERVER + "/achievement-service/";
+const API_SERVER_USER = API_SERVER + "achievement-service/";
 
 const authInstance = axios.create({
   baseURL: API_SERVER_USER,

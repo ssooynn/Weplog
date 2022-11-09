@@ -10,6 +10,8 @@ import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
 import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
 import { List } from "grommet-icons";
+import { myPageProfileApi } from "../../apis/mypageApi";
+import { challengeIngListAPi } from "../../apis/memberChallengeApi";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
@@ -19,24 +21,32 @@ export const ChallengeList = () => {
   const [challengeList, setChallengeList] = useState([]);
   const [myChallengeList, setMyChallengeList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState("");
 
   useEffect(() => {
     if (loading) {
       challengeListAPi(0, 3, "ASC", (res) => {
-        console.log(res);
         setChallengeList(res.data.content);
       }, (err) => {
         console.log(err);
       })
 
-      challengeMyApi(0, 3, "ASC", (res) => {
-        setMyChallengeList(res.data.content);
+      challengeIngListAPi((res) => {
         console.log(res);
+        setMyChallengeList(res.data);
       }, (err) => {
         console.log(err);
       })
+
+      myPageProfileApi((res) => {
+        setProfile(res.data.profileImageUrl);
+      }, (err) => {
+        console.log(err);
+      })
+
       setLoading(false);
     }
+
   }, [loading])
   return (
     <motion.div>
@@ -60,11 +70,26 @@ export const ChallengeList = () => {
               src={Logo}
               onClick={() => navigate("/")}
             />
-            <img
-              src={searchIcon}
-              style={{ alignSelf: "center" }}
-              alt="챌린지 검색"
-            />
+            <Box direction="row" align="center">
+
+              <img
+                src={searchIcon}
+                style={{ alignSelf: "center" }}
+                alt="챌린지 검색"
+              />
+              <motion.img
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  marginLeft: "5px"
+                }}
+                whileTap={{ scale: 0.9 }}
+                alt="mypage"
+                onClick={() => navigate("/mypage")}
+                src={`${profile}`}
+              />
+            </Box>
           </Box>
           <Text
             alignSelf="start"
