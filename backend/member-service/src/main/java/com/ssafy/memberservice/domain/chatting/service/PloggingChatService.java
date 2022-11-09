@@ -8,7 +8,7 @@ import com.ssafy.memberservice.domain.chatting.domain.enums.Color;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.PingType;
 import com.ssafy.memberservice.domain.chatting.dto.ActivateCrewPloggingResponse;
-import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.PloggingChatMessage;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatRoomResponse;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
@@ -23,6 +23,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
@@ -127,7 +128,7 @@ public class PloggingChatService {
 //        Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(chatMessage.getRoomId()).orElseThrow(() -> new NotFoundException("해당하는 방을 찾을 수 없습니다."));
         chatMessage.setSender(ploggingChatRoom.getPlayerMap().get(memberId));
-
+        chatMessage.setSendTime(LocalDateTime.now());
         sendChatMessage(chatMessage);
     }
 

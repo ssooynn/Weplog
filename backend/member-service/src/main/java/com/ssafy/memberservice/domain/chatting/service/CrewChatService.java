@@ -6,7 +6,7 @@ import com.ssafy.memberservice.domain.chatting.domain.mongo.Chats;
 import com.ssafy.memberservice.domain.chatting.domain.redis.CrewChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
-import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.ChatMessage;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
@@ -14,12 +14,20 @@ import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.bson.Document;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
@@ -42,6 +50,8 @@ public class CrewChatService {
     private final MemberCrewRepository memberCrewRepository;
 
     private final ChatsRespository chatsRespository;
+
+    private final MongoTemplate mongoTemplate;
 
 
     public CrewChatRoom makeRoom(String memberId, Long crewId) {
@@ -88,6 +98,9 @@ public class CrewChatService {
         } else if (MessageType.QUIT.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 방에서 나갔습니다.");
             chatMessage.setSender(Participant.builder().nickname("[알림]").build());
+        } else {
+            CrewChatRoom crewChatRoom = crewChatRepository.findById(Long.valueOf(chatMessage.getRoomId())).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
+            pushData(crewChatRoom.getChatId(), chatMessage);
         }
 
         log.info("plogging - {}", chatMessage.getMessage());
@@ -95,9 +108,18 @@ public class CrewChatService {
 
     }
 
+    private void pushData(String chatId, ChatMessage chatMessage) {
+        Query query = new Query().addCriteria(Criteria.where("_id").is(new ObjectId(chatId)));
+        Update update = new Update();
+
+        update.push("chatMessages", chatMessage);  //push라는 메소드에 키 값을 넣어주고 each를 통해서 해당 배열에 순차적으로 저장하게 하였습니다.
+        mongoTemplate.updateFirst(query, update, "chats");
+    }
+
     public void sendChatMessage(ChatMessage chatMessage, String memberId) {
         Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         chatMessage.setSender(Participant.from(member));
+        chatMessage.setSendTime(LocalDateTime.now());
         sendChatMessage(chatMessage);
     }
 

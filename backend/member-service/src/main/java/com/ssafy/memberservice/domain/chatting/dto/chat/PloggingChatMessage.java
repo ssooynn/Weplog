@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.chatting.dto;
+package com.ssafy.memberservice.domain.chatting.dto.chat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
