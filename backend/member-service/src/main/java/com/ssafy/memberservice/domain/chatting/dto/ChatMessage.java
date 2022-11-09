@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.chatting.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class ChatMessage {
 
     protected MessageType type; // 메시지 타입
     protected String roomId; // 방번호
-    protected String sender; // 메시지 보낸사람
+    protected Participant sender; // 메시지 보낸사람
     protected String message; // 메시지
 }
