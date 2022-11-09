@@ -47,6 +47,11 @@ public class ChatController {
         return ResponseEntity.ok(ploggingChatService.getCrewPloggingListFromMemberId(memberId));
     }
 
+    @GetMapping("/crew/room/{crewId}")
+    public ResponseEntity<?> getCrewChats(@PathVariable("crewId") Long crewId) {
+        return ResponseEntity.ok(crewChatService.getCrewChats(crewId));
+    }
+
     /**
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
      */

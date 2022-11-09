@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.chatting.service;
 
-import com.ssafy.memberservice.domain.chatting.dao.mongo.ChatsRespository;
+import com.ssafy.memberservice.domain.chatting.dao.mongo.ChatsRepository;
 import com.ssafy.memberservice.domain.chatting.dao.redis.CrewChatRepository;
 import com.ssafy.memberservice.domain.chatting.domain.mongo.Chats;
 import com.ssafy.memberservice.domain.chatting.domain.redis.CrewChatRoom;
@@ -15,7 +15,6 @@ import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -28,6 +27,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
@@ -49,7 +49,7 @@ public class CrewChatService {
 
     private final MemberCrewRepository memberCrewRepository;
 
-    private final ChatsRespository chatsRespository;
+    private final ChatsRepository chatsRepository;
 
     private final MongoTemplate mongoTemplate;
 
@@ -58,8 +58,9 @@ public class CrewChatService {
         // 멤버가 해당 크루인지 확인
         MemberCrew memberCrew = memberCrewRepository.findMemberCrewByMemberIdAndCrewId(UUID.fromString(memberId), crewId).orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
 
-        Chats chats = chatsRespository.save(Chats.builder()
+        Chats chats = chatsRepository.save(Chats.builder()
                 .chatMessages(new ArrayList<>())
+                .crewId(memberCrew.getCrew().getId())
                 .build());
         // 문제 없으니 방 생성
         CrewChatRoom crewChatRoom = crewChatRepository.save(CrewChatRoom.create(crewId, memberCrew, chats.getId()));
@@ -103,7 +104,7 @@ public class CrewChatService {
             pushData(crewChatRoom.getChatId(), chatMessage);
         }
 
-        log.info("plogging - {}", chatMessage.getMessage());
+        log.info("crewchat - {}", chatMessage.getMessage());
         redisTemplate.convertAndSend(crewTopic.getTopic(), chatMessage);
 
     }
@@ -136,5 +137,14 @@ public class CrewChatService {
         CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
         crewChatRoom.getPlayerMap().remove(member.getId().toString());
+    }
+
+    public List<ChatMessage> getCrewChats(Long crewId) {
+        Optional<Chats> chatsByCrewId = chatsRepository.findChatsByCrewId(crewId);
+
+        if (chatsByCrewId.isPresent()) {
+            return chatsByCrewId.get().getChatMessages();
+        }
+        return new ArrayList<>();
     }
 }

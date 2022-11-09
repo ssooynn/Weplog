@@ -2,6 +2,7 @@ package com.ssafy.memberservice.domain.chatting.domain.mongo;
 
 import com.ssafy.memberservice.domain.chatting.dto.chat.ChatMessage;
 import lombok.*;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -19,4 +20,6 @@ public class Chats {
 
     private List<ChatMessage> chatMessages;
 
+    @Indexed
+    private Long crewId;
 }
