@@ -1,6 +1,6 @@
-package com.ssafy.memberservice.domain.member.dto.memberdetail.controller;
+package com.ssafy.memberservice.domain.memberdetail.controller;
 
-import com.ssafy.memberservice.domain.member.dto.memberdetail.service.MyPageService;
+import com.ssafy.memberservice.domain.memberdetail.service.MyPageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.member.dto.memberdetail.dto;
+package com.ssafy.memberservice.domain.memberdetail.dto;
 
 import com.ssafy.memberservice.domain.member.domain.Member;
 import lombok.AllArgsConstructor;

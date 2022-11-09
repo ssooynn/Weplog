@@ -14,7 +14,7 @@ public interface MemberAchievementRepository extends JpaRepository<MemberAchieve
     List<MemberAchievement> findByMemberIdAndTypeListWithAchievement(UUID memberId, List<AchievementType> typeList);
 
     @Query("select ma from MemberAchievement ma join fetch ma.achievement a where ma.member.id in :memberIdList and a.type = :type")
-    List<MemberAchievement> findByMemberIdListAndTypeListWithAchievement(List<String> memberIdList, AchievementType type);
+    List<MemberAchievement> findByMemberIdListAndTypeListWithAchievement(List<UUID> memberIdList, AchievementType type);
 
     @Query("select ma from MemberAchievement ma join fetch ma.achievement a where ma.member.id = :memberId and a.type = :type")
     List<MemberAchievement> findByMemberIdAndTypeWithAchievement(UUID memberId, AchievementType type);

@@ -32,6 +32,7 @@ public class KafkaProducer {
         }
 
         kafkaTemplate.send(topic, jsonInString);
+        log.info("Kafka Producer " + topic + " 으로 보냄 Member-service로 -> {}", jsonInString);
         log.info("Kafka Producer sent reward point from the Member microservice!!:" + kafkaData);
 
         return addRewardPointDtoList;
