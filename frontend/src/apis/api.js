@@ -9,9 +9,9 @@ export const API_SERVER = "https://k7a1061.p.ssafy.io/";
 export const CLIENT_URL = "http://localhost:3000";
 
 export const AUTH_URL_KAKAO =
-  API_SERVER + "/member-service/oauth2/authorize/kakao";
+  API_SERVER + "member-service/oauth2/authorize/kakao";
 export const AUTH_URL_GOOGLE =
-  API_SERVER + "/member-service/oauth2/authorize/google";
+  API_SERVER + "member-service/oauth2/authorize/google";
 
 export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`;
 //
