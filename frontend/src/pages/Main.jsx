@@ -15,7 +15,7 @@ import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import { PlomonDetail } from "../components/AlertDialog";
+// import { PlomonDetail } from "../components/AlertDialog";
 import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
@@ -198,7 +198,7 @@ export const Main = () => {
             <PlomonName>재권</PlomonName>
             <PlomonState>Baby</PlomonState>
           </SmallPlomon>
-          <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/>
+          {/* <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/> */}
         </>
 
         <SmallPlomon>
