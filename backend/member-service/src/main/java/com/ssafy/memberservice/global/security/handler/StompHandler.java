@@ -79,6 +79,7 @@ public class StompHandler implements ChannelInterceptor {
                         .sessionId(sessionId)
                         .roomId(roomId)
                         .roomType(RoomType.PLOGGING)
+                        .memberId(memberId)
                         .build());
 
                 ploggingChatService.joinRoom(member, roomId);
@@ -99,8 +100,8 @@ public class StompHandler implements ChannelInterceptor {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             RoomOfSession roomOfSession = roomOfSessionRepository.findById(sessionId).orElseThrow(NoSuchElementException::new);
 
-            String memberId = jwtTokenProvider.getSubject(extractToken(accessor));
-            Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+//            String memberId = jwtTokenProvider.getSubject(extractToken(accessor));
+            Member member = memberRepository.findById(UUID.fromString(roomOfSession.getMemberId())).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
             // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
             // 채팅방의 인원수를 -1한다.
