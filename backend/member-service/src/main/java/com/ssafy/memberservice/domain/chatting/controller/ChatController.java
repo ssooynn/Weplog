@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.chatting.controller;
 
+import com.ssafy.memberservice.domain.chatting.dto.ActivateCrewPloggingResponse;
 import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatRoomResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -39,6 +41,11 @@ public class ChatController {
     public ResponseEntity<PloggingChatRoomResponse> createCrewRoom(@RequestHeader("memberId") String memberId,@RequestBody Long crewId) {
         log.info("memberId {} - crewId {}", memberId, crewId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ploggingChatService.makeRoom(memberId, crewId));
+    }
+
+    @GetMapping("/crew/rooms")
+    public ResponseEntity<List<ActivateCrewPloggingResponse>> getCrewPloggingListFromMemberId(@RequestHeader("memberId") String memberId) {
+        return ResponseEntity.ok(ploggingChatService.getCrewPloggingListFromMemberId(memberId));
     }
 
     /**
@@ -65,6 +72,7 @@ public class ChatController {
         // Websocket에 발행된 메시지를 redis로 발행(publish)
         ploggingChatService.sendChatMessage(message, memberId);
     }
+
 
     private String parseBearerToken(String bearerToken) {
 
