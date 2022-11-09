@@ -807,73 +807,72 @@ export const Plogging = () => {
             <DataBox label="칼로리" data={data.kcal} />
           </Box>
           {/* 채팅 */}
-          {ploggingType === "crew" && (
-            <Box
-              width="80%"
-              height="65%"
-              style={{
-                boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
-                textAlign: "start",
-              }}
-            >
-              {/* 채팅 구역 */}
-              <ChatContainer>
-                <MessageList>
-                  <Message
-                    model={{
-                      message: "hihi",
-                      sentTime: "15 mins ago",
-                      sener: "dwdw",
-                      direction: "incoming",
-                      position: "single",
-                    }}
-                  >
-                    <Avatar src={userIcon} name="Joe" />
-                    <Message.Footer sender="Emily" sentTime="just now" />
-                  </Message>
-                  {messages.map((message, index) => {
-                    if (message.type === "message")
-                      return (
-                        <Message
-                          key={index}
-                          model={{
-                            message: message.text,
-                            sentTime: message.sentTime,
-                            sender: message.sender,
-                            direction: message.direction,
-                            position: message.position,
-                          }}
-                        />
-                      );
-                    else if (
-                      message.type === "enter" ||
-                      message.type === "exit"
-                    )
-                      return (
-                        <MessageSeparator
-                          content={
-                            message.sender + "님이 " + message.type === "enter"
-                              ? "참가했습니다."
-                              : "나가셨습니다."
-                          }
-                        />
-                      );
-                  })}
-                </MessageList>
-                <MessageInput
-                  placeholder="Type message here"
-                  attachButton={false}
-                  onSend={(innerHtml, textContent, innerText, nodes) => {
-                    handleMessageSend(textContent);
-                    playAudio();
+
+          <Box
+            width="80%"
+            height="65%"
+            style={{
+              boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
+              textAlign: "start",
+            }}
+          >
+            {/* 채팅 구역 */}
+            <ChatContainer>
+              <MessageList>
+                {/* <Message
+                  model={{
+                    message: "hihi",
+                    sentTime: "15 mins ago",
+                    sener: "dwdw",
+                    direction: "incoming",
+                    position: "single",
                   }}
-                  style={{
-                    background: "#fff",
-                  }}
-                />
-              </ChatContainer>
-              {/* 채팅 버튼 */}
-              {/* <Box width="70%" height="100%" align="end" justify="end"></Box>
+                >
+                  <Avatar src={userIcon} name="Joe" />
+                  <Message.Footer sender="Emily" sentTime="just now" />
+                </Message> */}
+                {messages.map((message, index) => {
+                  if (message.type === "message")
+                    return (
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.text,
+                          sentTime: message.sentTime.toString(),
+                          sender: message.sender,
+                          direction: message.direction,
+                          position: message.position,
+                        }}
+                      />
+                    );
+                  else if (message.type === "enter" || message.type === "exit")
+                    return (
+                      <MessageSeparator
+                        content={
+                          message.sender + "님이 " + message.type === "enter"
+                            ? "참가했습니다."
+                            : "나가셨습니다."
+                        }
+                      />
+                    );
+                })}
+              </MessageList>
+              <MessageInput
+                placeholder={
+                  ploggingType === "crew" ? "여기에 입력하세요" : "메모장"
+                }
+                attachButton={false}
+                onSend={(innerHtml, textContent, innerText, nodes) => {
+                  handleMessageSend(textContent);
+                  playAudio();
+                }}
+                style={{
+                  background: "#fff",
+                }}
+              />
+            </ChatContainer>
+            {/* 채팅 버튼 */}
+            {/* <Box width="70%" height="100%" align="end" justify="end"></Box>
               <motion.button
                 style={{
                   boxShadow: "none",
@@ -888,8 +887,8 @@ export const Plogging = () => {
                   backgroundColor: "#57BA83",
                 }}
               ></motion.button> */}
-            </Box>
-          )}
+          </Box>
+
           {/* 정지, 일시정지 버튼 */}
           {/* <Box width="100%" direction="row" justify="center" gap="25px">
             <PloggingButton
