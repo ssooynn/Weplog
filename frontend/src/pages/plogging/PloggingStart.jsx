@@ -149,18 +149,18 @@ export const PloggingStart = () => {
           whileTap={{ scale: 0.9 }}
           onClick={() => {
             // setOpen(true);
-            navigate("/plogging", {
-              state: {
-                ploggingType: "single",
-                roomId: null,
-              },
-            });
             // navigate("/plogging", {
             //   state: {
-            //     ploggingType: "crew",
-            //     roomId: "029eb15a-078e-4e32-8e22-68c080e44d65",
+            //     ploggingType: "single",
+            //     roomId: null,
             //   },
             // });
+            navigate("/plogging", {
+              state: {
+                ploggingType: "crew",
+                roomId: "ef35d9c9-1e7e-4d02-a33d-5ba272b7ea2e",
+              },
+            });
           }}
         >
           Plogging!

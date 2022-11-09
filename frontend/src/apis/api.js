@@ -4,9 +4,9 @@ export const API_SERVER = "https://k7a1061.p.ssafy.io/";
 
 // export const API_SERVER = "http://localhost:8080/api";
 
-export const CLIENT_URL = "https://k7a106.p.ssafy.io";
+// export const CLIENT_URL = "https://k7a106.p.ssafy.io";
 
-// export const CLIENT_URL = "http://localhost:3000";
+export const CLIENT_URL = "http://localhost:3000";
 
 export const AUTH_URL_KAKAO =
   API_SERVER + "member-service/oauth2/authorize/kakao";

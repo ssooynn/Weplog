@@ -30,6 +30,7 @@
     "react": "^18.0.1",
     "react-color": "^2.19.3",
     "react-date-range": "^1.4.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "^18.0.1",
     "react-geolocated": "^4.0.3",
     "react-hook-geolocation": "^1.1.0",

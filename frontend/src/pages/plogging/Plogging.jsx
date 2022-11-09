@@ -127,6 +127,7 @@ export const Plogging = () => {
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const [markerPosition, setMarkerPosition] = useState();
   const [markerPositions, setMarkerPositions] = useState([]);
+  const [crewMarker, setCrewMarker] = useState([]);
   const [visible, setVisible] = useState(false);
   const audioPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
@@ -157,6 +158,17 @@ export const Plogging = () => {
     e.returnValue = "";
   };
 
+  // 마커 지정 함수
+  const setMarkerImage = (pingType) => {
+    return marker.pingType === "ONE"
+      ? TrashIcon
+      : marker.pingType === "TWO"
+      ? DishIcon
+      : marker.pingType === "THREE"
+      ? DesIcon
+      : GarbageIcon;
+  };
+
   // 시간에 따른 칼로리 구함.
   const handleCalories = () => {
     // kcal = MET * (3.5 * kg * min) * 5 / 1000
@@ -173,9 +185,10 @@ export const Plogging = () => {
       return [
         ...prev,
         {
+          sender: "자자쳐키",
           lat: markerPosition.lat,
           lng: markerPosition.lng,
-          marker: index,
+          pingType: index,
         },
       ];
     });
@@ -303,6 +316,7 @@ export const Plogging = () => {
   };
 
   const handleMessageSend = (text) => {
+    publishChatting(text);
     setMessages((prev) => [
       ...prev,
       {
@@ -372,12 +386,12 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
+      brokerURL: "ws://localhost:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
+        return SockJS("http://localhost:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -428,22 +442,32 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: data.text,
-                sentTime: data.time,
-                sender: data.sender,
-                direction: "incoming",
-                position: "single",
-                type: "message",
-              },
-            ]);
+            if (data.sender !== "자자쳐키")
+              setMessages((prev) => [
+                ...prev,
+                {
+                  text: data.text,
+                  sentTime: data.time,
+                  sender: data.sender,
+                  direction: "incoming",
+                  position: "single",
+                  type: "message",
+                },
+              ]);
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
             setVisible(true);
             // 마커 리스트 저장
+            setCrewMarker((prev) => [
+              ...prev,
+              {
+                sender: data.sender,
+                lat: data.lat,
+                lng: data.lng,
+                pingType: data.pingType,
+              },
+            ]);
             playAudio();
           }
           // 3. 사용자들 위치일 때
@@ -460,7 +484,7 @@ export const Plogging = () => {
                 sender: data.sender,
                 direction: "incoming",
                 position: "single",
-                type: "enter",
+                type: data.type,
               },
             ]);
           }
@@ -706,15 +730,7 @@ export const Plogging = () => {
                     <Image
                       sizes="30px"
                       fit="cover"
-                      src={
-                        marker.marker === 0
-                          ? TrashIcon
-                          : marker.marker === 1
-                          ? DishIcon
-                          : marker.marker === 2
-                          ? DesIcon
-                          : GarbageIcon
-                      }
+                      src={setMarkerImage(marker.pingType)}
                     />
                     <StyledText text="문석희" />
                   </Box>
@@ -838,23 +854,15 @@ export const Plogging = () => {
                         key={index}
                         model={{
                           message: message.text,
-                          sentTime: message.sentTime.toString(),
+                          sentTime: "보낸 시간",
                           sender: message.sender,
                           direction: message.direction,
                           position: message.position,
                         }}
                       />
                     );
-                  else if (message.type === "enter" || message.type === "exit")
-                    return (
-                      <MessageSeparator
-                        content={
-                          message.sender + "님이 " + message.type === "enter"
-                            ? "참가했습니다."
-                            : "나가셨습니다."
-                        }
-                      />
-                    );
+                  else if (message.type === "ENTER" || message.type === "QUIT")
+                    return <MessageSeparator content={message.text} />;
                 })}
               </MessageList>
               <MessageInput

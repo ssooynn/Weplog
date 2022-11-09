@@ -7,7 +7,7 @@ import rankIcon from "../../../assets/icons/rankIcon.svg";
 import applyIcon from "../../../assets/icons/applyIcon.svg";
 import { CrewApplyCard } from "../CrewApplyCard";
 
-export const CrewDetailMember = () => {
+const CrewDetailMember = ({}) => {
   return (
     <div>
       {/* 멤버 가로프로필 */}
@@ -51,3 +51,4 @@ export const CrewDetailMember = () => {
     </div>
   );
 };
+export default React.memo(CrewDetailMember);

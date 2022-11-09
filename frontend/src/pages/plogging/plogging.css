@@ -16,7 +16,13 @@
 .cs-message-input__content-editor-container {
   background-color: #fff;
 }
+.cs-message-separator {
+  color: #57ba83;
+}
+.cs-message-separator::before, .cs-message-separator::after {
 
+  background-color: #57ba83;
+}
 .cs-button--send {
   color: #57ba83;
 }
