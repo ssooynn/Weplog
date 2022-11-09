@@ -63,6 +63,7 @@ import {
   MessageList,
   MessageInput,
   TypingIndicator,
+  MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./plogging.css";
@@ -70,6 +71,7 @@ import userIcon from "../../assets/icons/userIcon.svg";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import ChatSound from "../../assets/sounds/chatNoti.mp3";
+import { exitPlogging, getGarbageList } from "../../apis/ploggingApi";
 
 export const DataBox = ({ label, data }) => {
   return (
@@ -127,7 +129,7 @@ export const Plogging = () => {
   const [markerPositions, setMarkerPositions] = useState([]);
   const [visible, setVisible] = useState(false);
   const audioPlayer = useRef(null);
-
+  const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -140,12 +142,12 @@ export const Plogging = () => {
     });
 
   const [messages, setMessages] = useState([]);
-
+  const { ploggingType, roomId } = locations.state;
   // ------------------함수-----------------------------
 
   // 소리 재생
   const playAudio = () => {
-    audioPlayer.current.stop();
+    audioPlayer.current.pause();
     audioPlayer.current.play();
   };
 
@@ -248,81 +250,103 @@ export const Plogging = () => {
   }, []);
 
   const handlePloggingFinish = () => {
-    navigate("/plogging/end", {
-      state: {
-        ploggingType: "",
-        ploggingData: {
-          latlng: mapData.latlng,
-          kcal: data.kcal,
-          time: time,
-          totalDistance: handleDistance(),
-          maxLng: mapData.maxLng,
-          minLng: mapData.minLng,
-          maxLat: mapData.maxLat,
-          minLat: mapData.minLat,
+    disConnect();
+    if (time < 60)
+      navigate("/plogging/end", {
+        state: {
+          ploggingType: ploggingType,
+          ploggingId: null,
+          ploggingData: {
+            latlng: mapData.latlng,
+            kcal: data.kcal,
+            time: time,
+            totalDistance: handleDistance(),
+            maxLng: mapData.maxLng,
+            minLng: mapData.minLng,
+            maxLat: mapData.maxLat,
+            minLat: mapData.minLat,
+          },
         },
-      },
-    });
+      });
+    else
+      exitPlogging(
+        {
+          calorie: data.kcal,
+          coordinates: mapData.latlng,
+          crewId: ploggingType === "single" ? null : null,
+          distance: data.totalDistance,
+          time: time,
+        },
+        (response) => {
+          console.log(response);
+          navigate("/plogging/end", {
+            state: {
+              ploggingType: ploggingType,
+              ploggingId: response.data.ploggingId,
+              ploggingData: {
+                latlng: mapData.latlng,
+                kcal: data.kcal,
+                time: time,
+                totalDistance: handleDistance(),
+                maxLng: mapData.maxLng,
+                minLng: mapData.minLng,
+                maxLat: mapData.maxLat,
+                minLat: mapData.minLat,
+              },
+            },
+          });
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
   };
 
   const handleMessageSend = (text) => {
-    setMessages((prev) => [...prev, text]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: text,
+        sentTime: new Date(),
+        sender: "localSender",
+        direction: "outgoing",
+        position: "single",
+        type: "message",
+      },
+    ]);
   };
 
-  // 웹소켓 구독
-  const subscribe = () => {
-    if (client != null) {
-      console.log("subs!!!!!!!!!");
-      client.subscribe("/sub/ride/room/" + "", (response) => {
-        console.log(response);
-        const data = JSON.parse(response.body);
-        // 1. 채팅일 때
-        if (data) {
-        }
-        // 2. 마커 위치일 때
-        else if (data) {
-          setVisible(true);
-          playAudio();
-        }
-        // 3. 사용자들 위치일 때
-        else if (data) {
-        }
-        // rideMembers.members[data.memberId] = data;
-        // setRideMembers({ ...rideMembers });
-      });
-    }
-  };
-
+  // 쓰레기통, 쓰레기많은거, 목적지, 식당
   //웹소켓 위치 발행
   const publishLocation = (lat, lng) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_POSITION",
+          type: "POS",
           lat: lat,
           lng: lng,
         }),
       });
     }
   };
-
+  // ENTER, QUIT, TALK, PING, POS
   //웹소켓 마커 발행
   const publishMarker = (marker) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_MARKER",
+          type: "PING",
           lat: marker.lat,
           lng: marker.lng,
-          marker: 0,
+          pingType: "THREE",
         }),
       });
     }
@@ -332,13 +356,14 @@ export const Plogging = () => {
   const publishChatting = (text) => {
     if (client != null) {
       client.publish({
-        destination: "/pub/ride/group",
+        destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         body: JSON.stringify({
-          messageType: "CURRENT_CHAT",
-          text: text,
+          type: "TALK",
+          roomId: roomId,
+          message: text,
         }),
       });
     }
@@ -347,12 +372,12 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k7a106.p.ssafy.io/api/ws-stomp",
+      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a106.p.ssafy.io/api/ws-stomp");
+        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -377,13 +402,14 @@ export const Plogging = () => {
       console.log("client init !!! ", frame);
       if (client != null)
         client.publish({
-          destination: "/pub/ride/group",
+          destination: "/pub/plogging/chat/message",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
-          body: JSON.stringify({
-            messageType: "ENTER",
-          }),
+          // body: JSON.stringify({
+          //   type: "ENTER",
+          //   roomId:roomId,
+          // }),
         });
       subscribe();
     };
@@ -391,6 +417,62 @@ export const Plogging = () => {
     client.activate();
   };
 
+  // 웹소켓 구독
+  const subscribe = () => {
+    if (client != null) {
+      console.log("subs!!!!!!!!!");
+      client.subscribe(
+        "/sub/chat/plogging/" + roomId,
+        (response) => {
+          console.log(response);
+          const data = JSON.parse(response.body);
+          // 1. 채팅일 때
+          if (data.type === "TALK") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.text,
+                sentTime: data.time,
+                sender: data.sender,
+                direction: "incoming",
+                position: "single",
+                type: "message",
+              },
+            ]);
+          }
+          // 2. 마커 위치일 때
+          else if (data.type === "PING") {
+            setVisible(true);
+            // 마커 리스트 저장
+            playAudio();
+          }
+          // 3. 사용자들 위치일 때
+          else if (data.type === "POS") {
+            // 라이드어스랑 로직 똑같음
+          }
+          // 4. 사용자 입장했을때/퇴장했을 떄
+          else if (data.type === "ENTER" || data.type === "QUIT") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.message,
+                sentTime: data.time,
+                sender: data.sender,
+                direction: "incoming",
+                position: "single",
+                type: "enter",
+              },
+            ]);
+          }
+          // rideMembers.members[data.memberId] = data;
+          // setRideMembers({ ...rideMembers });
+        },
+        {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        }
+      );
+    }
+  };
   // 웹소켓 연결해제
   const disConnect = () => {
     if (client != null) {
@@ -414,13 +496,35 @@ export const Plogging = () => {
   useInterval(
     () => {
       setTime(time + 1);
-      console.log(mapData);
+      // console.log(mapData);
       // setData((prev) => ({
       //   kcal: handleCalories(),
       //   totalDistance: prev.totalDistance,
       // }));
     },
     ready && walking ? 1000 : null
+  );
+
+  //1분마다 쓰레기통 위치 갱신
+  useInterval(
+    () => {
+      getGarbageList(
+        mapData.center,
+        (response) => {
+          // console.log(response);
+          setGarbages((prev) => (prev = response.data));
+          // console.log(garbages);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+      // setData((prev) => ({
+      //   kcal: handleCalories(),
+      //   totalDistance: prev.totalDistance,
+      // }));
+    },
+    ready && walking ? 1000 * 60 : 3000
   );
 
   // 실시간 위치를 찍어주는 함수
@@ -452,6 +556,19 @@ export const Plogging = () => {
               minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
+          if (garbages.length < 1) {
+            getGarbageList(
+              gps,
+              (response) => {
+                console.log(response);
+                setGarbages((prev) => (prev = response.data));
+                console.log(garbages);
+              },
+              (fail) => {
+                console.log(fail);
+              }
+            );
+          }
           if (time >= 1) {
             // 위치가 1개 초과로 저장되었을 때 거리 계산
             if (mapData.latlng.length > 1) {
@@ -495,9 +612,23 @@ export const Plogging = () => {
     ready ? 1000 : null
   );
 
+  // 웹소켓 초기화
+  useEffect(() => {
+    if (ploggingType === "crew" && client === null) {
+      initSocketClient();
+    }
+
+    return () => {
+      if (ploggingType === "crew" && client !== null) {
+        disConnect();
+      }
+    };
+  }, []);
+
   // 거리, 데이터 핸들 useEffect
   useEffect(() => {
     window.addEventListener("beforeunload", preventClose);
+
     return () => {
       window.removeEventListener("beforeunload", preventClose);
     };
@@ -602,6 +733,24 @@ export const Plogging = () => {
               }, // 마커이미지의 크기입니다
             }}
           />
+
+          {garbages.length > 0 &&
+            garbages.map((gabage, index) => {
+              return (
+                <MapMarker
+                  key={index}
+                  position={{ lat: gabage.lat, lng: gabage.lng }}
+                  image={{
+                    src: `/assets/images/garbage.png`,
+                    size: {
+                      width: 41,
+                      height: 41,
+                    },
+                  }}
+                />
+              );
+            })}
+
           {mapData.latlng && (
             <Polyline
               path={[mapData.latlng]}
@@ -658,6 +807,7 @@ export const Plogging = () => {
             <DataBox label="칼로리" data={data.kcal} />
           </Box>
           {/* 채팅 */}
+
           <Box
             width="80%"
             height="65%"
@@ -669,7 +819,7 @@ export const Plogging = () => {
             {/* 채팅 구역 */}
             <ChatContainer>
               <MessageList>
-                <Message
+                {/* <Message
                   model={{
                     message: "hihi",
                     sentTime: "15 mins ago",
@@ -680,24 +830,37 @@ export const Plogging = () => {
                 >
                   <Avatar src={userIcon} name="Joe" />
                   <Message.Footer sender="Emily" sentTime="just now" />
-                </Message>
-                {messages.map((mes, index) => {
-                  return (
-                    <Message
-                      key={index}
-                      model={{
-                        message: mes,
-                        sentTime: "15 mins ago",
-                        sener: "localSender",
-                        direction: "outgoing",
-                        position: "single",
-                      }}
-                    />
-                  );
+                </Message> */}
+                {messages.map((message, index) => {
+                  if (message.type === "message")
+                    return (
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.text,
+                          sentTime: message.sentTime.toString(),
+                          sender: message.sender,
+                          direction: message.direction,
+                          position: message.position,
+                        }}
+                      />
+                    );
+                  else if (message.type === "enter" || message.type === "exit")
+                    return (
+                      <MessageSeparator
+                        content={
+                          message.sender + "님이 " + message.type === "enter"
+                            ? "참가했습니다."
+                            : "나가셨습니다."
+                        }
+                      />
+                    );
                 })}
               </MessageList>
               <MessageInput
-                placeholder="Type message here"
+                placeholder={
+                  ploggingType === "crew" ? "여기에 입력하세요" : "메모장"
+                }
                 attachButton={false}
                 onSend={(innerHtml, textContent, innerText, nodes) => {
                   handleMessageSend(textContent);
@@ -725,6 +888,7 @@ export const Plogging = () => {
                 }}
               ></motion.button> */}
           </Box>
+
           {/* 정지, 일시정지 버튼 */}
           {/* <Box width="100%" direction="row" justify="center" gap="25px">
             <PloggingButton

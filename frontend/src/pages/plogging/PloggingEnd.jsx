@@ -29,7 +29,7 @@ window.$ = $;
 export const PloggingEnd = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { ploggingType, ploggingData } = location.state;
+  const { ploggingType, ploggingData, ploggingId } = location.state;
   const [data, setData] = useState(ploggingData);
   const [lineImage, setLineImage] = useState(null);
   const [lineImageBlack, setLineImageBlack] = useState(null);
@@ -128,17 +128,22 @@ export const PloggingEnd = () => {
   // };
 
   const handlePageChange = () => {
-    const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
-    console.log(line);
+    if (ploggingData.time < 60) {
+      navigate("/");
+    } else {
+      const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
+      console.log(line);
 
-    navigate("/plogging/register", {
-      state: {
-        ploggingType: ploggingType,
-        ploggingData: ploggingData,
-        address: address,
-        pathData: line,
-      },
-    });
+      navigate("/plogging/register", {
+        state: {
+          ploggingType: ploggingType,
+          ploggingData: ploggingData,
+          ploggingId: ploggingId,
+          address: address,
+          pathData: line,
+        },
+      });
+    }
     // line.style.background = "none";
     // // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
     // //   console.log(blob);
@@ -263,10 +268,10 @@ export const PloggingEnd = () => {
         >
           <div
             style={{
-              width: "200px",
+              width: "50%",
               height: "300px",
               position: "absolute",
-              left: "60%",
+              left: "50%",
               top: "-130px",
               zIndex: "15",
             }}
@@ -308,7 +313,7 @@ export const PloggingEnd = () => {
                 whileTap={{ scale: 0.9 }}
                 onClick={handlePageChange}
               >
-                {!register ? "다음" : "플로깅 완료!"}
+                {ploggingData.time < 60 ? "홈으로" : "플로깅 완료!"}
               </BootstrapButton>
 
               {/* <WhiteButton

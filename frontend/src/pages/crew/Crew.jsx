@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CrewCard } from "../../components/crew/CrewCard";
 import crewBanner from "../../assets/images/crewBanner.jpg";
 import { motion } from "framer-motion";
@@ -7,6 +7,9 @@ import { CrewScollableCardList } from "../../components/crew/CrewScollableCardLi
 import { ChallengeRankTop3 } from "../../components/rank/ChallengeRankTop3";
 
 export const Crew = () => {
+  const [top3, setTop3] = useState([]);
+
+  useEffect(() => {}, []);
   return (
     <motion.div>
       <div style={{ position: "relative", width: "100%", height: "260px" }}>
