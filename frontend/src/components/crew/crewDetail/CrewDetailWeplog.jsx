@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Box, Text } from "grommet";
 import planIcon from "../../../assets/icons/planIcon.png";
@@ -7,8 +7,13 @@ import { CrewPlanCard } from "../CrewPlanCard";
 import { useNavigate } from "react-router-dom";
 import { PloggingButtonCrew } from "../../common/Buttons.jsx";
 
-export const CrewDetailWeplog = () => {
+const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <motion.div>
       <Box>
@@ -20,7 +25,7 @@ export const CrewDetailWeplog = () => {
         </Box>
 
         {/* 캘린더 */}
-        <CrewCalender></CrewCalender>
+        <CrewCalender crewId={crewId}></CrewCalender>
 
         <Box direction="row" align="center" height="auto" justify="between">
           <Text
@@ -35,6 +40,7 @@ export const CrewDetailWeplog = () => {
             color="#00853b"
             weight={500}
             margin={{ left: "7px", bottom: "10px" }}
+            onClick={handleOpen}
           >
             플로깅 일정 등록하기
           </Text>
@@ -57,3 +63,4 @@ export const CrewDetailWeplog = () => {
     </motion.div>
   );
 };
+export default React.memo(CrewDetailWeplog);

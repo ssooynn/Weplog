@@ -17,5 +17,9 @@ export const currentMonthDay = (displayInfo, date) => {
   );
 };
 
+export const selectDay = (year, month, day) => {
+  return year + "년 " + month + "월 " + day + "일";
+};
+
 export const monthDayStart = (displayInfo) =>
   new Date(displayInfo.year, displayInfo.month, 0).getDay();
