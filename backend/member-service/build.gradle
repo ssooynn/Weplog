@@ -39,6 +39,9 @@ dependencies {
     // redisson-spring-boot-starter
     implementation 'org.redisson:redisson-spring-boot-starter:3.17.7'
 
+    // mongodb
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     // aws s3

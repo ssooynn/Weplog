@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -17,8 +19,8 @@ import lombok.Setter;
 public class PloggingChatMessage extends ChatMessage {
 
     @Builder
-    public PloggingChatMessage(MessageType type, String roomId, Participant sender, String message, long userCount, PingType pingType, String lat, String lng) {
-        super(type, roomId, sender, message);
+    public PloggingChatMessage(MessageType type, String roomId, Participant sender, String message, LocalDateTime sendTime, PingType pingType, String lat, String lng) {
+        super(type, roomId, sender, message, sendTime);
         this.pingType = pingType;
         this.lat = lat;
         this.lng = lng;

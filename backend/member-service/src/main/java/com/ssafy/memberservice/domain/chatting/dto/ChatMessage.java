@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,4 +21,5 @@ public class ChatMessage {
     protected String roomId; // 방번호
     protected Participant sender; // 메시지 보낸사람
     protected String message; // 메시지
+    protected LocalDateTime sendTime;
 }
