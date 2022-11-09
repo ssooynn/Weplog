@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.chatting.domain.mongo;
 
-import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.ChatMessage;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
