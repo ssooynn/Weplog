@@ -1,7 +1,6 @@
-import React from 'react'
+import React from "react";
 
-export const CrewDetailOurFeed = () => {
-    return (
-        <div>CrewDetailOurFeed</div>
-    )
-}
+const CrewDetailOurFeed = ({}) => {
+  return <div>CrewDetailOurFeed</div>;
+};
+export default React.memo(CrewDetailOurFeed);
