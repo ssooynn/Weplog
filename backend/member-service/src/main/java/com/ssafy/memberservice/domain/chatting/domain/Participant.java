@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 public class Participant implements Serializable {
 
-    private UUID id;
+    private String id;
 
     private String nickname;
     private String color;
@@ -19,7 +19,7 @@ public class Participant implements Serializable {
 
     public static Participant from(Member member) {
         return Participant.builder()
-                .id(member.getId())
+                .id(member.getId().toString())
                 .nickname(member.getNickname())
                 .profileImageUrl(member.getProfileImageUrl())
                 .build();

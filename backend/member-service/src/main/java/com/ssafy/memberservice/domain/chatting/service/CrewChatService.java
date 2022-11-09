@@ -60,11 +60,11 @@ public class CrewChatService {
     public void sendChatMessage(ChatMessage chatMessage) {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         if (MessageType.ENTER.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
-            chatMessage.setSender("[알림]");
+            chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 방에 입장했습니다.");
+            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
         } else if (MessageType.QUIT.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 방에서 나갔습니다.");
-            chatMessage.setSender("[알림]");
+            chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 방에서 나갔습니다.");
+            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
         }
 
         log.info("plogging - {}", chatMessage.getMessage());
@@ -74,7 +74,7 @@ public class CrewChatService {
 
     public void sendChatMessage(ChatMessage chatMessage, String memberId) {
         Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        chatMessage.setSender(member.getNickname());
+        chatMessage.setSender(Participant.from(member));
         sendChatMessage(chatMessage);
     }
 
