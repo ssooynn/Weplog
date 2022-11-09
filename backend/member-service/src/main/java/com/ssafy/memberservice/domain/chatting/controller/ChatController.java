@@ -48,7 +48,7 @@ public class ChatController {
     public void message(ChatMessage message, @Header(HttpHeaders.AUTHORIZATION) String token) {
         String memberId = jwtTokenProvider.getSubject(parseBearerToken(token));
         // 로그인 회원 정보로 대화명 설정
-        message.setSender(memberId);
+
 
         // 채팅방 인원수 세팅
         // Websocket에 발행된 메시지를 redis로 발행(publish)

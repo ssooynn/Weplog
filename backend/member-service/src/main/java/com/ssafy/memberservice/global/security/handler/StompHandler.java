@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.global.security.handler;
 
 import com.ssafy.memberservice.domain.chatting.dao.RoomOfSessionRepository;
+import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.chatting.domain.RoomOfSession;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.RoomType;
@@ -83,7 +84,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 ploggingChatService.joinRoom(member, roomId);
-                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(member.getNickname()).build());
+                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(Participant.from(member)).build());
             } else {
                 roomOfSessionRepository.save(RoomOfSession.builder()
                         .sessionId(sessionId)
@@ -92,7 +93,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 crewChatService.joinRoom(member, roomId);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, member.getNickname(), ""));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, Participant.from(member), ""));
             }
             log.info("SUBSCRIBED {}, {}", member.getNickname(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -108,11 +109,11 @@ public class StompHandler implements ChannelInterceptor {
             if (roomOfSession.getRoomType().equals(RoomType.CREW)) {
 
                 crewChatService.quitRoom(roomOfSession.getRoomId(), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), member.getNickname(), ""));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(),Participant.from(member), ""));
 
             } else {
                 ploggingChatService.quitRoom(roomOfSession.getRoomId(), member);
-                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.QUIT).roomId(roomOfSession.getRoomId()).sender(member.getNickname()).build());
+                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.QUIT).roomId(roomOfSession.getRoomId()).sender(Participant.from(member)).build());
             }
 
             log.info("DISCONNECTED {}, {}", sessionId, roomOfSession.getRoomId());
