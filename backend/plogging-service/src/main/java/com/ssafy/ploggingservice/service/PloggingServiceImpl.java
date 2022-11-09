@@ -67,9 +67,8 @@ public class PloggingServiceImpl implements PloggingService {
     @Override
     public List<List<CoordinateDto>> getPloggingLoc(double lat, double lng) {
         List<PloggingInterface> plogging = ploggingRepository.getPloggingLoc(lat, lng, LocalDateTime.now().minusMinutes(20));
-        //System.out.println("#######################" + plogging.get(0).getPloggingId());
         List<List<CoordinateDto>> answer = new ArrayList<>();
-        List<CoordinateDto> list = new ArrayList<>();
+        List<CoordinateDto> list;
         for (PloggingInterface p: plogging) {
             Long id = p.getPloggingId();
             list = coordinateRepository.findAllByPloggingId(id).stream().map(CoordinateDto::new).collect(Collectors.toList());

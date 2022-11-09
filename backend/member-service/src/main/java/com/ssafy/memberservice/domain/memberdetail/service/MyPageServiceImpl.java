@@ -1,20 +1,22 @@
-package com.ssafy.memberservice.domain.member.dto.memberdetail.service;
+package com.ssafy.memberservice.domain.memberdetail.service;
 
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.dao.MemberDetailRepository;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.domain.MemberDetail;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.dto.MyPageDetailRes;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.dto.MyPageRes;
+import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
+import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
+import com.ssafy.memberservice.domain.memberdetail.dto.MyPageDetailRes;
+import com.ssafy.memberservice.domain.memberdetail.dto.MyPageRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MyPageServiceImpl implements MyPageService {
     private final MemberDetailRepository memberDetailRepository;
     private final MemberRepository memberRepository;
