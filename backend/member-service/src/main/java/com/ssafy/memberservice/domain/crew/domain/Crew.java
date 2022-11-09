@@ -8,9 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 import javax.persistence.*;
@@ -52,15 +50,15 @@ public class Crew extends BaseEntity {
     @OneToMany(mappedBy = "crew")
     private List<MemberCrew> memberCrewList = new ArrayList<>();
 
-    public static Crew createCrew(CreateCrewRequest request, String imageUrl, Member member) {
+    public static Crew createCrew(CreateCrewRequest request, String imageUrl, Member member, Double lon, Double lat, String address) {
         Crew crew = new Crew();
         crew.name = request.getName();
         crew.description = request.getDescription();
         crew.imageUrl = imageUrl;
         crew.crewMaster = member;
         // TODO: crewLoc 백에서 처리할지 프론트에서 할지 정해야 함
-        crew.activityArea = request.getActivityArea();
-        String pointWKT = String.format("POINT(%s %s)", request.getLon(), request.getLat());
+        crew.activityArea = address != null ? address : request.getActivityArea();
+        String pointWKT = String.format("POINT(%s %s)", lon != null ? lon : request.getLon(), lat != null ? request.getLat() : null);
         try {
             crew.crewLoc = (Point) new WKTReader().read(pointWKT);
             crew.crewLoc.setSRID(3857);
