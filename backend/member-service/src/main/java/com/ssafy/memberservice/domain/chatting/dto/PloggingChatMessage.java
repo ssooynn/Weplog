@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.chatting.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.PingType;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import lombok.Setter;
 public class PloggingChatMessage extends ChatMessage {
 
     @Builder
-    public PloggingChatMessage(MessageType type, String roomId, String sender, String message, long userCount, PingType pingType, String lat, String lng) {
+    public PloggingChatMessage(MessageType type, String roomId, Participant sender, String message, long userCount, PingType pingType, String lat, String lng) {
         super(type, roomId, sender, message);
         this.pingType = pingType;
         this.lat = lat;

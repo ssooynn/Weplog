@@ -96,11 +96,11 @@ public class PloggingChatService {
     public void sendChatMessage(PloggingChatMessage chatMessage) {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         if (MessageType.ENTER.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 플로깅에 참여했습니다.");
-            chatMessage.setSender("[알림]");
+            chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 플로깅에 참여했습니다.");
+            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
         } else if (MessageType.QUIT.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 플로깅을 종료했습니다.");
-            chatMessage.setSender("[알림]");
+            chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 플로깅을 종료했습니다.");
+            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
         } else if (MessageType.POS.equals(chatMessage.getType())) {
 
         } else if (MessageType.PING.equals(chatMessage.getType())) {
@@ -123,7 +123,7 @@ public class PloggingChatService {
     public void sendChatMessage(PloggingChatMessage chatMessage, String memberId) {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        chatMessage.setSender(member.getNickname());
+        chatMessage.setSender(Participant.from(member));
         sendChatMessage(chatMessage);
     }
 
@@ -132,9 +132,9 @@ public class PloggingChatService {
 
         ploggingChatRoom.getPlayerMap().remove(member.getId().toString());
 
-        if (ploggingChatRoom.getPlayerMap().size() == 0) {
-            ploggingChatRepository.deleteById(roomId);
-        }
+//        if (ploggingChatRoom.getPlayerMap().size() == 0) {
+//            ploggingChatRepository.deleteById(roomId);
+//        }
     }
 
     public PloggingChatRoomResponse getRoomByCrewId(Long crewId) {
