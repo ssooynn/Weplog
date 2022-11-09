@@ -4,13 +4,13 @@ import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
-import com.ssafy.memberservice.domain.memberdetail.dto.MyPageDetailRes;
-import com.ssafy.memberservice.domain.memberdetail.dto.MyPageRes;
+import com.ssafy.memberservice.domain.memberdetail.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,5 +30,14 @@ public class MyPageServiceImpl implements MyPageService {
     public MyPageRes getMyPage(UUID uuid) {
         Member member = memberRepository.findById(uuid).get();
         return new MyPageRes(member);
+    }
+
+    @Override
+    public TotalRankingResponse getTotalRanking() {
+        List<TotalRankingDistanceInterface> totalRankingDistance = memberDetailRepository.findTotalRankingDistance();
+        List<TotalRankingTimeInterface> totalRankingTime = memberDetailRepository.findTotalRankingTime();
+        List<TotalRankingCntInterface> totalRankingCnt = memberDetailRepository.findTotalRankingCnt();
+
+        return TotalRankingResponse.create(totalRankingDistance, totalRankingTime, totalRankingCnt);
     }
 }

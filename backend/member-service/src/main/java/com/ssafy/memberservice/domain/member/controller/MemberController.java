@@ -7,6 +7,7 @@ import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import com.ssafy.memberservice.global.security.util.JwtTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
 
@@ -54,7 +56,8 @@ public class MemberController {
     @ApiOperation(value = "닉네임 중복 검사", notes = "false -> 중복되지 않음, true -> 중복됨 ")
     @GetMapping("/check/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname, @ApiIgnore @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        log.info("들어온 닉네임: -> {}", nickname);
+//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         return new ResponseEntity<>(memberService.checkDoubleNickname(nickname), HttpStatus.OK);
     }

@@ -14,10 +14,19 @@ import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import com.ssafy.memberservice.infra.s3.S3Upload;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +39,7 @@ import static com.ssafy.memberservice.global.common.error.exception.NotMatchExce
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CrewServiceImpl implements CrewService {
 
     private final CrewRepository crewRepository;
@@ -40,6 +50,9 @@ public class CrewServiceImpl implements CrewService {
 
     private final CrewChatService crewChatService;
 
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String restApiKey;
+
     // 크루 생성하기
     @Override
     public CreateCrewResponse createCrew(CreateCrewRequest request, MultipartFile image, UUID memberId) {
@@ -48,8 +61,42 @@ public class CrewServiceImpl implements CrewService {
 
         String imageUrl = s3Upload.uploadImageToS3(image);
 
-        Crew saveCrew = crewRepository.save(Crew.createCrew(request, imageUrl, findMember));
+        ResponseEntity<String> res = null;
+//        try {
+            RestTemplate rest = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
+            // REST_API_KEY
+            headers.set("Authorization", "KakaoAK " + restApiKey);
+
+            HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+            // x: 경도 longitude, y: 위도 latitude
+            String apiURL = "https://dapi.kakao.com/v2/local/search/address?query=" + request.getActivityArea();
+//            URI uri = new URI(apiURL);
+
+            res = rest.exchange(apiURL, HttpMethod.GET, entity, String.class);
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        String lon = null;
+        String lat = null;
+        String address = null;
+        try {
+            JSONObject locJsonObj1 = new JSONObject(res.getBody());
+            log.info("카카오에서 좌표 가져오기 -> {}", locJsonObj1);
+            JSONArray locJsonArr = new JSONArray(locJsonObj1.getJSONArray("documents"));
+            JSONObject locJsonObj2 = (JSONObject) locJsonArr.get(0);
+            lon = locJsonObj2.getString("x");
+            lat = locJsonObj2.getString("y");
+            address = locJsonObj2.getString("address_name");
+        } catch (JSONException e) {
+            log.error(e.getMessage());
+        }
+
+        log.info("크루 생성할 때 주소로 좌표 가져오기 -> {}, {}", lon, lat);
+        Crew saveCrew = crewRepository.save(Crew.createCrew(request, imageUrl, findMember, lon != null ? Double.parseDouble(lon) : null, lat != null ? Double.parseDouble(lat) : null, address));
 
         // 생성 후 참가시켜주기
         memberCrewRepository.save(MemberCrew.create(findMember, saveCrew));
