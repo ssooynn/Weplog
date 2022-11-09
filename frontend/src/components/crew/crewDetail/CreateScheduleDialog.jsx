@@ -33,9 +33,7 @@ export const CreateScheduleDialog = ({
   const [startDate, setStartDate] = useState(new Date());
 
   const handleRegisterSchedule = () => {
-    startDate.setMonth(date.month);
-    startDate.setDate(date.month);
-    startDate.setFullYear(date.month);
+    startDate.setFullYear(date.year, date.month, date.day);
     const calendarReq = {
       content: desc,
       crewId: crewId,
@@ -77,7 +75,7 @@ export const CreateScheduleDialog = ({
         align="center"
       >
         <Text weight={500} size="16px">
-          {selectDay(date.year, date.month, date.day)}
+          {selectDay(date.year, date.month + 1, date.day)}
         </Text>
         <Grid
           width="90%"

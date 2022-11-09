@@ -47,7 +47,7 @@ export const CrewCalender = ({ crewId }) => {
     setSelectedDate(
       (prev) =>
         (prev = {
-          month: displayedCalenderInfo.month + 1,
+          month: displayedCalenderInfo.month,
           year: displayedCalenderInfo.year,
           day: index,
         })
@@ -87,7 +87,7 @@ export const CrewCalender = ({ crewId }) => {
       getCrewSchedule(
         {
           crewId: crewId,
-          date: date.getFullYear + "-" + date.getMonth,
+          date: new Date(+date + 3240 * 10000).toISOString().split("T")[0],
         },
         (response) => {
           console.log(response);
