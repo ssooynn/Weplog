@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
+@ToString
 public class MemberAchievement extends BaseEntity {
 
     @Id

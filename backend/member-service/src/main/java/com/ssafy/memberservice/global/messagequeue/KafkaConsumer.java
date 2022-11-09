@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.dao.MemberDetailRepository;
-import com.ssafy.memberservice.domain.member.dto.memberdetail.domain.MemberDetail;
+import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
+import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
 import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
 import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
 import com.ssafy.memberservice.global.messagequeue.dto.AddRewardPointDto;
@@ -30,7 +30,7 @@ public class KafkaConsumer {
     private final KafkaProducer kafkaProducer;
 
     @KafkaListener(topics = "update-reward-point")
-    public void createFirstMemberAchievementList(String kafkaMessage) {
+    public void updateRewardPoint(String kafkaMessage) {
         log.info("Counsume update-reward-point Kafka Message: -> {}", kafkaMessage);
 
         Map<String, Object> map = new HashMap<>();
@@ -40,8 +40,14 @@ public class KafkaConsumer {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        List<Object> objectList = (List<Object>) map.get("updateMember");
+        List<AddRewardPointDto> rewardPointDtoList = new ArrayList<>();
+        for (Object o : objectList) {
+            LinkedHashMap<String, Object> temp = (LinkedHashMap) o;
+            rewardPointDtoList.add(AddRewardPointDto.create(UUID.fromString(temp.get("memberId").toString()), Integer.parseInt(temp.get("rewardPoint").toString())));
+        }
 
-        List<AddRewardPointDto> rewardPointDtoList = (List<AddRewardPointDto>) map.get("updateMember");
+//        List<AddRewardPointDto> rewardPointDtoList = (List<AddRewardPointDto>) map.get("updateMember");
 
         for (AddRewardPointDto addRewardPointDto : rewardPointDtoList) {
             UUID memberId = UUID.fromString(addRewardPointDto.getMemberId());
@@ -49,11 +55,13 @@ public class KafkaConsumer {
             findMemberDetail.addRewardPoint(addRewardPointDto.getRewardPoint());
 
             // 키우고 있는 플로몬 경험치 주고 경험치 꽉차면 레벨업
-            MemberPet findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId).get();
-            boolean evolutionFlag = findMemberPet.addExp(addRewardPointDto.getRewardPoint());
-            // 레벨업 했으면 카프카로 보내서 도전과제 갱신
-            if (evolutionFlag) {
-                kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+            Optional<MemberPet> findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId);
+            if (findMemberPet.isPresent()) {
+                boolean evolutionFlag = findMemberPet.get().addExp(addRewardPointDto.getRewardPoint());
+                // 레벨업 했으면 카프카로 보내서 도전과제 갱신
+                if (evolutionFlag) {
+                    kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+                }
             }
         }
 
