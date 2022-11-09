@@ -16,9 +16,10 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     @Query("select distinct c from Crew c join fetch c.memberCrewList cl join fetch cl.member")
     List<Crew> findAllWithMemberCrewList();
 
-    @Query(value = "select crewId, ST_Distance_Sphere(Point(:lon, :lat), crew_loc) distance\n" +
-            "from crew\n" +
-            "order by distance asc limit 10;", nativeQuery = true)
+    @Query(value = "select crew_id crewId, ST_Distance(ST_SRID(Point(:lon, :lat), 3857), crew_loc) distance\n" +
+            "            from crew\n" +
+            "            where crew_loc is not null\n" +
+            "            order by distance asc limit 10", nativeQuery = true)
     List<NearCrewListInterface> findAllNear(Double lat, Double lon);
 
     @Query("select distinct c from Crew c join fetch c.memberCrewList cl join fetch cl.member where c.id in :crewIdList")
