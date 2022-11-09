@@ -1,14 +1,14 @@
 package com.ssafy.memberservice.global.security.handler;
 
-import com.ssafy.memberservice.domain.chatting.dao.RoomOfSessionRepository;
-import com.ssafy.memberservice.domain.chatting.domain.CrewChatRoom;
+import com.ssafy.memberservice.domain.chatting.dao.redis.RoomOfSessionRepository;
+import com.ssafy.memberservice.domain.chatting.domain.redis.CrewChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
-import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
-import com.ssafy.memberservice.domain.chatting.domain.RoomOfSession;
+import com.ssafy.memberservice.domain.chatting.domain.redis.PloggingChatRoom;
+import com.ssafy.memberservice.domain.chatting.domain.redis.RoomOfSession;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.RoomType;
-import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
-import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.ChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.PloggingChatMessage;
 import com.ssafy.memberservice.domain.chatting.service.CrewChatService;
 import com.ssafy.memberservice.domain.chatting.service.PloggingChatService;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
@@ -29,7 +29,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -86,7 +86,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 PloggingChatRoom ploggingChatRoom = ploggingChatService.joinRoom(member, roomId);
-                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(ploggingChatRoom.getPlayerMap().get(memberId)).build());
+                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(ploggingChatRoom.getPlayerMap().get(memberId)).sendTime(LocalDateTime.now()).build());
             } else {
                 roomOfSessionRepository.save(RoomOfSession.builder()
                         .sessionId(sessionId)
@@ -95,7 +95,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 CrewChatRoom crewChatRoom = crewChatService.joinRoom(Long.valueOf(roomId), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, crewChatRoom.getPlayerMap().get(memberId), ""));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, crewChatRoom.getPlayerMap().get(memberId), "", LocalDateTime.now()));
             }
             log.info("SUBSCRIBED {}, {}", member.getNickname(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -111,7 +111,7 @@ public class StompHandler implements ChannelInterceptor {
             if (roomOfSession.getRoomType().equals(RoomType.CREW)) {
 
                 crewChatService.quitRoom(Long.valueOf(roomOfSession.getRoomId()), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), Participant.from(member), ""));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), Participant.from(member), "", LocalDateTime.now()));
 
             } else {
                 ploggingChatService.quitRoom(roomOfSession.getRoomId(), member);
