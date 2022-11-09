@@ -200,7 +200,7 @@ export const Signup = () => {
               width="50%"
             />
             <Button
-              nicknamecheck
+              nicknamecheck="true"
               onClick={
                 CheckNickname
               }

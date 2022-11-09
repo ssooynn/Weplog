@@ -7,6 +7,7 @@ import { StyledInput } from "../../components/common/TextInput";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import leftArrowIcon from "../../assets/icons/leftArrowIcon.svg";
+import { myPageProfileApi } from "../../apis/mypageApi";
 
 export const MypageUser = () => {
   const [profile, setProfile] = useState("");
@@ -33,6 +34,18 @@ export const MypageUser = () => {
 
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    myPageProfileApi((res) => {
+      console.log(res);
+      setProfile(res.data.profileImageUrl);
+      setName(res.data.name);
+      setNickName(res.data.nickname);
+      setWeight(res.data.weight);
+    }, (err) => {
+      console.log(err);
+    })
+  }, [])
   return (
     <Box
       direction="column"
@@ -81,9 +94,6 @@ export const MypageUser = () => {
               paddingTop: "70px",
             }}
           >
-            <label htmlFor="image">
-              <img src={gallery} width="30px" height="30px" alt="프로필 편집" />
-            </label>
             <input
               id="image"
               type="file"
@@ -92,6 +102,7 @@ export const MypageUser = () => {
               style={{
                 display: "none",
               }}
+              readOnly
             />
           </div>
         </Box>
@@ -107,6 +118,7 @@ export const MypageUser = () => {
               console.log(name);
             }}
             width="50%"
+            readOnly
           />
         </Box>
         {/* 닉네임 */}
@@ -123,15 +135,8 @@ export const MypageUser = () => {
                 console.log(nickname);
               }}
               width="50%"
+              readOnly
             />
-            <Button
-              nicknamecheck
-              onClick={(e) => {
-                CheckNickname();
-              }}
-            >
-              중복 체크
-            </Button>
           </Box>
         </Box>
         {/* 몸무게 */}
@@ -153,16 +158,13 @@ export const MypageUser = () => {
                 console.log(weight);
               }}
               width="50%"
+              readOnly
             />
             <Text color="#7E7E7E" weight={400} alignSelf="center" size="14px">
               Kg
             </Text>
           </Box>
         </Box>
-
-        <Button biggreen style={{ alignSelf: "center" }}>
-          회원가입
-        </Button>
       </Box>
     </Box>
   );
