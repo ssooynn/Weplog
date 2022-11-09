@@ -79,20 +79,20 @@
 
 ## 🗣️ 협업 관리
 
-**Git Flow**
-[Git](README.assets/협업툴 Git.png)
+**Git Flow**<br>
+![Git](README.assets//%ED%98%91%EC%97%85%ED%88%B4%20Git.png)
 
 ---
 
-**Jira BurnDown Chart**
+**Jira BurnDown Chart**<br>
 [JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S07P31A106/boards/100)
-![JIRA](README.assets/협업툴 JIRA.png)
+![JIRA](README.assets//%ED%98%91%EC%97%85%ED%88%B4%20JIRA.png)
 
 ---
 
-**Notion**
+**Notion**<br>
 [Notion](https://www.notion.so/A106-3bc641fa277a46b6a82aae0976fea8c4)
-![Notion](README.assets/협업툴 Notion.png)
+![Notion](README.assets//%ED%98%91%EC%97%85%ED%88%B4%20Notion.png)
 
 ## 👩‍👩‍👧 개발 멤버 소개
 
