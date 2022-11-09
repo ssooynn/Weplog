@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -26,13 +27,16 @@ public class CalendarServiceImpl implements CalendarService
     private final MemberRepository memberRepository;
     private final CrewRepository crewRepository;
     @Override
-    public CalendarRes getCalendarInfo(LocalDateTime time, Long crewId) {
-        LocalDateTime start = time.withDayOfMonth(1);
-        LocalDateTime end = time.withDayOfMonth(time.getMonth().length(time.toLocalDate().isLeapYear()));
+    public List<CalendarRes> getCalendarInfo(LocalDate time, Long crewId) {
+        LocalDateTime start = time.withDayOfMonth(1).atTime(0, 0, 0);
+        LocalDateTime end = time.withDayOfMonth(time.getMonth().length(time.isLeapYear()))
+                .atTime(23,59,59);
+
+        System.out.println(start);
         List<CalendarRes> res = calendarRepository.findAllByDate(start, end, crewId).stream()
                 .map(CalendarRes::new)
                 .collect(Collectors.toList());
-        return null;
+        return res;
     }
 
     @Override
