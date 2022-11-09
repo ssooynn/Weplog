@@ -1,8 +1,8 @@
 package com.ssafy.memberservice.domain.chatting.controller;
 
 import com.ssafy.memberservice.domain.chatting.dto.ActivateCrewPloggingResponse;
-import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
-import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.ChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.PloggingChatMessage;
 import com.ssafy.memberservice.domain.chatting.dto.PloggingChatRoomResponse;
 import com.ssafy.memberservice.domain.chatting.service.CrewChatService;
 import com.ssafy.memberservice.domain.chatting.service.PloggingChatService;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
 import java.util.List;
 
@@ -46,6 +45,11 @@ public class ChatController {
     @GetMapping("/crew/rooms")
     public ResponseEntity<List<ActivateCrewPloggingResponse>> getCrewPloggingListFromMemberId(@RequestHeader("memberId") String memberId) {
         return ResponseEntity.ok(ploggingChatService.getCrewPloggingListFromMemberId(memberId));
+    }
+
+    @GetMapping("/crew/room/{crewId}")
+    public ResponseEntity<?> getCrewChats(@PathVariable("crewId") Long crewId) {
+        return ResponseEntity.ok(crewChatService.getCrewChats(crewId));
     }
 
     /**

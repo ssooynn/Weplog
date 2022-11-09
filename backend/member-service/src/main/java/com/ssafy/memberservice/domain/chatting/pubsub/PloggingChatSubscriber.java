@@ -1,12 +1,9 @@
 package com.ssafy.memberservice.domain.chatting.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
-import com.ssafy.memberservice.domain.chatting.dto.PloggingChatMessage;
+import com.ssafy.memberservice.domain.chatting.dto.chat.PloggingChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
