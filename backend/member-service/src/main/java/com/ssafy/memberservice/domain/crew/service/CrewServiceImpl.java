@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.crew.service;
 
+import com.ssafy.memberservice.domain.chatting.service.CrewChatService;
 import com.ssafy.memberservice.domain.crew.dao.CrewRepository;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.crew.dto.*;
@@ -37,6 +38,8 @@ public class CrewServiceImpl implements CrewService {
     private final MemberCrewRepository memberCrewRepository;
     private final JoinWaitingRepository joinWaitingRepository;
 
+    private final CrewChatService crewChatService;
+
     // 크루 생성하기
     @Override
     public CreateCrewResponse createCrew(CreateCrewRequest request, MultipartFile image, UUID memberId) {
@@ -50,6 +53,8 @@ public class CrewServiceImpl implements CrewService {
 
         // 생성 후 참가시켜주기
         memberCrewRepository.save(MemberCrew.create(findMember, saveCrew));
+
+        crewChatService.makeRoom(findMember.getId().toString(), saveCrew.getId());
 
         return CreateCrewResponse.from(saveCrew.getId());
     }
