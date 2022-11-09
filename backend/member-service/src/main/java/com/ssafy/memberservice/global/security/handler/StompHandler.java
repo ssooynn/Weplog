@@ -1,7 +1,9 @@
 package com.ssafy.memberservice.global.security.handler;
 
 import com.ssafy.memberservice.domain.chatting.dao.RoomOfSessionRepository;
+import com.ssafy.memberservice.domain.chatting.domain.CrewChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
+import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.RoomOfSession;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.RoomType;
@@ -83,8 +85,8 @@ public class StompHandler implements ChannelInterceptor {
                         .memberId(memberId)
                         .build());
 
-                ploggingChatService.joinRoom(member, roomId);
-                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(Participant.from(member)).build());
+                PloggingChatRoom ploggingChatRoom = ploggingChatService.joinRoom(member, roomId);
+                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(ploggingChatRoom.getPlayerMap().get(memberId)).build());
             } else {
                 roomOfSessionRepository.save(RoomOfSession.builder()
                         .sessionId(sessionId)
@@ -92,8 +94,8 @@ public class StompHandler implements ChannelInterceptor {
                         .roomType(RoomType.CREW)
                         .build());
 
-                crewChatService.joinRoom(member, roomId);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, Participant.from(member), ""));
+                CrewChatRoom crewChatRoom = crewChatService.joinRoom(Long.valueOf(roomId), member);
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, crewChatRoom.getPlayerMap().get(memberId), ""));
             }
             log.info("SUBSCRIBED {}, {}", member.getNickname(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -108,8 +110,8 @@ public class StompHandler implements ChannelInterceptor {
             // 채팅방의 인원수를 -1한다.
             if (roomOfSession.getRoomType().equals(RoomType.CREW)) {
 
-                crewChatService.quitRoom(roomOfSession.getRoomId(), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(),Participant.from(member), ""));
+                crewChatService.quitRoom(Long.valueOf(roomOfSession.getRoomId()), member);
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.QUIT, roomOfSession.getRoomId(), Participant.from(member), ""));
 
             } else {
                 ploggingChatService.quitRoom(roomOfSession.getRoomId(), member);
