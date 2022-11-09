@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.chatting.domain;
+package com.ssafy.memberservice.domain.chatting.domain.redis;
 
 import com.ssafy.memberservice.domain.chatting.domain.enums.RoomType;
 import lombok.Builder;

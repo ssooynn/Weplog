@@ -1,18 +1,16 @@
 package com.ssafy.memberservice.domain.chatting.service;
 
-import com.ssafy.memberservice.domain.chatting.dao.CrewChatRepository;
-import com.ssafy.memberservice.domain.chatting.domain.CrewChatRoom;
+import com.ssafy.memberservice.domain.chatting.dao.mongo.ChatsRespository;
+import com.ssafy.memberservice.domain.chatting.dao.redis.CrewChatRepository;
+import com.ssafy.memberservice.domain.chatting.domain.mongo.Chats;
+import com.ssafy.memberservice.domain.chatting.domain.redis.CrewChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
-import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
-import com.ssafy.memberservice.domain.chatting.domain.enums.Color;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.dto.ChatMessage;
-import com.ssafy.memberservice.domain.chatting.dto.PloggingChatRoomResponse;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
-import com.ssafy.memberservice.global.common.error.exception.DuplicateException;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +19,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
@@ -43,13 +41,19 @@ public class CrewChatService {
 
     private final MemberCrewRepository memberCrewRepository;
 
+    private final ChatsRespository chatsRespository;
+
 
     public CrewChatRoom makeRoom(String memberId, Long crewId) {
         // 멤버가 해당 크루인지 확인
         MemberCrew memberCrew = memberCrewRepository.findMemberCrewByMemberIdAndCrewId(UUID.fromString(memberId), crewId).orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
 
+        Chats chats = chatsRespository.save(Chats.builder()
+                .chatMessages(new ArrayList<>())
+                .build());
         // 문제 없으니 방 생성
-        CrewChatRoom crewChatRoom = crewChatRepository.save(CrewChatRoom.create(crewId, memberCrew));
+        CrewChatRoom crewChatRoom = crewChatRepository.save(CrewChatRoom.create(crewId, memberCrew, chats.getId()));
+
 
         return crewChatRoom;
     }

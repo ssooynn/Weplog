@@ -1,10 +1,9 @@
 package com.ssafy.memberservice.domain.chatting.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.memberservice.domain.chatting.dao.PloggingChatRepository;
+import com.ssafy.memberservice.domain.chatting.dao.redis.PloggingChatRepository;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
-import com.ssafy.memberservice.domain.chatting.domain.PloggingChatRoom;
+import com.ssafy.memberservice.domain.chatting.domain.redis.PloggingChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.enums.Color;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
 import com.ssafy.memberservice.domain.chatting.domain.enums.PingType;
