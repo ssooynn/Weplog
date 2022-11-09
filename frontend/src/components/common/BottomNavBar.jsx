@@ -13,6 +13,8 @@ import Crew from "../../assets/images/crew.png";
 import CrewActive from "../../assets/images/crewActive.png";
 import { Box } from "grommet";
 import { StyledText } from "../Common";
+import { myInfoApi } from "../../apis/mypageApi";
+import { useDispatch } from 'react-redux';
 
 const NavBarText = ({ text, active }) => {
   return (
@@ -47,11 +49,15 @@ const IconButtonStyle = {
 };
 let lastScrollTop = 0;
 let nowScrollTop = 0;
+
+
+
 export const NavBar = () => {
   const [show, handleShow] = useState("visible");
   const [opacity, setOpacity] = useState("1");
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     let mounted = true;
     window.addEventListener("scroll", () => {
@@ -76,6 +82,7 @@ export const NavBar = () => {
         lastScrollTop = nowScrollTop;
       }
     });
+
 
     return () => {
       // window.removeEventListener("scroll", () => { });

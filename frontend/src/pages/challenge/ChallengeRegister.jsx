@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Box, Grid, Text } from "grommet";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
@@ -12,6 +12,7 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import styled from "styled-components";
 import calendarButton from "../../assets/icons/calendar.png";
+import { challengeIngListAPi } from "../../apis/memberChallengeApi";
 
 
 const LoginModalStyled = styled.div`
@@ -40,6 +41,7 @@ export const ChallengeRegister = () => {
   const [type, setType] = useState("");
   const [goal, setGoal] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [myType, setMyType] = useState([]);
 
   const WantUpdateProfile = (e) => {
     let file = e.target.files[0];
@@ -54,8 +56,12 @@ export const ChallengeRegister = () => {
   };
 
   const changeType = (str) => {
-    console.log(str);
-    setType(str);
+    if (myType.includes(str)) {
+      alert("이미 해당 타입의 챌린지를 가지고 있습니다.");
+    } else {
+      console.log(str);
+      setType(str);
+    }
   };
 
   const challengeRegister = () => {
@@ -103,8 +109,21 @@ export const ChallengeRegister = () => {
       item.getDate(item) < 10 ? "0" + item.getDate(item) : item.getDate(item);
     setEndDate(`${year}-${month}-${date}`);
   };
+
+  useEffect(() => {
+    challengeIngListAPi((res) => {
+      console.log(res);
+      for (let i = 0; i < res.data.length; i++) {
+        setMyType((prev) => [...prev, res.data[i].type])
+        console.log(myType);
+      }
+    }, (err) => {
+      console.log(err);
+    })
+  }, [])
   return (
     <motion.div style={{ minHeight: "88vh" }}>
+      {myType}
       {/* 커버 사진 설정 */}
       <Box justify="center" align="center">
         {profile === "" ? (

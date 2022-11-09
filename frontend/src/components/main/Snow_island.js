@@ -12,14 +12,14 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 export function SnowIsland(props) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('/snow_island.glb')
-  const { ref, actions, names } = useAnimations(animations, group)
-  const [index, setIndex] = useState(0)
-  useEffect(() => {
-    // Reset and fade in animation after an index has been changed
-    actions[names[index]].reset().fadeIn(0.5).play()
-    // In the clean-up phase, fade it out
-    return () => actions[names[index]]
-  }, [index, actions, names])
+  // const { ref, actions, names } = useAnimations(animations, group)
+  // const [index, setIndex] = useState(0)
+  // useEffect(() => {
+  //   // Reset and fade in animation after an index has been changed
+  //   actions[names[index]].reset().fadeIn(0.5).play()
+  //   // In the clean-up phase, fade it out
+  //   return () => actions[names[index]]
+  // }, [index, actions, names])
   
   
   return (
@@ -28,12 +28,12 @@ export function SnowIsland(props) {
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="root">
             <group name="GLTF_SceneRootNode" rotation={[Math.PI / 2, 0, 0]}>
-              <group name="Sphere002_44" position={[0.01, 3.57, -0.61]} scale={0.11}>
+              {/* <group name="Sphere002_44" position={[0.01, 3.57, -0.61]} scale={0.11}>
                 <mesh name="Object_103" geometry={nodes.Object_103.geometry} material={materials.material_0} />
               </group>
               <group name="Sphere003_45" position={[-0.28, 3.6, -0.6]} rotation={[0, 0, -0.05]} scale={0.11}>
                 <mesh name="Object_105" geometry={nodes.Object_105.geometry} material={materials.material_0} />
-              </group>
+              </group> */}
               <group name="Sphere_2" rotation={[Math.PI / 2, 0, 0]}>
                 <mesh name="Object_4" geometry={nodes.Object_4.geometry} material={materials['Material.001']} />
               </group>

@@ -21,6 +21,8 @@ import { ChallengeDetail } from "./pages/challenge/ChallengeDetail.jsx";
 import { ChallengeRegister } from "./pages/challenge/ChallengeRegister.jsx";
 import { Mypage } from "./pages/mypage/Mypage.jsx";
 import { MypageUser } from "./pages/mypage/MypageUser.jsx";
+import { MypageAchievement } from "./pages/mypage/MypageAchievement";
+
 import { CrewDetail } from "./pages/crew/CrewDetail.jsx";
 import { DrawingCharacter } from "./pages/plomon/DrawingCharacter.jsx";
 import { CrewRegister } from "./pages/crew/CrewRegister.jsx";
@@ -118,6 +120,8 @@ export const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/mypage/user" element={<MypageUser />} />
+      <Route path="/mypage/achievement" element={<MypageAchievement />} />
+
     </Routes>
   );
 };

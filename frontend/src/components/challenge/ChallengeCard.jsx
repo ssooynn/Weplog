@@ -1,5 +1,5 @@
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -28,51 +28,62 @@ const WhiteBg = styled.div`
 export const ChallengeCard = ({ challenge }) => {
   const navigate = useNavigate();
   const goChallengeDetail = () => {
-    navigate(`/challenge/detail/${2}`);
+    navigate(`/challenge/detail/${challenge.challengeId}`);
   };
-  return (
-    <Box
-      background={{ image: `url(${challenge.imageUrl})`, opacity: "strong" }}
-      height="100px"
-      width="100%"
-      margin="10px 0px"
-      round="small"
-      elevation="medium"
-      onClick={goChallengeDetail}
-    >
-      <WhiteBg>
-        <Box justify="between" pad="14px 18px" height="100px">
-          <Text size="14px" weight={500} color="black">
-            {challenge.title}
-          </Text>
-          <Text size="10px" weight={400}>
-            Goal - {challenge.goal}{challenge.type = "DISTANCE" ? "Km" : (challenge.type = "TIME" ? "시간" : "회")} 플로깅
-          </Text>
-          <Text size="10px" weight={400}>
-            기한 - {challenge.endDate}까지
-          </Text>
-          <Box direction="row" width="100%" justify="between">
-            <Box direction="row" justify="between" align="center" width="190px">
-              <ProgressBar
-                id="progress"
-                value={challenge.progressRate}
-                min="0"
-                max="100"
-              ></ProgressBar>
-              <Text size="10px" weight={400}>
-                {challenge.progressRate}%
-              </Text>
-            </Box>
-            <Box>
-              <Text size="10px" weight={500}>
-                참여인원 {challenge.participantsCnt}명
-              </Text>
+  const [typeUnit, setTypeUnit] = useState(challenge.type);
+  useEffect(() => {
+    if (typeUnit === 'DISTANCE') {
+      setTypeUnit("Km")
+    } else if (typeUnit === 'TIME') {
+      setTypeUnit("시간")
+    } else {
+      setTypeUnit("회")
+    }
+  }, [challenge])
+  if (challenge)
+    return (
+      <Box
+        background={{ image: `url(${challenge.imageUrl})`, opacity: "strong" }}
+        height="100px"
+        width="100%"
+        margin="10px 0px"
+        round="small"
+        elevation="medium"
+        onClick={goChallengeDetail}
+      >
+        <WhiteBg>
+          <Box justify="between" pad="14px 18px" height="100px">
+            <Text size="14px" weight={500} color="black">
+              {challenge.title}
+            </Text>
+            <Text size="10px" weight={400}>
+              Goal - {challenge.goal}{typeUnit} 플로깅
+            </Text>
+            <Text size="10px" weight={400}>
+              기한 - {challenge.endDate}까지
+            </Text>
+            <Box direction="row" width="100%" justify="between">
+              <Box direction="row" justify="between" align="center" width="190px">
+                <ProgressBar
+                  id="progress"
+                  value={challenge.progressRate}
+                  min="0"
+                  max="100"
+                ></ProgressBar>
+                <Text size="10px" weight={400}>
+                  {challenge.progressRate}%
+                </Text>
+              </Box>
+              <Box>
+                <Text size="10px" weight={500}>
+                  참여인원 {challenge.participantsCnt}명
+                </Text>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </WhiteBg>
-    </Box>
-  );
+        </WhiteBg>
+      </Box>
+    );
 };
 
 
