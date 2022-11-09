@@ -39,6 +39,20 @@ const StyledButton = styled(motion.button)`
       box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
     `}
     
+    ${(props) =>
+    props.bigpinkround &&
+    css`
+    border-radius: 10px;
+      height: 59px;
+      border: 0px;
+      font-family: 'Spoqa Han Sans Neo';
+      font-weight: 400;
+      font-size: 16px;
+      color: white;
+      background: #EC8888;
+      width: 100%;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
+    `}
 
   ${(props) =>
     props.bigpink &&

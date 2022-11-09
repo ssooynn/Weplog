@@ -1,13 +1,16 @@
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import rightArrowIcon from "../../assets/icons/rightArrowIcon.svg";
-import ploggingLogIcon from "../../assets/icons/ploggingLogIcon.svg";
-import ploggingQuestIcon from "../../assets/icons/ploggingQuestIcon.svg";
-import ploggingChallengeIcon from "../../assets/icons/ploggingChallengeIcon.svg";
-import ploggingCrewIcon from "../../assets/icons/ploggingChallengeIcon.svg";
+import ploggingLogIcon from "../../assets/icons/ploggingLogIcon.png";
+import ploggingQuestIcon from "../../assets/icons/ploggingQuestIcon.png";
+import ploggingChallengeIcon from "../../assets/icons/ploggingChallengeIcon.png";
+import ploggingCrewIcon from "../../assets/icons/ploggingCrewIcon.png";
 import { ChallengeCard } from "../../components/challenge/ChallengeCard";
 import { useNavigate } from "react-router-dom";
+import { myAchievementApi } from "../../apis/achievementApi";
+import { myPageInfoApi, myPageProfileApi } from "../../apis/mypageApi";
+import { m } from "framer-motion";
 
 const ProfileImg = styled.img`
   width: 60px;
@@ -24,10 +27,62 @@ const StyledHr = styled.hr`
 `;
 
 export const Mypage = () => {
+  const [profile, setProfile] = useState("");
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [achievementAllCnt, setAchievementAllCnt] = useState(0);
+  const [achievementSuccessCnt, setAchievementSuccessCnt] = useState(0);
+  const [achievementIngCnt, setAchievementIngCnt] = useState(0);
+
   const navigate = useNavigate();
   const goPage = (url) => {
     navigate(`${url}`);
   };
+
+  const getPloggingLogs = () => {
+    console.log("2");
+  }
+
+  const getAchievement = () => {
+    myAchievementApi((res) => {
+      setAchievementAllCnt(res.data.length);
+      let success = 0;
+      for (let i = 0; i < res.data.length; i++) {
+        if (res.data[i].completeFlag === true) {
+          success++;
+        }
+      }
+      setAchievementSuccessCnt(success);
+      setAchievementIngCnt(res.data.length - success);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const getProfile = () => {
+    myPageProfileApi((res) => {
+      console.log(res);
+      setProfile(res.data.profileImageUrl);
+      setName(res.data.name);
+      setNickname(res.data.nickname);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const getInfo = () => {
+    myPageInfoApi((res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    getAchievement();
+    getProfile();
+    getInfo();
+  }, [])
   return (
     <Box>
       {/* 유저 정보 */}
@@ -39,12 +94,12 @@ export const Mypage = () => {
         width="100%"
       >
         <Box direction="row" width="50%" justify="between" align="center">
-          <ProfileImg src="https://picsum.photos/400/300"></ProfileImg>
-          <Box direction="row" align="center" justify="between" width="50%">
+          <ProfileImg src={`${profile}`}></ProfileImg>
+          <Box direction="row" align="center" justify="between" width="60px">
             <Text size="18px" weight={500}>
-              뉴진차
+              {nickname}
             </Text>
-            <Text size="14px" weight="400">
+            <Text size="14px" weight={400}>
               님
             </Text>
           </Box>
@@ -131,7 +186,7 @@ export const Mypage = () => {
               내 도전 과제
             </Text>
           </Box>
-          <Text size="12px" weight={500} color="#575757">
+          <Text size="12px" weight={500} color="#575757" onClick={() => navigate("/mypage/achievement")}>
             더 보기
           </Text>
         </Box>
@@ -145,13 +200,14 @@ export const Mypage = () => {
           elevation="medium"
           justify="around"
           align="center"
+          onClick={() => navigate("/mypage/achievement")}
         >
           <Box direction="column" align="center">
             <Text size="12px" margin="1px 0px" weight={500} color="#575757">
               총 과제
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              21개
+              {achievementAllCnt}개
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -159,7 +215,7 @@ export const Mypage = () => {
               완료
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              12개
+              {achievementSuccessCnt}개
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -167,7 +223,7 @@ export const Mypage = () => {
               미완료
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              9개
+              {achievementIngCnt}개
             </Text>
           </Box>
         </Box>
@@ -194,7 +250,7 @@ export const Mypage = () => {
             챌린지 모두 보기
           </Text>
         </Box>
-        <ChallengeCard></ChallengeCard>
+        {/* <ChallengeCard></ChallengeCard> */}
       </Box>
 
       {/* 내 크루 */}
@@ -208,7 +264,7 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingChallengeIcon} width="27px" height="27px" />
+            <img src={ploggingCrewIcon} width="27px" height="27px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 크루
             </Text>
@@ -217,8 +273,8 @@ export const Mypage = () => {
             크루 모두 보기
           </Text>
         </Box>
-        <ChallengeCard></ChallengeCard>
+        {/* <ChallengeCard></ChallengeCard> */}
       </Box>
-    </Box>
+    </Box >
   );
 };

@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { challengeDetailApi, challengeGiveUpApi, challengeRankingApi } from "../../apis/challengeApi";
+import { challengeJoinAPi } from "../../apis/memberChallengeApi";
 import shareIcon from "../../assets/icons/shareIcon.svg";
 import Button from "../../components/Button";
 import { ChallengeRankCard } from "../../components/rank/ChallengeRankCard";
@@ -28,6 +30,9 @@ const ProgressBar = styled.progress`
 export const ChallengeDetail = () => {
   //challengeId
   const { challengeId } = useParams();
+  const [challenge, setChallenge] = useState("");
+  const [typeUnit, setTypeUnit] = useState();
+  const [endDate, setEndDate] = useState([]);
 
   const sharePage = () => {
     window.navigator.share({
@@ -36,12 +41,59 @@ export const ChallengeDetail = () => {
       url: window.location.href,
     });
   };
+
+  useEffect(() => {
+    loadChallengeDetail();
+    loadChallengeRanking();
+  }, [])
+
+  const loadChallengeDetail = () => {
+    challengeDetailApi(challengeId, (res) => {
+      setChallenge(res.data);
+      if (res.data.type === 'DISTANCE') {
+        setTypeUnit("Km")
+      } else if (res.data.type === 'TIME') {
+        setTypeUnit("시간")
+      } else {
+        setTypeUnit("회")
+      }
+      setEndDate(challenge.endDate.split("-"));
+      console.log(res.data);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const loadChallengeRanking = () => {
+    challengeRankingApi(challengeId, (res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+  const giveUpChallenge = () => {
+    challengeGiveUpApi(challengeId, (res1) => {
+      console.log(res1);
+      loadChallengeDetail();
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const joinChallenge = () => {
+    challengeJoinAPi(challengeId, (res) => {
+      console.log(res);
+      loadChallengeDetail();
+    }, (err) => {
+      console.log(err);
+    })
+  }
   return (
     <motion.div>
       <div style={{ position: "relative" }}>
         {/* 챌린지 bgImage */}
         <Box
-          background={{ image: `url(https://picsum.photos/400/300)` }}
+          background={{ image: `url(${challenge.imageUrl})` }}
           width="100%"
           height="280px"
         ></Box>
@@ -56,23 +108,23 @@ export const ChallengeDetail = () => {
             }}
             background={{ color: "white" }}
             width="90%"
-            height="250px"
+            height="270px"
             elevation="medium"
             pad="30px"
             justify="between"
           >
             <Box direction="row" justify="between" align="center">
               <Text size="20px" weight={500}>
-                오늘도 지구와 함께
+                {challenge.title}
               </Text>
               <img src={shareIcon} alt="공유" width="22px" height="22px"></img>
             </Box>
             <Box>
               <Text size="12px" weight={400}>
-                Goal - 10Km 플로깅
+                Goal - {challenge.goal}{typeUnit} 플로깅
               </Text>
               <Text size="12px" weight={400}>
-                기한 - 2022.12.25일 12시까지
+                기한 - {endDate[0]}.{endDate[1]}.{endDate[2]} 까지
               </Text>
             </Box>
             <Box>
@@ -88,26 +140,29 @@ export const ChallengeDetail = () => {
               >
                 <ProgressBar
                   id="progress"
-                  value="75"
+                  value={challenge.progressRage}
                   min="0"
                   max="100"
                 ></ProgressBar>
                 <Text size="12px" weight={500}>
-                  75%
+                  {challenge.progressRate} %
                 </Text>
               </Box>
             </Box>
             <Box direction="row" justify="between" align="end">
               <Box>
+                <Text size="12px" weight={400} margin="5px 0px 0px 0px">
+                  참여자 총 플로깅 횟수 : {challenge.totalPloggingCnt} 회
+                </Text>
                 <Text size="12px" weight={400} margin="5px 0px">
-                  참여자 총 플로깅 횟수 : 13회
+                  참여자 총 플로깅 거리 : {challenge.totalDistance} Km
                 </Text>
                 <Text size="12px" weight={400}>
-                  참여자 총 플로깅 거리 : 4.5Km
+                  참여자 총 플로깅 시간 : {challenge.totalTime} 시간
                 </Text>
               </Box>
               <Text size="12px" weight={500} alignSelf="end">
-                참여인원 15명
+                참여인원 {challenge.participantsCnt}명
               </Text>
             </Box>
           </Box>
@@ -130,9 +185,11 @@ export const ChallengeDetail = () => {
           참여자 기여도 Ranking
         </Text>
         <ChallengeRankCardList></ChallengeRankCardList>
-        <Button biggreenround style={{ margin: "10px 0px" }}>
+        {challenge.myChallenge ? <Button bigpinkround="true" style={{ margin: "10px 0px" }} onClick={giveUpChallenge}>
+          챌린지 포기하기
+        </Button> : <Button biggreenround="true" style={{ margin: "10px 0px" }} onClick={joinChallenge}>
           챌린지 참여하기
-        </Button>
+        </Button>}
       </Box>
     </motion.div>
   );

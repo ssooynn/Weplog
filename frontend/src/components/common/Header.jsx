@@ -5,6 +5,7 @@ import Logo from "../../assets/images/logo.png";
 import { motion } from "framer-motion";
 import { Box } from "grommet";
 import userIcon from "../../assets/icons/userIcon.svg"
+import { myPageInfoApi, myPageProfileApi } from "../../apis/mypageApi";
 
 // Header
 const Header = styled.div`
@@ -21,7 +22,15 @@ const ProfileImg = styled.img`
 `
 
 export const LogoHeader = () => {
+  const [profile, setProfile] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    myPageProfileApi((res) => {
+      setProfile(res.data.profileImageUrl);
+    }, (err) => {
+      console.log(err);
+    })
+  }, [])
   return (
     <Header>
       <Box pad="18px 24px" direction="row" justify="between" align="center">
@@ -44,7 +53,7 @@ export const LogoHeader = () => {
           whileTap={{ scale: 0.9 }}
           alt="mypage"
           onClick={() => navigate("/mypage")}
-          src='https://picsum.photos/400/300'
+          src={`${profile}`}
         />
       </Box>
     </Header>
