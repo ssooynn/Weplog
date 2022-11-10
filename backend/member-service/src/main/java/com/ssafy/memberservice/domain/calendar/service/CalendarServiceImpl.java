@@ -47,7 +47,9 @@ public class CalendarServiceImpl implements CalendarService
         System.out.println(member);
         System.out.println(crew);
         Calendar calendar = Calendar.builder()
-                .crew(crew).member(member).location(calendarReq.getLocation()).content(calendarReq.getContent())
+                .crew(crew).member(member)
+                .location(calendarReq.getLocation()).content(calendarReq.getContent())
+                .scheduleDate(calendarReq.getScheduleDate())
                 .build();
         calendarRepository.save(calendar);
     }
