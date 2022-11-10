@@ -90,6 +90,12 @@ const createCrewRoom = async (crewId, success, fail) => {
 const getRoomByCrewId = async (crewId, success, fail) => {
   await authInstance.get(`/room/${crewId}`).then(success).catch(fail);
 };
+
+// 플로깅 시작 전 진행중인 크루 플로깅 가져오가
+const getExistCrewPlogging = async (success, fail) => {
+  await authInstance.get(`/rooms`).then(success).catch(fail);
+};
+
 export {
   getAllCrewList,
   createCrew,
@@ -102,4 +108,5 @@ export {
   getCrewWaitingList,
   createCrewRoom,
   getRoomByCrewId,
+  getExistCrewPlogging,
 };
