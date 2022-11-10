@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.memberpet.dto;
 
-import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
+import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import lombok.Builder;
 
 public class MemberPetRes {

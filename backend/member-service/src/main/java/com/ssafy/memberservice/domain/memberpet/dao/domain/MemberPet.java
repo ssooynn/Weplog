@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.memberpet.domain;
+package com.ssafy.memberservice.domain.memberpet.dao.domain;
 
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.pet.domain.Pet;
@@ -43,7 +43,7 @@ public class MemberPet extends BaseEntity {
         this.member = member;
         this.pet = pet;
         this.currentExp = 0;
-        this.currentLevel = 0;
+        this.currentLevel = 1;
         this.fileUrl = pet.getFileUrl();
         this.imageLevel = 0;
         this.maxExp = pet.getMaxExp();

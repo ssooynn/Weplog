@@ -8,7 +8,7 @@ import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
 import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
 import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
-import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
+import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import com.ssafy.memberservice.global.messagequeue.dto.AddRewardPointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
