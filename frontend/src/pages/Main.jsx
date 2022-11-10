@@ -136,7 +136,7 @@ const PlomonState = styled.div`
   font-size: 10px;
   font-weight: 500;
   margin-top: 2vw;
-  padding: 0 8px 2px 8px;
+  padding: 0 8px 1px 8px;
   border-radius: 15px;
 `
 
@@ -203,17 +203,17 @@ export const Main = () => {
 
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample2}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>피스</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample3}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>키치</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample4}/>
-          <PlomonName>해리</PlomonName>
+          <PlomonName>레이</PlomonName>
           <PlomonState>Baby</PlomonState>
         </SmallPlomon>
       </PlomonTableArea>

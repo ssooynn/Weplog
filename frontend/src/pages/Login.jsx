@@ -5,7 +5,11 @@ import googleLoginIcon from "../assets/icons/googleLoginBtn.png";
 import kakaoLoginIcon from "../assets/icons/kakaoLoginBtn.png";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
-import { AUTH_URL_KAKAO, AUTH_URL_GOOGLE, OAUTH2_REDIRECT_URI } from "../apis/api";
+import {
+  AUTH_URL_KAKAO,
+  AUTH_URL_GOOGLE,
+  OAUTH2_REDIRECT_URI,
+} from "../apis/api";
 //투명도 있는 그라데이션
 const GradientBlack = styled.div`
   background: linear-gradient(
@@ -27,7 +31,7 @@ export const Login = () => {
   //함수
   //회원가입 페이지 요청
   const GoSignup = (choice) => {
-    if (choice == 'google') {
+    if (choice == "google") {
       window.location.href = AUTH_URL_GOOGLE + OAUTH2_REDIRECT_URI;
     } else {
       window.location.href = AUTH_URL_KAKAO + OAUTH2_REDIRECT_URI;
@@ -36,11 +40,11 @@ export const Login = () => {
 
   const googleLogin = () => {
     window.location.href = AUTH_URL_GOOGLE + OAUTH2_REDIRECT_URI;
-  }
+  };
 
   const kakaoLogin = () => {
     window.location.href = AUTH_URL_KAKAO + OAUTH2_REDIRECT_URI;
-  }
+  };
   return (
     <Box
       height="100vh"
@@ -61,14 +65,24 @@ export const Login = () => {
             justify="between"
             align="center"
           >
-            <img src={kakaoLoginIcon} alt="카카오로 로그인" width="300px" onClick={kakaoLogin} />
-            <img src={googleLoginIcon} alt="구글로 로그인" width="300px" onClick={googleLogin} />
+            <img
+              src={kakaoLoginIcon}
+              alt="카카오로 로그인"
+              width="300px"
+              onClick={kakaoLogin}
+            />
+            <img
+              src={googleLoginIcon}
+              alt="구글로 로그인"
+              width="300px"
+              onClick={googleLogin}
+            />
             <Box direction="row" margin={{ top: "15px" }}>
               <Text
                 color="white"
                 size="small"
-                weight="300"
-                onClick={(e) => GoSignup('kakao')}
+                weight={300}
+                onClick={(e) => GoSignup("kakao")}
                 margin={{ right: "5px" }}
               >
                 카카오로 회원가입
@@ -81,7 +95,7 @@ export const Login = () => {
                 size="small"
                 weight={300}
                 margin={{ left: "5px", right: "5px" }}
-                onClick={(e) => GoSignup('google')}
+                onClick={(e) => GoSignup("google")}
               >
                 구글로 회원가입
               </Text>
