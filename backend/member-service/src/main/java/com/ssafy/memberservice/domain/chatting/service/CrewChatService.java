@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
@@ -127,9 +124,8 @@ public class CrewChatService {
     public CrewChatRoom joinRoom(Long roomId, Member member) {
         CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
 
-
         Participant participant = Participant.from(member);
-        crewChatRoom.getPlayerMap().put(member.getId().toString(), participant);
+        crewChatRoom.addParticipant(participant);
         return crewChatRepository.save(crewChatRoom);
     }
 

@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.chatting.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.memberservice.domain.chatting.dto.chat.PloggingChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class PloggingChatSubscriber {
      */
     public void sendMessage(String publishMessage) {
         try {
+
             // ChatMessage 객채로 맵핑
             PloggingChatMessage chatMessage = objectMapper.readValue(publishMessage, PloggingChatMessage.class);
             log.info("sendMessage -> {}", chatMessage.getMessage());
