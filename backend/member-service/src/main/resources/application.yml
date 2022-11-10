@@ -69,7 +69,7 @@ token:
 oauth2:
   # ????? ??
   #  authorizedRedirectUri: http://localhost:3000/oauth2/redirect
-  authorizedRedirectUri: {client-host}/oauth2/redirect
+  authorizedRedirectUri: ${client-host}/oauth2/redirect
 
 kafka-ip: 127.0.0.1:9092
 
