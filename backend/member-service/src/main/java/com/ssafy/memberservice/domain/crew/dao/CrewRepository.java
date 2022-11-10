@@ -24,4 +24,7 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
     @Query("select distinct c from Crew c join fetch c.memberCrewList cl join fetch cl.member where c.id in :crewIdList")
     List<Crew> findByIdListWithMemberCrewList(List<Long> crewIdList);
+
+    @Query("select c from Crew c join fetch c.memberCrewList where c.id = :crewId")
+    Optional<Crew> findByCrewIdForLock(Long crewId);
 }
