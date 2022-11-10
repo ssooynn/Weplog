@@ -15,11 +15,12 @@ import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-// import { PlomonDetail } from "../components/AlertDialog";
 import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
 import PlomonSample4 from "../assets/PlomonSample4.gif";
+import Switch from '@mui/material/Switch';
+
 
 
 const MainCategoryContainer = styled.div`
@@ -181,12 +182,17 @@ const ProgressBar = styled.progress`
   }
 `;
 
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+
 
 export const Main = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [plomonOpen, setPlomonOpen] = useState(false);
-
+  const [isPlomonClicked, setIsPlomonClicked] = useState(false);
+  useEffect(()=>{
+},[plomonOpen, isPlomonClicked]);
   return (
     <div
       style={{
@@ -234,7 +240,7 @@ export const Main = () => {
         모아보기
       </PlomonTableTitle>
       <PlomonTableArea>
-        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false)) }>
+        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false)) }>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
           <PlomonName>재권</PlomonName>
           <PlomonState>Baby</PlomonState>
@@ -264,7 +270,7 @@ export const Main = () => {
         onDismiss={() => setPlomonOpen(false)}
         snapPoints={({ maxHeight }) => 0.93 * maxHeight}
       >
-      <PlomonTableTitle onClick={() => (setPlomonOpen(false), setOpen(true))}>
+      <PlomonTableTitle onClick={() => (isPlomonClicked===false ? (setPlomonOpen(false), setOpen(true)): setPlomonOpen(false))}>
         <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
         재권
       </PlomonTableTitle>
@@ -291,12 +297,15 @@ export const Main = () => {
             <PlomonDetailText>
               변신
             </PlomonDetailText>
-            
+            <div style={{margin:"1px 52vw 0 0"}}>
+              <Switch {...label}/>
+            </div>
           </Box>
         </SmallPlomon>
       </PlomonTableArea>
       </BottomSheet>
-      <MainMYContents style={{ position: "absolute" }} />
+
+      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked}/>
     </div>
   );
 };
