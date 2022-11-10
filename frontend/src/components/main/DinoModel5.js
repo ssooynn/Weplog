@@ -8,7 +8,7 @@ export function DinoModel5(props) {
   const [index, setIndex] = useState(13);
   const mesh = useRef(null);
   useFrame(() => {mesh.current.position.z += 0.5;
-    if(mesh.current.position.z > 1000) {mesh.current.position.z = -1000
+    if(mesh.current.position.z > 1000) {mesh.current.position.z = -500
     }});
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
