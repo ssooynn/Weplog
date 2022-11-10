@@ -3,7 +3,7 @@ package com.ssafy.memberservice.domain.memberpet.service;
 import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
-import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
+import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import com.ssafy.memberservice.domain.memberpet.dto.MemberPetRes;
 import com.ssafy.memberservice.domain.pet.dao.PetRepository;
 import com.ssafy.memberservice.domain.pet.domain.Pet;
@@ -41,7 +41,6 @@ public class MemberPetServiceImpl implements MemberPetService{
         Pet pet = petRepository.findById(petId).get();
         Member member = memberRepository.findById(id).get();
         memberPetRepository.save(new MemberPet(member, pet));
-        return;
     }
 
     @Override

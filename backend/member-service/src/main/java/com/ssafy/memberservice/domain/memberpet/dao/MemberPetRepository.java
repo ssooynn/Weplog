@@ -1,6 +1,6 @@
 package com.ssafy.memberservice.domain.memberpet.dao;
 
-import com.ssafy.memberservice.domain.memberpet.domain.MemberPet;
+import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +21,7 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
 
     @Query("select mp from MemberPet mp where mp.member.id = :memberId and mp.currentLevel = 1")
     Optional<MemberPet> findGrowingPetByMemberId(UUID memberId);
+
+    @Query("select m from MemberPet m where m.currentLevel = 1")
+    Optional<MemberPet> findByLevel(UUID uuid);
 }
