@@ -10,9 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -25,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 class CrewServiceImplTest {
 
     @Autowired
@@ -36,6 +37,8 @@ class CrewServiceImplTest {
 
     @Test
     @DisplayName("attend crew test -> concurrency complete O")
+
+    @Transactional
     public void attendCrewTest() throws InterruptedException {
         // given
 //        Crew joinCrew = crewRepository.findById(8L).get();
@@ -64,6 +67,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW1= new MemberCrew(null, null, findCrew, 0, 0, 0, "test1", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW1);
                     successCount.getAndIncrement();
@@ -83,6 +87,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW2= new MemberCrew(null, null, findCrew, 0, 0, 0, "test2", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW2);
                     successCount.getAndIncrement();
@@ -102,6 +107,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW3= new MemberCrew(null, null, findCrew, 0, 0, 0, "test3", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW3);
                     successCount.getAndIncrement();
@@ -121,6 +127,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW4= new MemberCrew(null, null, findCrew, 0, 0, 0, "test4", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW4);
                     successCount.getAndIncrement();
@@ -140,6 +147,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW5= new MemberCrew(null, null, findCrew, 0, 0, 0, "test5", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW5);
                     successCount.getAndIncrement();
@@ -159,6 +167,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW6= new MemberCrew(null, null, findCrew, 0, 0, 0, "test6", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW6);
                     successCount.getAndIncrement();
@@ -178,6 +187,7 @@ class CrewServiceImplTest {
                 Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
                 // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
                 if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
                     MemberCrew TEST_MEMBER_CREW7= new MemberCrew(null, null, findCrew, 0, 0, 0, "test7", "");
                     memberCrewRepository.save(TEST_MEMBER_CREW7);
                     successCount.getAndIncrement();

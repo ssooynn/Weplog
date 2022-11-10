@@ -3,8 +3,11 @@ package com.ssafy.memberservice.domain.crew.dao;
 import com.ssafy.memberservice.domain.crew.domain.Crew;
 import com.ssafy.memberservice.domain.crew.dto.NearCrewListInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +29,7 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     List<Crew> findByIdListWithMemberCrewList(List<Long> crewIdList);
 
     @Query("select c from Crew c join fetch c.memberCrewList where c.id = :crewId")
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE) //여기
+    @Transactional
     Optional<Crew> findByCrewIdForLock(Long crewId);
 }
