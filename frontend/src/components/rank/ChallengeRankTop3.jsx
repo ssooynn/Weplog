@@ -28,8 +28,6 @@ const Profile3rd = styled.img`
 `;
 
 export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
-  console.log(top3);
-  console.log(type);
   const changeImage = (id) => {
     if (type === 'user') {
       return top3[id].profileImageUrl;
@@ -73,13 +71,13 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
         margin="20px 0px"
       >
         <Box direction="column" height="85px" justify="between" align="center">
-          <Profile2nd src={changeImage(0)} alt="프로필 사진" />
+          <Profile2nd src={changeImage(1)} alt="프로필 사진" />
           <Box direction="column" align="center">
             <Text size="10px" weight={400}>
-              {changeTitle(0)}
+              {changeTitle(1)}
             </Text>
             <Text size="10px" weight={400}>
-              {changevalue(0)}
+              {changevalue(1)}
             </Text>
           </Box>
         </Box>
@@ -95,13 +93,13 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
             alt="왕관 사진"
             style={{ position: "absolute", top: "-20px", left: "30px" }}
           />
-          <Profile1st src={changeImage(1)} alt="프로필 사진" />
+          <Profile1st src={changeImage(0)} alt="프로필 사진" />
           <Box direction="column" align="center">
             <Text size="12px" weight={500}>
-              {changeTitle(1)}
+              {changeTitle(0)}
             </Text>
             <Text size="10px" weight={400}>
-              {changevalue(1)}
+              {changevalue(0)}
             </Text>
           </Box>
         </Box>

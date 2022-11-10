@@ -6,12 +6,17 @@ import { ChallengeRankCardList } from "../../components/rank/ChallengeRankCardLi
 import rankIcon from "../../assets/icons/rankIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { rankApi } from "../../apis/rankingApi";
+import { useSelector } from "react-redux";
 
 export const Rank = () => {
   const navigate = useNavigate();
   const [rankType, setRankType] = useState("");
   const [allRankingList, setAllRankingList] = useState({});
   const [rankList, setRankList] = useState([]);
+  const [myRank, setMyRank] = useState("");
+  const [myRankValue, setMyRankValue] = useState("");
+  const [myProfile, setMyProfile] = useState("");
+  const [myNickname, setMyNickname] = useState("");
   useEffect(() => {
     rankApi((res) => {
       console.log(res);
@@ -105,16 +110,15 @@ export const Rank = () => {
             내 랭킹
           </Text>
           <Box width="100%" align="center">
-            {/* <ChallengeRankCard></ChallengeRankCard> */}
+            <ChallengeRankCard my={true} rank={myRank} profileImgUrl={myProfile} nickname={myNickname} value={myRankValue}></ChallengeRankCard>
           </Box>
         </Box>
-
         {/* 내 랭크*/}
         <Box direction="column" pad="0px 8%" width="100%" margin="30px 0px">
           <Text size="16px" weight={400}>
             참여자 기여도 Ranking
           </Text>
-          {rankList !== undefined && rankList.length > 0 && <ChallengeRankCardList rankType={rankType} list={rankList}></ChallengeRankCardList>}
+          {rankList !== undefined && rankList.length > 0 && <ChallengeRankCardList rankType={rankType} list={rankList} setMyRank={setMyRank} setMyNickname={setMyNickname} setMyProfile={setMyProfile} setMyRankValue={setMyRankValue} />}
 
         </Box>
       </Box>
