@@ -10,6 +10,7 @@ export const CLIENT_URL = "https://k7a106.p.ssafy.io";
 
 export const AUTH_URL_KAKAO =
   API_SERVER + "member-service/oauth2/authorize/kakao";
+
 export const AUTH_URL_GOOGLE =
   API_SERVER + "member-service/oauth2/authorize/google";
 
