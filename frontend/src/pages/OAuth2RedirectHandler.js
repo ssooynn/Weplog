@@ -35,6 +35,7 @@ export const OAuth2RedirectHandler = (props) => {
             nickname: res.data.nickname,
             weight: res.data.weight,
             profileImageUrl: res.data.profileImageUrl,
+            plomon: 1,
           };
           dispatch(setUser(user));
         },
