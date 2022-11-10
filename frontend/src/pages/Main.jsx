@@ -140,6 +140,47 @@ const PlomonState = styled.div`
   border-radius: 15px;
 `
 
+const PlomonDetailName = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #535353;
+  padding-top: 5vw;
+`
+
+const PlomonDetailState = styled.div`
+  background-color: #57BA83;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 1vh 0 2vh 0;
+  padding: 0 12px 2px 12px;
+  border-radius: 20px;
+`
+
+const PlomonDetailText = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #535353;
+  margin-right: 10px;
+
+`
+
+const ProgressBar = styled.progress`
+  appearance: none;
+  height: 4px;
+  width:56vw;
+  margin-top:1px;
+  ::-webkit-progress-bar {
+    border-radius: 5px;
+    background: #c1c1c1;
+  }
+
+  ::-webkit-progress-value {
+    border-radius: 5px;
+    background: #57ba83;
+  }
+`;
+
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -181,6 +222,7 @@ export const Main = () => {
           </PopUpButtonArea>
         </PopUpButton>
       </Box>
+
       {/* 모아보기 */}
       <BottomSheet
         open={open}
@@ -192,15 +234,11 @@ export const Main = () => {
         모아보기
       </PlomonTableTitle>
       <PlomonTableArea>
-        <>
-          <SmallPlomon onClick={() => setPlomonOpen(true)}>
-            <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
-            <PlomonName>재권</PlomonName>
-            <PlomonState>Baby</PlomonState>
-          </SmallPlomon>
-          {/* <PlomonDetail plomonOpen={plomonOpen} handleClose={()=>{setPlomonOpen(false)}}/> */}
-        </>
-
+        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false)) }>
+          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
+          <PlomonName>재권</PlomonName>
+          <PlomonState>Baby</PlomonState>
+        </SmallPlomon>
         <SmallPlomon>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample2}/>
           <PlomonName>피스</PlomonName>
@@ -215,6 +253,46 @@ export const Main = () => {
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample4}/>
           <PlomonName>레이</PlomonName>
           <PlomonState>Baby</PlomonState>
+        </SmallPlomon>
+      </PlomonTableArea>
+      </BottomSheet>
+
+
+      {/* 플로몬 디테일 */}
+      <BottomSheet
+        open={plomonOpen}
+        onDismiss={() => setPlomonOpen(false)}
+        snapPoints={({ maxHeight }) => 0.93 * maxHeight}
+      >
+      <PlomonTableTitle onClick={() => (setPlomonOpen(false), setOpen(true))}>
+        <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
+        재권
+      </PlomonTableTitle>
+      <PlomonTableArea>
+        <SmallPlomon>
+          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={PlomonSample1}/>
+          <PlomonDetailName>재권</PlomonDetailName>
+          <PlomonDetailState>Baby</PlomonDetailState>
+          <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
+            <PlomonDetailText>
+              경험치
+            </PlomonDetailText>
+            <ProgressBar
+              id="progress"
+              value={67}
+              min="0"
+              max="100"
+            ></ProgressBar>
+            <Text size="12px" weight={400}>
+              {67}%
+            </Text>
+          </Box>
+          <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
+            <PlomonDetailText>
+              변신
+            </PlomonDetailText>
+            
+          </Box>
         </SmallPlomon>
       </PlomonTableArea>
       </BottomSheet>
