@@ -38,41 +38,42 @@ export const PloggingStart = () => {
 
   //hooks
   useEffect(() => {
-    if (localStorage.getItem("accessToken") === undefined) {
+    if (localStorage.getItem("accessToken") === null) {
       window.location.href = "/login";
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          setLoc((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude, // 위도
+              lng: position.coords.longitude, // 경도
+            },
+          }));
+          var coord = new kakao.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+          getNearRecentPloggingList(
+            { lat: position.coords.latitude, lng: position.coords.longitude },
+            (response) => {
+              console.log(response);
+            },
+            (fail) => {
+              console.log(fail);
+            }
+          );
+        },
+        (err) => {
+          setLoc((prev) => ({
+            ...prev,
+            errMsg: err.message,
+          }));
+        }
+      );
     }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position);
-        setLoc((prev) => ({
-          ...prev,
-          center: {
-            lat: position.coords.latitude, // 위도
-            lng: position.coords.longitude, // 경도
-          },
-        }));
-        var coord = new kakao.maps.LatLng(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-        getNearRecentPloggingList(
-          { lat: position.coords.latitude, lng: position.coords.longitude },
-          (response) => {
-            console.log(response);
-          },
-          (fail) => {
-            console.log(fail);
-          }
-        );
-      },
-      (err) => {
-        setLoc((prev) => ({
-          ...prev,
-          errMsg: err.message,
-        }));
-      }
-    );
   }, []);
 
   return (
