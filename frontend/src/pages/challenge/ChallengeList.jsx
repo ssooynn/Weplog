@@ -9,9 +9,9 @@ import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
 import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
-import { List } from "grommet-icons";
 import { myPageProfileApi } from "../../apis/mypageApi";
 import { challengeIngListAPi } from "../../apis/memberChallengeApi";
+import { useSelector } from "react-redux";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ export const ChallengeList = () => {
   const [myChallengeList, setMyChallengeList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState("");
+  const user = useSelector(state => state.user.user);
+  console.log(user);
 
   useEffect(() => {
     if (loading) {

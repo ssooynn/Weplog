@@ -38,38 +38,42 @@ export const PloggingStart = () => {
 
   //hooks
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position);
-        setLoc((prev) => ({
-          ...prev,
-          center: {
-            lat: position.coords.latitude, // 위도
-            lng: position.coords.longitude, // 경도
-          },
-        }));
-        var coord = new kakao.maps.LatLng(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-        getNearRecentPloggingList(
-          { lat: position.coords.latitude, lng: position.coords.longitude },
-          (response) => {
-            console.log(response);
-          },
-          (fail) => {
-            console.log(fail);
-          }
-        );
-      },
-      (err) => {
-        setLoc((prev) => ({
-          ...prev,
-          errMsg: err.message,
-        }));
-      }
-    );
+    if (localStorage.getItem("accessToken") === null) {
+      window.location.href = "/login";
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          setLoc((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude, // 위도
+              lng: position.coords.longitude, // 경도
+            },
+          }));
+          var coord = new kakao.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+          getNearRecentPloggingList(
+            { lat: position.coords.latitude, lng: position.coords.longitude },
+            (response) => {
+              console.log(response);
+            },
+            (fail) => {
+              console.log(fail);
+            }
+          );
+        },
+        (err) => {
+          setLoc((prev) => ({
+            ...prev,
+            errMsg: err.message,
+          }));
+        }
+      );
+    }
   }, []);
 
   return (
@@ -148,19 +152,19 @@ export const PloggingStart = () => {
         <BootstrapButton
           whileTap={{ scale: 0.9 }}
           onClick={() => {
-            // setOpen(true);
-            // navigate("/plogging", {
-            //   state: {
-            //     ploggingType: "single",
-            //     roomId: null,
-            //   },
-            // });
+            setOpen(true);
             navigate("/plogging", {
               state: {
-                ploggingType: "crew",
-                roomId: "ef35d9c9-1e7e-4d02-a33d-5ba272b7ea2e",
+                ploggingType: "single",
+                roomId: null,
               },
             });
+            // navigate("/plogging", {
+            //   state: {
+            //     ploggingType: "crew",
+            //     roomId: "ef35d9c9-1e7e-4d02-a33d-5ba272b7ea2e",
+            //   },
+            // });
           }}
         >
           Plogging!

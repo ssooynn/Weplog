@@ -2,6 +2,7 @@ import { Box } from "grommet";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { myPageProfileApi } from "../apis/mypageApi";
 // import { myInfo } from "../utils/api/userApi";
 import { setUser } from "../stores/modules/user";
 
@@ -27,19 +28,20 @@ export const OAuth2RedirectHandler = (props) => {
       console.log("추가입력 - X");
       navigate("/signup");
     } else {
-      console.log(localStorage.getItem("accessToken"));
-      // myInfo((res) => {
-      //     console.log(res);
-      //     const { data } = res;
-      //     dispatch(setUser(data));
-      //     console.log(data);
-
-      //     // navigate("/");
-      //     // window.location.href = '/';
-      // }, (err) => {
-      //     console.log(err);
-      //     navigate("/");
-      // });
+      myPageProfileApi(
+        (res) => {
+          const user = {
+            name: res.data.name,
+            nickname: res.data.nickname,
+            weight: res.data.weight,
+            profileImageUrl: res.data.profileImageUrl,
+          };
+          dispatch(setUser(user));
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
       const from = localStorage.getItem("from");
       if (from) {
         localStorage.removeItem("from");

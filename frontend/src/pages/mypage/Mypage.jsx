@@ -33,6 +33,10 @@ export const Mypage = () => {
   const [achievementAllCnt, setAchievementAllCnt] = useState(0);
   const [achievementSuccessCnt, setAchievementSuccessCnt] = useState(0);
   const [achievementIngCnt, setAchievementIngCnt] = useState(0);
+  const [ploggingCnt, setPloggingCnt] = useState(0);
+  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState(0);
+
 
   const navigate = useNavigate();
   const goPage = (url) => {
@@ -72,10 +76,29 @@ export const Mypage = () => {
 
   const getInfo = () => {
     myPageInfoApi((res) => {
+      setPloggingCnt(res.data.ploggingCnt);
+      setTime(secChangeTime(res.data.time));
+      setDistance(res.data.distance);
       console.log(res);
     }, (err) => {
       console.log(err);
     })
+  }
+
+  const secChangeTime = (seconds) => {
+    var hour = parseInt(seconds / 3600);
+    var min = parseInt((seconds % 3600) / 60);
+    var sec = seconds % 60;
+    if (hour <= 10) {
+      hour = `0${hour}`;
+    }
+    if (min <= 10) {
+      min = `0${min}`;
+    }
+    if (sec <= 10) {
+      sec = `0${sec}`;
+    }
+    return `${hour} : ${min} : ${sec}`;
   }
 
   useEffect(() => {
@@ -149,7 +172,7 @@ export const Mypage = () => {
               총 횟수
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              13회
+              {ploggingCnt} 회
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -157,7 +180,7 @@ export const Mypage = () => {
               총 거리
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              14.3Km
+              {distance} Km
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -165,7 +188,7 @@ export const Mypage = () => {
               총 시간
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              24:08:12
+              {time}
             </Text>
           </Box>
         </Box>
@@ -207,7 +230,7 @@ export const Mypage = () => {
               총 과제
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              {achievementAllCnt}개
+              {achievementAllCnt} 개
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -215,7 +238,7 @@ export const Mypage = () => {
               완료
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              {achievementSuccessCnt}개
+              {achievementSuccessCnt} 개
             </Text>
           </Box>
           <Box direction="column" align="center">
@@ -223,7 +246,7 @@ export const Mypage = () => {
               미완료
             </Text>
             <Text size="14px" margin="1px 0px" weight={500} color="#00853B">
-              {achievementIngCnt}개
+              {achievementIngCnt} 개
             </Text>
           </Box>
         </Box>
