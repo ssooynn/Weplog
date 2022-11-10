@@ -190,7 +190,9 @@ export const Main = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [plomonOpen, setPlomonOpen] = useState(false);
-
+  const [isPlomonClicked, setIsPlomonClicked] = useState(false);
+  useEffect(()=>{
+},[plomonOpen, isPlomonClicked]);
   return (
     <div
       style={{
@@ -238,7 +240,7 @@ export const Main = () => {
         모아보기
       </PlomonTableTitle>
       <PlomonTableArea>
-        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false)) }>
+        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false)) }>
           <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
           <PlomonName>재권</PlomonName>
           <PlomonState>Baby</PlomonState>
@@ -268,7 +270,7 @@ export const Main = () => {
         onDismiss={() => setPlomonOpen(false)}
         snapPoints={({ maxHeight }) => 0.93 * maxHeight}
       >
-      <PlomonTableTitle onClick={() => (setPlomonOpen(false), setOpen(true))}>
+      <PlomonTableTitle onClick={() => (isPlomonClicked===false ? (setPlomonOpen(false), setOpen(true)): setPlomonOpen(false))}>
         <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
         재권
       </PlomonTableTitle>
@@ -297,13 +299,13 @@ export const Main = () => {
             </PlomonDetailText>
             <div style={{margin:"1px 52vw 0 0"}}>
               <Switch {...label}/>
-
             </div>
           </Box>
         </SmallPlomon>
       </PlomonTableArea>
       </BottomSheet>
-      <MainMYContents style={{ position: "absolute" }} />
+
+      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked}/>
     </div>
   );
 };
