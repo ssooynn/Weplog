@@ -23,12 +23,14 @@ public class PloggingChatRoom implements Serializable {
     @Id
     private String roomId;
 
-    private Map<String, Participant> playerMap;
+    private Map<String, Participant> participantMap;
 
     private Participant host;
 
     @Indexed
     private Long crewId;
+
+    private int participantCnt;
 
     private LocalDateTime createdTime;
 
@@ -37,8 +39,18 @@ public class PloggingChatRoom implements Serializable {
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.crewId = crewId;
         chatRoom.host = Participant.from(member);
-        chatRoom.playerMap = new LinkedHashMap<>();
+        chatRoom.participantMap = new LinkedHashMap<>();
         chatRoom.createdTime = LocalDateTime.now();
         return chatRoom;
+    }
+
+    public void addParticipant(Participant participant) {
+        if (this.getParticipantMap() == null) {
+            this.participantMap = new LinkedHashMap<>();
+        }
+
+        this.participantCnt++;
+
+        this.participantMap.put(participant.getId(), participant);
     }
 }
