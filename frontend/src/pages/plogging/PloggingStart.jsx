@@ -73,7 +73,7 @@ export const PloggingStart = () => {
   }, []);
   //hooks
   useEffect(() => {
-    if (User === null || User === undefined) {
+    if (localStorage.getItem("accessToken") === null) {
       window.location.href = "/login";
     } else {
       navigator.geolocation.getCurrentPosition(
