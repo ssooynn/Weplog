@@ -190,7 +190,7 @@ export const CrewDetail = () => {
                 crewId={crewId}
               />
             )}
-            {clicked === 1 && <CrewDetailTalk />}
+            {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
             {clicked === 2 && <CrewDetailOurFeed />}
             {clicked === 3 && <CrewDetailMember />}
           </Box>

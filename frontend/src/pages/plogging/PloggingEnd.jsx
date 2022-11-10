@@ -44,7 +44,7 @@ export const PloggingEnd = () => {
   const [pathData, setPathData] = useState();
   const { kakao } = window;
   const geocoder = new kakao.maps.services.Geocoder();
-  const User = useSelector((state) => state.user.user);
+  const User = useSelector((state) => state.user);
 
   // ploggingType: "",
   //     ploggingData: {
@@ -278,7 +278,7 @@ export const PloggingEnd = () => {
             position: "relative",
           }}
         >
-          <div
+          {/* <div
             style={{
               width: "50%",
               height: "300px",
@@ -287,29 +287,29 @@ export const PloggingEnd = () => {
               top: "30%",
               zIndex: "15",
             }}
-          >
-            {/* <Canvas camera={{ position: [0, 50, 120] }} flat linear>
+          > */}
+          {/* <Canvas camera={{ position: [0, 50, 120] }} flat linear>
               {/* <ambientLight intensity={0.4} /> */}
-            {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
-            {/* <pointLight position={[0, 60, 400]} /> */}
-            {/* <pointLight position={[0, 150, 250]} /> 
+          {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
+          {/* <pointLight position={[0, 60, 400]} /> */}
+          {/* <pointLight position={[0, 150, 250]} /> 
               <Suspense fallback={null}>
                 <Plomon />
                 <Environment preset="sunset" />
               </Suspense>
             </Canvas> */}
-            <img
-              src={`/assets/plomons/${plomonSelector(User.plomon)}.gif`}
-              style={{
-                width: "200px",
-                fill: "cover",
-                position: "absolute",
-                right: 0,
-                top: "-150px",
-                zIndex: "15",
-              }}
-            />
-          </div>
+          <img
+            src={`/assets/plomons/${plomonSelector(User.plomon)}.gif`}
+            style={{
+              width: "210px",
+              fill: "cover",
+              position: "absolute",
+              right: 0,
+              top: "-100px",
+              zIndex: "15",
+            }}
+          />
+          {/* </div> */}
           <Box width="100%" height="100%" align="center" justify="around">
             <Box direction="row" width="100%" justify="center" gap="55px">
               <DataBox label="킬로미터" data={ploggingData.totalDistance} />

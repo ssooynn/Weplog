@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { container } from "../../utils/util";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { Box } from "grommet";
+import { Box, Spinner } from "grommet";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
 import { PloggingTypeBottomSheet } from "../../components/plogging/PloggingTypeBottomSheet";
@@ -23,9 +23,10 @@ export const PloggingStart = () => {
   const [address, setAddress] = useState();
   const navigate = useNavigate();
   const { kakao } = window;
+  const [loading, setLoading] = useState(true);
   const geocoder = new kakao.maps.services.Geocoder();
   const [ploggingCrews, setPloggingCrews] = useState([]);
-  const User = useSelector((state) => state.user.user);
+  const User = useSelector((state) => state.user);
   // function
   const handleClose = () => {
     setOpen(false);
@@ -73,106 +74,114 @@ export const PloggingStart = () => {
   }, []);
   //hooks
   useEffect(() => {
-    if (localStorage.getItem("accessToken") === null) {
-      window.location.href = "/login";
-    } else {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log(position);
-          setLoc((prev) => ({
-            ...prev,
-            center: {
-              lat: position.coords.latitude, // 위도
-              lng: position.coords.longitude, // 경도
-            },
-          }));
-          var coord = new kakao.maps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-          getNearRecentPloggingList(
-            { lat: position.coords.latitude, lng: position.coords.longitude },
-            (response) => {
-              console.log(response);
-            },
-            (fail) => {
-              console.log(fail);
-            }
-          );
-        },
-        (err) => {
-          setLoc((prev) => ({
-            ...prev,
-            errMsg: err.message,
-          }));
-        }
-      );
-      getExistCrewPlogging(
-        (response) => {
-          console.log(response);
-          setPloggingCrews(response.data);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+    if (loading) {
+      if (localStorage.getItem("accessToken") === null) {
+        setLoading(false);
+        window.location.href = "/login";
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+            setLoc((prev) => ({
+              ...prev,
+              center: {
+                lat: position.coords.latitude, // 위도
+                lng: position.coords.longitude, // 경도
+              },
+            }));
+            var coord = new kakao.maps.LatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+            getNearRecentPloggingList(
+              { lat: position.coords.latitude, lng: position.coords.longitude },
+              (response) => {
+                console.log(response);
+              },
+              (fail) => {
+                console.log(fail);
+              }
+            );
+          },
+          (err) => {
+            setLoc((prev) => ({
+              ...prev,
+              errMsg: err.message,
+            }));
+          }
+        );
+        getExistCrewPlogging(
+          (response) => {
+            console.log(response);
+            setPloggingCrews(response.data);
+            setLoading(false);
+          },
+          (fail) => {
+            console.log(fail);
+          }
+        );
+      }
     }
+    return () => {
+      setLoading(false);
+    };
   }, []);
-
-  return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={container}
-      style={{
-        position: "relative",
-        width: "100%",
-        textAlign: "center",
-        height: "calc(var(--vh, 1vh) * 100 - 50px)",
-      }}
-    >
-      {/* 지도 */}
-      <Map
-        center={loc.center}
-        isPanto={true}
-        style={{ width: "100%", height: "100%" }}
+  if (loading) return <Spinner />;
+  else
+    return (
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={container}
+        style={{
+          position: "relative",
+          width: "100%",
+          textAlign: "center",
+          height: "calc(var(--vh, 1vh) * 100 - 50px)",
+        }}
       >
-        <MapMarker
-          position={loc.center}
-          image={{
-            src: `/assets/images/start.png`,
-            size: {
-              width: 29,
-              height: 41,
-            }, // 마커이미지의 크기입니다
-          }}
-        ></MapMarker>
-      </Map>
-      {/* 주소, 챌린지 선택 박스 */}
-      <Box
-        width="100%"
-        align="center"
-        style={{ position: "absolute", top: "5%", zIndex: "3" }}
-        gap="medium"
-      >
-        {/* 주소박스 */}
-        <Box
-          width="75%"
-          height="46px"
-          align="center"
-          justify="center"
-          style={{
-            color: "white",
-            borderRadius: "10px",
-            fontWeight: "bold",
-            background: "#57BA83",
-          }}
+        {/* 지도 */}
+        <Map
+          center={loc.center}
+          isPanto={true}
+          style={{ width: "100%", height: "100%" }}
         >
-          {address ? address : "어디일까요?"}
-        </Box>
-        {/* 챌린지 선택 박스 */}
-        {/* <Box width="75%" direction="row" justify="end">
+          <MapMarker
+            position={loc.center}
+            image={{
+              src: `/assets/images/start.png`,
+              size: {
+                width: 29,
+                height: 41,
+              }, // 마커이미지의 크기입니다
+            }}
+          ></MapMarker>
+        </Map>
+        {/* 주소, 챌린지 선택 박스 */}
+        <Box
+          width="100%"
+          align="center"
+          style={{ position: "absolute", top: "5%", zIndex: "3" }}
+          gap="medium"
+        >
+          {/* 주소박스 */}
+          <Box
+            width="75%"
+            height="46px"
+            align="center"
+            justify="center"
+            style={{
+              color: "white",
+              borderRadius: "10px",
+              fontWeight: "bold",
+              background: "#57BA83",
+            }}
+          >
+            {address ? address : "어디일까요?"}
+          </Box>
+          {/* 챌린지 선택 박스 */}
+          {/* <Box width="75%" direction="row" justify="end">
           <Box
             width="60%"
             height="34px"
@@ -186,21 +195,21 @@ export const PloggingStart = () => {
             챌린지 도전 중
           </Box>
         </Box> */}
-      </Box>
-      {/* 플로깅 시작 버튼 */}
-      <Box
-        width="100%"
-        align="center"
-        style={{ position: "absolute", bottom: "9%", zIndex: "3" }}
-      >
-        <BootstrapButton
-          whileTap={{ scale: 0.9 }}
-          onClick={handlePloggingStart}
+        </Box>
+        {/* 플로깅 시작 버튼 */}
+        <Box
+          width="100%"
+          align="center"
+          style={{ position: "absolute", bottom: "9%", zIndex: "3" }}
         >
-          Plogging!
-        </BootstrapButton>
-      </Box>
-      <PloggingTypeBottomSheet open={open} onDismiss={handleClose} />
-    </motion.div>
-  );
+          <BootstrapButton
+            whileTap={{ scale: 0.9 }}
+            onClick={handlePloggingStart}
+          >
+            Plogging!
+          </BootstrapButton>
+        </Box>
+        <PloggingTypeBottomSheet open={open} onDismiss={handleClose} />
+      </motion.div>
+    );
 };
