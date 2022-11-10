@@ -9,6 +9,7 @@ import {
   getMyCrewList,
   getMyNearCrewList,
   getTop3CrewList,
+  getAllCrewList
 } from "../../apis/crewApi";
 
 export const Crew = () => {
@@ -18,6 +19,7 @@ export const Crew = () => {
   const [near, setNear] = useState([]);
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("DIS");
+  const [crewList, setCrewList] = useState([]);
 
   const handleType = (type) => {
     setType(type);
@@ -40,6 +42,12 @@ export const Crew = () => {
         setMyCrews((prev) => (prev = response.data));
         setLoading(false);
       });
+      getAllCrewList((res) => {
+        console.log(res);
+        setCrewList(res.data);
+      }, (err) => {
+        console.log(err);
+      })
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
@@ -51,7 +59,7 @@ export const Crew = () => {
             }
           );
         },
-        (err) => {}
+        (err) => { }
       );
     }
     setLoading(false);
@@ -144,6 +152,18 @@ export const Crew = () => {
           {type === "TIME" && <ChallengeRankTop3 type={"crew"} top3={top3Time} />}
           {type === "DIS" && <ChallengeRankTop3 type={"crew"} top3={top3Distance} />}
         </Box>
-      </motion.div>
+
+        <Box pad="medium" width="100%" margin={{ bottom: "30px" }}>
+          <Text size="18px" weight={500} margin="20px 10px 0px 10px">
+            모든 크루 List
+          </Text>
+          <Box direction="row" wrap={true} justify="start" margin={{ left: "4px" }}>
+            {crewList.map((crew, index) => <Box direction="row" justify="between" key={index} width="50%">
+              <CrewCard crew={crew}></CrewCard>
+            </Box>)}
+          </Box>
+        </Box>
+
+      </motion.div >
     );
 };
