@@ -109,7 +109,7 @@ public class CrewChatService {
 
     }
 
-    private void pushData(String chatId, ChatMessage chatMessage) {
+    public void pushData(String chatId, ChatMessage chatMessage) {
         Query query = new Query().addCriteria(Criteria.where("_id").is(new ObjectId(chatId)));
         Update update = new Update();
 
