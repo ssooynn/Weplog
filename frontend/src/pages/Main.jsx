@@ -1,14 +1,8 @@
 import { motion } from "framer-motion";
 import { container } from "../utils/util";
 import React, { useEffect, useState } from "react";
-import {
-  Routes,
-  Route,
-  useLocation,
-  Link,
-  useNavigate,
-} from "react-router-dom";
-import styled, { keyframes, css } from "styled-components";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { Box, Text } from "grommet";
 import { MainMYContents } from "../components/main/MainMYContents";
 import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
@@ -104,7 +98,6 @@ const PlomonTableTitle = styled.div`
   color: #232323;
   display: flex;
   align-items: center;
-  
 `
 
 const PlomonTableArea = styled.div`
@@ -276,7 +269,7 @@ export const Main = () => {
       </PlomonTableTitle>
       <PlomonTableArea>
         <SmallPlomon>
-          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={PlomonSample1}/>
+          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={PlomonSample1} onClick={() => navigate("/main/plomon3d")}/>
           <PlomonDetailName>재권</PlomonDetailName>
           <PlomonDetailState>Baby</PlomonDetailState>
           <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
