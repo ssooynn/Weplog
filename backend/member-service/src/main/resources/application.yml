@@ -73,4 +73,4 @@ oauth2:
 
 kafka-ip: 127.0.0.1:9092
 
-login-host: http://localhost:8081
+login-host: http://localhost:8000/member-service

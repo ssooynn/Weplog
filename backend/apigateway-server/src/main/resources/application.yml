@@ -51,9 +51,9 @@ spring:
             - Path=/member-service/oauth2/**
             - Method=GET
           filters:
-            - RemoveRequestHeader=Cookie
+#            - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
-
+#            - RemoveResponseHeader= Access-Control-Allow-Origin
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:

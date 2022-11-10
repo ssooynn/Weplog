@@ -1,4 +1,4 @@
-package com.ssafy.memberservice.domain.chatting.dto;
+package com.ssafy.memberservice.domain.chatting.dto.chat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,4 +21,5 @@ public class ChatMessage {
     protected String roomId; // 방번호
     protected Participant sender; // 메시지 보낸사람
     protected String message; // 메시지
+    protected LocalDateTime sendTime;
 }

@@ -1,8 +1,7 @@
-package com.ssafy.memberservice.domain.chatting.domain;
+package com.ssafy.memberservice.domain.chatting.domain.redis;
 
-import com.ssafy.memberservice.domain.member.domain.Member;
+import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
-import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -23,10 +22,11 @@ public class CrewChatRoom implements Serializable {
 
     private String chatId;
 
-    public static CrewChatRoom create(Long crewId, MemberCrew memberCrew) {
+    public static CrewChatRoom create(Long crewId, MemberCrew memberCrew, String chatId) {
         CrewChatRoom crewChatRoom = new CrewChatRoom();
         crewChatRoom.roomId = crewId;
         crewChatRoom.playerMap = new LinkedHashMap<>();
+        crewChatRoom.chatId = chatId;
         return crewChatRoom;
     }
 
