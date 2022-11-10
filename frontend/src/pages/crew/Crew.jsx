@@ -141,8 +141,8 @@ export const Crew = () => {
               </Text>
             </Box>
           </Box>
-          {type === "TIME" && <ChallengeRankTop3 top3Crews={top3Time} />}
-          {type === "DIS" && <ChallengeRankTop3 top3Crews={top3Distance} />}
+          {type === "TIME" && <ChallengeRankTop3 type={"crew"} top3={top3Time} />}
+          {type === "DIS" && <ChallengeRankTop3 type={"crew"} top3={top3Distance} />}
         </Box>
       </motion.div>
     );

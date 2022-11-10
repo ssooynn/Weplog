@@ -33,6 +33,7 @@ export const ChallengeDetail = () => {
   const [challenge, setChallenge] = useState("");
   const [typeUnit, setTypeUnit] = useState();
   const [endDate, setEndDate] = useState([]);
+  const [challengeRanking, setChallengeRanking] = useState([]);
 
   const sharePage = () => {
     window.navigator.share({
@@ -66,6 +67,7 @@ export const ChallengeDetail = () => {
 
   const loadChallengeRanking = () => {
     challengeRankingApi(challengeId, (res) => {
+      setChallengeRanking(res.data);
       console.log(res);
     }, (err) => {
       console.log(err);
@@ -184,7 +186,8 @@ export const ChallengeDetail = () => {
         <Text size="16px" weight={400}>
           참여자 기여도 Ranking
         </Text>
-        <ChallengeRankCardList></ChallengeRankCardList>
+        <ChallengeRankCardList list={challengeRanking}></ChallengeRankCardList>
+
         {challenge.myChallenge ? <Button bigpinkround="true" style={{ margin: "10px 0px" }} onClick={giveUpChallenge}>
           챌린지 포기하기
         </Button> : <Button biggreenround="true" style={{ margin: "10px 0px" }} onClick={joinChallenge}>
