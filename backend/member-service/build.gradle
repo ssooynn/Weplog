@@ -39,6 +39,9 @@ dependencies {
     // redisson-spring-boot-starter
     implementation 'org.redisson:redisson-spring-boot-starter:3.17.7'
 
+    // mongodb
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     // aws s3
@@ -73,6 +76,10 @@ dependencies {
 
 // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
     implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20220924'
+
 }
 
 dependencyManagement {

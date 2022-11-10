@@ -1,7 +1,7 @@
-package com.ssafy.memberservice.domain.chatting.domain;
+package com.ssafy.memberservice.domain.chatting.domain.redis;
 
+import com.ssafy.memberservice.domain.chatting.domain.Participant;
 import com.ssafy.memberservice.domain.member.domain.Member;
-import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.annotation.Id;
@@ -9,7 +9,6 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
