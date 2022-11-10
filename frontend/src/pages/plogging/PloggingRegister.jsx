@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { container } from "../../utils/util";
@@ -108,6 +108,13 @@ export const PloggingRegister = () => {
     );
   };
 
+  let vh = 0;
+
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
+
   return (
     <motion.div
       initial="hidden"
@@ -116,7 +123,7 @@ export const PloggingRegister = () => {
       style={{
         position: "relative",
         textAlign: "center",
-        height: "100vh",
+        height: "calc(var(--vh, 1vh) * 100)",
       }}
     >
       {/* 헤더 */}
