@@ -20,6 +20,7 @@ public class CrewChatSubscriber {
      */
     public void sendMessage(String publishMessage) {
         try {
+
             // ChatMessage 객채로 맵핑
             ChatMessage chatMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
             log.info("sendMessage -> {}", chatMessage.getMessage());

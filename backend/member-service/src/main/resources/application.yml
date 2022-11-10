@@ -2,8 +2,8 @@
 server:
   port: 8081 # random port
 
-
 spring:
+
   application:
     name: member-service
   security:
