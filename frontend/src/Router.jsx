@@ -29,6 +29,7 @@ import { CrewRegister } from "./pages/crew/CrewRegister.jsx";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
+import { Plomon3D } from "./pages/Plomon3D.jsx";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -121,6 +122,7 @@ export const Router = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/mypage/user" element={<MypageUser />} />
       <Route path="/mypage/achievement" element={<MypageAchievement />} />
+      <Route path="/main/plomon3d" element={<Plomon3D />} />
 
     </Routes>
   );
