@@ -15,6 +15,8 @@ import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -33,7 +35,6 @@ import static com.ssafy.memberservice.global.common.error.exception.NotFoundExce
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class CrewChatService {
 
     private final ChannelTopic crewTopic;
@@ -49,6 +50,10 @@ public class CrewChatService {
     private final ChatsRepository chatsRepository;
 
     private final MongoTemplate mongoTemplate;
+
+    private final RedissonClient redissonClient;
+
+    private final static String KEY = "CREW_CHAT";
 
 
     public CrewChatRoom makeRoom(String memberId, Long crewId) {
@@ -122,6 +127,9 @@ public class CrewChatService {
     }
 
     public CrewChatRoom joinRoom(Long roomId, Member member) {
+
+        RLock lock = redissonClient.getLock(KEY + roomId);
+
         CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
 
         Participant participant = Participant.from(member);
@@ -132,7 +140,7 @@ public class CrewChatService {
     public void quitRoom(Long roomId, Member member) {
         CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
-        crewChatRoom.getPlayerMap().remove(member.getId().toString());
+        crewChatRoom.removeParticipant(member);
     }
 
     public List<ChatMessage> getCrewChats(Long crewId) {

@@ -22,7 +22,7 @@ public class PloggingChatRoomResponse {
 
     public static PloggingChatRoomResponse of(PloggingChatRoom ploggingChatRoom) {
         return PloggingChatRoomResponse.builder()
-                .playerMap(ploggingChatRoom.getPlayerMap())
+                .playerMap(ploggingChatRoom.getParticipantMap())
                 .host(ploggingChatRoom.getHost())
                 .roomId(ploggingChatRoom.getRoomId())
                 .ploggingSeconds(Duration.between(ploggingChatRoom.getCreatedTime(),LocalDateTime.now()).getSeconds())
