@@ -40,19 +40,19 @@ export const Crew = () => {
         setMyCrews((prev) => (prev = response.data));
         setLoading(false);
       });
-      // navigator.geolocation.getCurrentPosition(
-      //   (position) => {
-      //     console.log(position);
-      //     getMyNearCrewList(
-      //       { lat: position.coords.latitude, lng: position.coords.longitude },
-      //       (response) => {
-      //         console.log(response);
-      //         setNear((prev) => (prev = response.data));
-      //       }
-      //     );
-      //   },
-      //   (err) => {}
-      // );
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          getMyNearCrewList(
+            { lat: position.coords.latitude, lng: position.coords.longitude },
+            (response) => {
+              console.log(response);
+              setNear((prev) => (prev = response.data));
+            }
+          );
+        },
+        (err) => {}
+      );
     }
     setLoading(false);
     return () => {
@@ -110,7 +110,7 @@ export const Crew = () => {
           <Text size="18px" weight={500} margin="20px 10px 0px 10px">
             지금 내 근처 크루
           </Text>
-          <CrewScollableCardList></CrewScollableCardList>
+          {near && <CrewScollableCardList crews={near}></CrewScollableCardList>}
         </Box>
 
         {/* Top3 */}
