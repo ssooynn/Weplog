@@ -14,7 +14,7 @@ const ChallengeRankStyled = styled.div`
   border-radius: 5px;
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  background-color: #cdebda;
+  background-color: ${(props) => props.my ? "#cdebda" : "white"};
   margin-top: 10px;
 
   ${(props) =>
@@ -31,13 +31,12 @@ const RankProfileImg = styled.img`
   margin-right: 20px;
 `;
 
-export const ChallengeRankCard = ({ rank, profileImgUrl, nickname, value }) => {
-  console.log(profileImgUrl);
+export const ChallengeRankCard = ({ rank, profileImgUrl, nickname, value, my }) => {
   return (
-    <ChallengeRankStyled>
+    <ChallengeRankStyled my={my}>
       <Box direction="row" justify="between" width="100%" align="center">
         <Box direction="row" width="60%" align="center">
-          <Text size="14px" weight={400} color="#00853B">
+          <Text size="14px" weight={400} color={my ? "#00853B" : "#1f1d1d"}>
             {rank}
           </Text>
           <Box
@@ -56,7 +55,7 @@ export const ChallengeRankCard = ({ rank, profileImgUrl, nickname, value }) => {
             </Text>
           </Box>
         </Box>
-        <Text size="14px" weight={500} color="#00853B">
+        <Text size="14px" weight={500} color={my ? "#00853B" : "#1f1d1d"}>
           {value}
         </Text>
       </Box>
