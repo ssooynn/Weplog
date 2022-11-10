@@ -683,7 +683,7 @@ export const Plogging = () => {
           width: "100%",
           textAlign: "center",
           height: "calc(var(--vh, 1vh) * 100)",
-          background: "#57BA83",
+          background: "#040a07",
           color: "white",
           fontSize: "56px",
           display: "flex",
