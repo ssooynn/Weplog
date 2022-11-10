@@ -133,7 +133,7 @@ export const Plogging = () => {
   const audioPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
-  const User = useSelector((state) => state.user.user);
+  const User = useSelector((state) => state.user);
   // console.log(User);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
