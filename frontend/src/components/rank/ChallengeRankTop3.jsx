@@ -1,5 +1,5 @@
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import crown from "../../assets/images/crown.svg";
 
@@ -27,8 +27,43 @@ const Profile3rd = styled.img`
   border: 2px solid #ff9900;
 `;
 
-export const ChallengeRankTop3 = ({ top3Crews }) => {
-  if (top3Crews && top3Crews.length > 0)
+export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
+  console.log(top3);
+  console.log(type);
+  const changeImage = (id) => {
+    if (type === 'user') {
+      return top3[id].profileImageUrl;
+    } else {
+      return top3[id].imageUrl;
+    }
+  }
+  const changeTitle = (id) => {
+    if (type === 'user') {
+      return top3[id].nickname;
+    } else {
+      return top3[id].name;
+    }
+  }
+  const changevalue = (id) => {
+    if (type === 'user') {
+      switch (rankType) {
+        case "DISTANCE":
+          return top3[id].totalDistance + " Km";
+
+        case "PLOGGING_CNT":
+          return top3[id].totalCnt + " 회";
+
+        case "TIME":
+          return top3[id].totalTime;
+
+        default:
+          return undefined;
+      }
+    } else {
+      return top3[id].totalAmount;
+    }
+  }
+  if (top3 && top3.length > 0)
     return (
       <Box
         direction="row"
@@ -38,13 +73,13 @@ export const ChallengeRankTop3 = ({ top3Crews }) => {
         margin="20px 0px"
       >
         <Box direction="column" height="85px" justify="between" align="center">
-          <Profile2nd src={top3Crews[1].imageUrl} alt="프로필 사진" />
-          <Box direction="column">
+          <Profile2nd src={changeImage(0)} alt="프로필 사진" />
+          <Box direction="column" align="center">
             <Text size="10px" weight={400}>
-              {top3Crews[1].name}
+              {changeTitle(0)}
             </Text>
             <Text size="10px" weight={400}>
-              {top3Crews[1].totalAmount}
+              {changevalue(0)}
             </Text>
           </Box>
         </Box>
@@ -60,24 +95,24 @@ export const ChallengeRankTop3 = ({ top3Crews }) => {
             alt="왕관 사진"
             style={{ position: "absolute", top: "-20px", left: "30px" }}
           />
-          <Profile1st src={top3Crews[0].imageUrl} alt="프로필 사진" />
+          <Profile1st src={changeImage(1)} alt="프로필 사진" />
           <Box direction="column" align="center">
             <Text size="12px" weight={500}>
-              {top3Crews[0].name}
+              {changeTitle(1)}
             </Text>
             <Text size="10px" weight={400}>
-              {top3Crews[0].totalAmount}
+              {changevalue(1)}
             </Text>
           </Box>
         </Box>
         <Box direction="column" height="85px" justify="between" align="center">
-          <Profile3rd src={top3Crews[2].imageUrl} alt="프로필 사진" />
-          <Box direction="column">
+          <Profile3rd src={changeImage(2)} alt="프로필 사진" />
+          <Box direction="column" align="center">
             <Text size="10px" weight={400}>
-              {top3Crews[2].name}
+              {changeTitle(2)}
             </Text>
             <Text size="10px" weight={400}>
-              {top3Crews[2].totalAmount}
+              {changevalue(2)}
             </Text>
           </Box>
         </Box>
