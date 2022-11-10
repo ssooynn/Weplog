@@ -12,7 +12,7 @@ function Island() {
   const mesh = useRef(null);
   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.0005));
   return (
-    <mesh ref={mesh} scale={0.5}>
+    <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
         <DinoModel1 scale={0.08} position={[0, 23, 11]}/>
         <DinoModel2 scale={0.08} position={[-8, 15.2, 26]}/>
