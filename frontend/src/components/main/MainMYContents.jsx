@@ -29,14 +29,14 @@ export function MainMYContents() {
     <Canvas
     camera={{position: [-40, 15, 0]}}
     >
-        <Suspense fallback={null}>
-          <Island />
-          <OrbitControls />
-          <directionalLight color={"white"} position={[0, 10, 10]} />
-          <directionalLight color={"white"} position={[-8.6, 10, -5]} />
-          <directionalLight color={"white"} position={[8.6, 10, -5]} />
-          <directionalLight color={"white"} position={[0, -20, 0]} />
-        </Suspense>
-      </Canvas>
+      <Suspense fallback={null}>
+        <Island />
+        <OrbitControls />
+        <directionalLight color={"white"} position={[0, 10, 10]} />
+        <directionalLight color={"white"} position={[-8.6, 10, -5]} />
+        <directionalLight color={"white"} position={[8.6, 10, -5]} />
+        <directionalLight color={"white"} position={[0, -20, 0]} />
+      </Suspense>
+    </Canvas>
   );
 }
