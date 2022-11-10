@@ -72,6 +72,7 @@ import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import ChatSound from "../../assets/sounds/chatNoti.mp3";
 import { exitPlogging, getGarbageList } from "../../apis/ploggingApi";
+import { useSelector } from "react-redux";
 
 export const DataBox = ({ label, data }) => {
   return (
@@ -132,6 +133,8 @@ export const Plogging = () => {
   const audioPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+  const User = useSelector((state) => state.user.user);
+  // console.log(User);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -144,6 +147,8 @@ export const Plogging = () => {
 
   const [messages, setMessages] = useState([]);
   const { ploggingType, roomId } = locations.state;
+  let vh = 0;
+
   // ------------------함수-----------------------------
 
   // 소리 재생
@@ -160,11 +165,11 @@ export const Plogging = () => {
 
   // 마커 지정 함수
   const setMarkerImage = (pingType) => {
-    return marker.pingType === "ONE"
+    return pingType === "ONE"
       ? TrashIcon
-      : marker.pingType === "TWO"
+      : pingType === "TWO"
       ? DishIcon
-      : marker.pingType === "THREE"
+      : pingType === "THREE"
       ? DesIcon
       : GarbageIcon;
   };
@@ -172,7 +177,7 @@ export const Plogging = () => {
   // 시간에 따른 칼로리 구함.
   const handleCalories = () => {
     // kcal = MET * (3.5 * kg * min) * 5 / 1000
-    return calcCalories(user.info.weight, time);
+    return calcCalories(User.weight, time);
   };
 
   const handleDistance = () => {
@@ -185,7 +190,7 @@ export const Plogging = () => {
       return [
         ...prev,
         {
-          sender: "자자쳐키",
+          sender: User.nickname,
           lat: markerPosition.lat,
           lng: markerPosition.lng,
           pingType: index,
@@ -360,7 +365,7 @@ export const Plogging = () => {
           type: "PING",
           lat: marker.lat,
           lng: marker.lng,
-          pingType: "THREE",
+          pingType: marker.pingType,
         }),
       });
     }
@@ -442,7 +447,7 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
-            if (data.sender !== "자자쳐키")
+            if (data.sender !== User.nickname)
               setMessages((prev) => [
                 ...prev,
                 {
@@ -457,22 +462,26 @@ export const Plogging = () => {
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
-            setVisible(true);
-            // 마커 리스트 저장
-            setCrewMarker((prev) => [
-              ...prev,
-              {
-                sender: data.sender,
-                lat: data.lat,
-                lng: data.lng,
-                pingType: data.pingType,
-              },
-            ]);
-            playAudio();
+            if (data.sender !== User.nickname) {
+              setVisible(true);
+              // 마커 리스트 저장
+              setCrewMarker((prev) => [
+                ...prev,
+                {
+                  sender: data.sender,
+                  lat: data.lat,
+                  lng: data.lng,
+                  pingType: data.pingType,
+                },
+              ]);
+              playAudio();
+            }
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
             // 라이드어스랑 로직 똑같음
+            if (data.sender !== User.nickname) {
+            }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
@@ -550,6 +559,11 @@ export const Plogging = () => {
     },
     ready && walking ? 1000 * 60 : 3000
   );
+
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
 
   // 실시간 위치를 찍어주는 함수
   useInterval(
@@ -668,8 +682,8 @@ export const Plogging = () => {
         style={{
           width: "100%",
           textAlign: "center",
-          height: "100vh",
-          background: "#57BA83",
+          height: "calc(var(--vh, 1vh) * 100)",
+          background: "#040a07",
           color: "white",
           fontSize: "56px",
           display: "flex",
@@ -726,13 +740,19 @@ export const Plogging = () => {
                   key={index}
                   position={{ lat: marker.lat, lng: marker.lng }}
                 >
-                  <Box width="30px" height="60px">
+                  <Box
+                    width="45px"
+                    height="45px"
+                    align="center"
+                    background={{ color: "white", opacity: 0.6 }}
+                    round="small"
+                  >
                     <Image
                       sizes="30px"
                       fit="cover"
                       src={setMarkerImage(marker.pingType)}
                     />
-                    <StyledText text="문석희" />
+                    <StyledText text={marker.sender} size="9px" weight="bold" />
                   </Box>
                 </CustomOverlayMap>
               );

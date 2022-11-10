@@ -13,6 +13,7 @@ const user = {
   nickname: "",
   weight: "",
   profileImageUrl: "",
+  plomon: 1,
 };
 
 export default handleActions(
@@ -20,7 +21,7 @@ export default handleActions(
     //사용자 정보 설정
     [SET_USER]: (state, { payload: user }) =>
       produce(state, (draft) => {
-        draft = user;
+        draft.user = user;
         // console.log(draft.user);
       }),
   },

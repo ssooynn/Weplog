@@ -7,6 +7,8 @@ import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
 import { PloggingTypeBottomSheet } from "../../components/plogging/PloggingTypeBottomSheet";
 import { getNearRecentPloggingList } from "../../apis/ploggingApi";
+import { getExistCrewPlogging } from "../../apis/crewApi";
+import { useSelector } from "react-redux";
 export const PloggingStart = () => {
   //variabales
   const [loc, setLoc] = useState({
@@ -22,6 +24,8 @@ export const PloggingStart = () => {
   const navigate = useNavigate();
   const { kakao } = window;
   const geocoder = new kakao.maps.services.Geocoder();
+  const [ploggingCrews, setPloggingCrews] = useState([]);
+  const User = useSelector((state) => state.user.user);
   // function
   const handleClose = () => {
     setOpen(false);
@@ -36,40 +40,84 @@ export const PloggingStart = () => {
     }
   };
 
+  const handlePloggingStart = () => {
+    // () => {
+    //   setOpen(true);
+
+    //   // navigate("/plogging", {
+    //   //   state: {
+    //   //     ploggingType: "crew",
+    //   //     roomId: "ef35d9c9-1e7e-4d02-a33d-5ba272b7ea2e",
+    //   //   },
+    //   // });
+    // }
+
+    if (ploggingCrews.length > 0) {
+      // 크루 플로깅 선택
+      setOpen(true);
+    } else {
+      navigate("/plogging", {
+        state: {
+          ploggingType: "single",
+          roomId: null,
+        },
+      });
+    }
+  };
+
+  let vh = 0;
+
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
   //hooks
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position);
-        setLoc((prev) => ({
-          ...prev,
-          center: {
-            lat: position.coords.latitude, // 위도
-            lng: position.coords.longitude, // 경도
-          },
-        }));
-        var coord = new kakao.maps.LatLng(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-        getNearRecentPloggingList(
-          { lat: position.coords.latitude, lng: position.coords.longitude },
-          (response) => {
-            console.log(response);
-          },
-          (fail) => {
-            console.log(fail);
-          }
-        );
-      },
-      (err) => {
-        setLoc((prev) => ({
-          ...prev,
-          errMsg: err.message,
-        }));
-      }
-    );
+    if (localStorage.getItem("accessToken") === null) {
+      window.location.href = "/login";
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          setLoc((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude, // 위도
+              lng: position.coords.longitude, // 경도
+            },
+          }));
+          var coord = new kakao.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+          getNearRecentPloggingList(
+            { lat: position.coords.latitude, lng: position.coords.longitude },
+            (response) => {
+              console.log(response);
+            },
+            (fail) => {
+              console.log(fail);
+            }
+          );
+        },
+        (err) => {
+          setLoc((prev) => ({
+            ...prev,
+            errMsg: err.message,
+          }));
+        }
+      );
+      getExistCrewPlogging(
+        (response) => {
+          console.log(response);
+          setPloggingCrews(response.data);
+        },
+        (fail) => {
+          console.log(fail);
+        }
+      );
+    }
   }, []);
 
   return (
@@ -81,7 +129,7 @@ export const PloggingStart = () => {
         position: "relative",
         width: "100%",
         textAlign: "center",
-        height: "calc(94vh - 50px)",
+        height: "calc(var(--vh, 1vh) * 100 - 50px)",
       }}
     >
       {/* 지도 */}
@@ -143,25 +191,11 @@ export const PloggingStart = () => {
       <Box
         width="100%"
         align="center"
-        style={{ position: "absolute", bottom: "7%", zIndex: "3" }}
+        style={{ position: "absolute", bottom: "9%", zIndex: "3" }}
       >
         <BootstrapButton
           whileTap={{ scale: 0.9 }}
-          onClick={() => {
-            // setOpen(true);
-            // navigate("/plogging", {
-            //   state: {
-            //     ploggingType: "single",
-            //     roomId: null,
-            //   },
-            // });
-            navigate("/plogging", {
-              state: {
-                ploggingType: "crew",
-                roomId: "ef35d9c9-1e7e-4d02-a33d-5ba272b7ea2e",
-              },
-            });
-          }}
+          onClick={handlePloggingStart}
         >
           Plogging!
         </BootstrapButton>
