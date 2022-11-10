@@ -24,7 +24,7 @@ const CrewDetailTalk = ({}) => {
   return (
     <ChatContainer
       style={{
-        height: "40vh",
+        height: "36vh",
         boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.2)",
         paddingTop: "10px",
         borderRadius: "10px",

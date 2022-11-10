@@ -102,4 +102,23 @@ export const GrommetTheme = {
   },
 };
 
-export const petList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+export const petList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+export const plomonList = [
+  { index: 1, name: "피스" },
+  { index: 2, name: "로에" },
+  { index: 3, name: "라바" },
+  { index: 4, name: "슈타" },
+  { index: 5, name: "요거" },
+  { index: 6, name: "레이" },
+  { index: 7, name: "레오" },
+  { index: 8, name: "바나" },
+  { index: 9, name: "마크" },
+  { index: 10, name: "라프" },
+  { index: 11, name: "키치" },
+  { index: 12, name: "재권" },
+];
+
+export const plomonSelector = (index) => {
+  console.log(index);
+  return plomonList.find((p) => p.index === index).name;
+};

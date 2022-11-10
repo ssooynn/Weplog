@@ -227,28 +227,28 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
             fit="cover"
             src={TrashBtn}
             onClick={() => {
-              handleMarker(0);
+              handleMarker("ONE");
             }}
           />
           <Image
             fit="cover"
             src={DishBtn}
             onClick={() => {
-              handleMarker(1);
+              handleMarker("TWO");
             }}
           />
           <Image
             fit="cover"
             src={DesBtn}
             onClick={() => {
-              handleMarker(2);
+              handleMarker("THREE");
             }}
           />
           <Image
             fit="cover"
             src={GarbageBtn}
             onClick={() => {
-              handleMarker(3);
+              handleMarker("FOUR");
             }}
           />
         </Box>
