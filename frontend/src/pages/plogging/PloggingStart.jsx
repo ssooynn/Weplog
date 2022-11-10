@@ -38,6 +38,9 @@ export const PloggingStart = () => {
 
   //hooks
   useEffect(() => {
+    if (localStorage.getItem("accessToken") === undefined) {
+      window.location.href = "/login";
+    }
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log(position);
