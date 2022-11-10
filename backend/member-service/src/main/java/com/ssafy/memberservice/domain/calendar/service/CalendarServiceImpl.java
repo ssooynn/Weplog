@@ -11,6 +11,7 @@ import com.ssafy.memberservice.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CalendarServiceImpl implements CalendarService
 {
     private final CalendarRepository calendarRepository;
@@ -40,6 +42,7 @@ public class CalendarServiceImpl implements CalendarService
     }
 
     @Override
+    @Transactional
     public void postCalendarInfo(UUID memberId, CalendarReq calendarReq) {
         System.out.println("Heyyyy");
         Member member = memberRepository.findById(memberId).get();
