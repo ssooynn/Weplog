@@ -86,7 +86,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 PloggingChatRoom ploggingChatRoom = ploggingChatService.joinRoom(member, roomId);
-                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(ploggingChatRoom.getPlayerMap().get(memberId)).sendTime(LocalDateTime.now()).build());
+                ploggingChatService.sendChatMessage(PloggingChatMessage.builder().type(MessageType.ENTER).roomId(roomId).sender(ploggingChatRoom.getParticipantMap().get(memberId)).sendTime(LocalDateTime.now()).build());
             } else {
                 roomOfSessionRepository.save(RoomOfSession.builder()
                         .sessionId(sessionId)
@@ -95,7 +95,7 @@ public class StompHandler implements ChannelInterceptor {
                         .build());
 
                 CrewChatRoom crewChatRoom = crewChatService.joinRoom(Long.valueOf(roomId), member);
-                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, crewChatRoom.getPlayerMap().get(memberId), "", LocalDateTime.now()));
+                crewChatService.sendChatMessage(new ChatMessage(MessageType.ENTER, roomId, crewChatRoom.getParticipantMap().get(memberId), "", LocalDateTime.now()));
             }
             log.info("SUBSCRIBED {}, {}", member.getNickname(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -120,7 +120,7 @@ public class StompHandler implements ChannelInterceptor {
 
             log.info("DISCONNECTED {}, {}", sessionId, roomOfSession.getRoomId());
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
-            roomOfSessionRepository.deleteById(roomOfSession.getSessionId());
+            roomOfSessionRepository.deleteById(sessionId);
         }
         return message;
     }
