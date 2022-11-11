@@ -71,21 +71,20 @@ public class PloggingChatService {
         Participant participant = Participant.from(member);
         Color newColor = getNewColor(ploggingChatRoom);
         participant.setColor(newColor.name());
-        if (ploggingChatRoom.getPlayerMap() == null || ploggingChatRoom.getPlayerMap().size() == 0) {
-            ploggingChatRoom.setPlayerMap(new LinkedHashMap<>());
-        }
-        ploggingChatRoom.getPlayerMap().put(member.getId().toString(), participant);
+
+        ploggingChatRoom.addParticipant(participant);
+
         return ploggingChatRoom;
     }
 
     private Color getNewColor(PloggingChatRoom ploggingChatRoom) {
         Set<Color> usedColors = new HashSet<>();
-        if (ploggingChatRoom.getPlayerMap() == null || ploggingChatRoom.getPlayerMap().size() == 0) return Color.RED;
-        for (Participant participant : ploggingChatRoom.getPlayerMap().values()) {
+        if (ploggingChatRoom.getParticipantMap() == null || ploggingChatRoom.getParticipantMap().size() == 0) return Color.RED;
+        for (Participant participant : ploggingChatRoom.getParticipantMap().values()) {
             usedColors.add(Color.valueOf(participant.getColor()));
         }
 
-        int size = ploggingChatRoom.getPlayerMap().size() * 2;
+        int size = ploggingChatRoom.getParticipantMap().size() * 2;
         for (int i = 0; i < size; i++) {
             Color newColor = Color.randomColor();
             if (!usedColors.contains(newColor)) {
@@ -127,7 +126,7 @@ public class PloggingChatService {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
 //        Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(chatMessage.getRoomId()).orElseThrow(() -> new NotFoundException("해당하는 방을 찾을 수 없습니다."));
-        chatMessage.setSender(ploggingChatRoom.getPlayerMap().get(memberId));
+        chatMessage.setSender(ploggingChatRoom.getParticipantMap().get(memberId));
         chatMessage.setSendTime(LocalDateTime.now());
         sendChatMessage(chatMessage);
     }
@@ -135,7 +134,7 @@ public class PloggingChatService {
     public void quitRoom(String roomId, Member member) {
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
-        ploggingChatRoom.getPlayerMap().remove(member.getId().toString());
+        ploggingChatRoom.getParticipantMap().remove(member.getId().toString());
 
 //        if (ploggingChatRoom.getPlayerMap().size() == 0) {
 //            ploggingChatRepository.deleteById(roomId);
@@ -143,9 +142,9 @@ public class PloggingChatService {
     }
 
     public PloggingChatRoomResponse getRoomByCrewId(Long crewId) {
-        PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findByCrewId(crewId).orElseThrow(() -> new NotFoundException("크루 플로깅 방이 없습니다."));
+        Optional<PloggingChatRoom> byCrewId = ploggingChatRepository.findByCrewId(crewId);
 
-        return PloggingChatRoomResponse.of(ploggingChatRoom);
+        return byCrewId.map(PloggingChatRoomResponse::of).orElse(null);
     }
 
     public List<ActivateCrewPloggingResponse> getCrewPloggingListFromMemberId(String memberId) {
