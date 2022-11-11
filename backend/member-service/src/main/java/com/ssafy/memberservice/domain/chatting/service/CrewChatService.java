@@ -128,7 +128,7 @@ public class CrewChatService {
 
     public CrewChatRoom joinRoom(Long roomId, Member member) {
 
-        RLock lock = redissonClient.getLock(KEY + roomId);
+//        RLock lock = redissonClient.getLock(KEY + roomId);
 
         CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
 

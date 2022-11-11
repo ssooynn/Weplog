@@ -142,9 +142,9 @@ public class PloggingChatService {
     }
 
     public PloggingChatRoomResponse getRoomByCrewId(Long crewId) {
-        PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findByCrewId(crewId).orElseThrow(() -> new NotFoundException("크루 플로깅 방이 없습니다."));
+        Optional<PloggingChatRoom> byCrewId = ploggingChatRepository.findByCrewId(crewId);
 
-        return PloggingChatRoomResponse.of(ploggingChatRoom);
+        return byCrewId.map(PloggingChatRoomResponse::of).orElse(null);
     }
 
     public List<ActivateCrewPloggingResponse> getCrewPloggingListFromMemberId(String memberId) {
