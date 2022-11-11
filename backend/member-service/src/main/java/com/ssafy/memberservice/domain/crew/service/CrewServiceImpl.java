@@ -19,12 +19,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,6 +54,7 @@ public class CrewServiceImpl implements CrewService {
     private final JoinWaitingRepository joinWaitingRepository;
 
     private final CrewChatService crewChatService;
+    private final EntityManager em;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String restApiKey;
@@ -134,9 +140,14 @@ public class CrewServiceImpl implements CrewService {
         if (!findJoinWaiting.getCrew().getCrewMaster().getId().equals(crewKing.getId())) {
             throw new NotMatchException(CREW_KING_NOT_MATCH);
         }
+        Long crewId = findJoinWaiting.getCrew().getId();
+
+        // 영속성 컨텍스트 초기화
+        em.clear();
 
         // 크루 최대 참여자 수 안넘는지 체크
-        Crew joinCrew = findJoinWaiting.getCrew();
+        Crew joinCrew = crewRepository.findByCrewIdForLock(crewId).get();
+        System.out.println("현재원 수:" + joinCrew.getMemberCrewList().size());
         if (joinCrew.getMemberCrewList().size() >= joinCrew.getMaxParticipantCnt()) {
             throw new NotMatchException(CREW_MAX_PARTICIPANT_CNT_NOT_MATCH);
         }
