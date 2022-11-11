@@ -20,6 +20,8 @@ import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 // import ChatSound from "../../assets/sounds/chatNoti.mp3";
 import { useSelector } from "react-redux";
+import { dateToDetailString } from "../../../utils/util";
+import { getCrewChats } from "../../../apis/crewApi";
 
 var client = null;
 
@@ -67,12 +69,12 @@ const CrewDetailTalk = ({ crewId }) => {
   const initSocketClient = () => {
     client = new StompJs.Client({
       // brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
-      brokerURL: "ws://localhost:8081/ws-stomp",
+      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("http://localhost:8081/ws-stomp");
+        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -171,10 +173,16 @@ const CrewDetailTalk = ({ crewId }) => {
 
   // 웹소켓 초기화
   useEffect(() => {
-    if (client === null) {
-      initSocketClient();
-    }
-
+    initSocketClient();
+    getCrewChats(
+      crewId,
+      (response) => {
+        console.log(response);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
     return () => {
       if (client !== null) {
         disConnect();
@@ -220,12 +228,12 @@ const CrewDetailTalk = ({ crewId }) => {
                 <Avatar src={message.profileImg} name={message.sender} />
                 <Message.Footer
                   sender={message.sender}
-                  sentTime={message.sentTime}
+                  sentTime={dateToDetailString(message.sentTime)}
                 />
               </Message>
             );
           else if (message.type === "ENTER" || message.type === "QUIT")
-            return <MessageSeparator content={message.text} />;
+            return <MessageSeparator key={index} content={message.text} />;
         })}
       </MessageList>
       <MessageInput

@@ -8,13 +8,15 @@ import {
   selectDay,
 } from "../../utils/calender";
 import React, { useEffect, useState } from "react";
-import { Box, Text } from "grommet";
+import { Box, Spinner, Text } from "grommet";
 import { CreateScheduleDialog } from "./crewDetail/CreateScheduleDialog";
 import { getCrewSchedule } from "../../apis/calenderApi";
 
-export const CrewCalender = ({ crewId }) => {
+export const CrewCalender = ({ crewId, selectedDays, getSchedule }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const today = new Date();
   const defaultDisplayedCalender = {
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
@@ -43,15 +45,18 @@ export const CrewCalender = ({ crewId }) => {
   };
 
   const handleSelectedDates = (index) => {
-    setOpen(true);
-    setSelectedDate(
-      (prev) =>
-        (prev = {
-          month: displayedCalenderInfo.month,
-          year: displayedCalenderInfo.year,
-          day: index,
-        })
-    );
+    if (index < parseInt(today.getDate())) {
+    } else {
+      setSelectedDate(
+        (prev) =>
+          (prev = {
+            month: displayedCalenderInfo.month,
+            year: displayedCalenderInfo.year,
+            day: index,
+          })
+      );
+      setOpen(true);
+    }
     // if (selectedDateIndex.includes(index))
     //   setSelectedDateIndex(
     //     selectedDateIndex.filter((dateIndex) => dateIndex !== index)
@@ -72,7 +77,11 @@ export const CrewCalender = ({ crewId }) => {
       <span
         key={`calender-day-number${index}`}
         className={`num-item ${
-          selectedDateIndex.includes(index) ? "selected" : ""
+          selectedDateIndex.includes(index)
+            ? parseInt(item) < parseInt(today.getDate())
+              ? "passed"
+              : "selected"
+            : ""
         } ${currentMonthDay(displayedCalenderInfo, item) ? "current-day" : ""}`}
         onClick={(_) => handleSelectedDates(index)}
       >
@@ -83,100 +92,90 @@ export const CrewCalender = ({ crewId }) => {
 
   useEffect(() => {
     if (loading) {
-      const date = new Date();
-      getCrewSchedule(
-        {
-          crewId: crewId,
-          date: new Date(+date + 3240 * 10000).toISOString().split("T")[0],
-        },
-        (response) => {
-          console.log(response);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+      setSelectedDateIndex(selectedDays);
+      setLoading(false);
     }
   }, []);
+  if (loading) return <Spinner />;
+  else
+    return (
+      <>
+        <CreateScheduleDialog
+          crewId={crewId}
+          open={open}
+          handleClose={() => {
+            setOpen(false);
+          }}
+          accept={getSchedule}
+          date={selectedDate}
+        />
 
-  return (
-    <>
-      <CreateScheduleDialog
-        crewId={crewId}
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        accept={() => {}}
-        date={selectedDate}
-      />
-
-      <Box width="90%" margin="20px" align="center">
-        <div className="calender">
-          <div className="month-name">
-            <img
-              className={`${
-                displayedCalenderInfo.month === 0 ? "unclickable" : ""
-              }`}
-              onClick={(e) => handleArrowClick("previous")}
-              src="/assets/images/arrow-left-line.svg"
-              alt="arrow-left"
-              width="20px"
-              height="20px"
-            />
-            <span className="month-text">
-              {monthYear(displayedCalenderInfo)}
-            </span>
-            <img
-              className={`${
-                displayedCalenderInfo.month === 11 ? "unclickable" : ""
-              } right-arrow`}
-              onClick={(e) => handleArrowClick("next")}
-              src="/assets/images/arrow-left-line.svg"
-              alt="arrow-left"
-              width="20px"
-              height="20px"
-            />
-          </div>
-          <div className="days">
-            {days.map((day) => (
-              <span key={`calender-day_${day}`} className="day">
-                {day}
+        <Box width="90%" margin="20px" align="center">
+          <div className="calender">
+            <div className="month-name">
+              <img
+                className={`${
+                  displayedCalenderInfo.month === 0 ? "unclickable" : ""
+                }`}
+                onClick={(e) => handleArrowClick("previous")}
+                src="/assets/images/arrow-left-line.svg"
+                alt="arrow-left"
+                width="20px"
+                height="20px"
+              />
+              <span className="month-text">
+                {monthYear(displayedCalenderInfo)}
               </span>
-            ))}
+              <img
+                className={`${
+                  displayedCalenderInfo.month === 11 ? "unclickable" : ""
+                } right-arrow`}
+                onClick={(e) => handleArrowClick("next")}
+                src="/assets/images/arrow-left-line.svg"
+                alt="arrow-left"
+                width="20px"
+                height="20px"
+              />
+            </div>
+            <div className="days">
+              {days.map((day) => (
+                <span key={`calender-day_${day}`} className="day">
+                  {day}
+                </span>
+              ))}
+            </div>
+            <div className="num-of-days">{displayDates(monthDayStart)}</div>
           </div>
-          <div className="num-of-days">{displayDates(monthDayStart)}</div>
-        </div>
-        <Box direction="row" justify="end" margin="10px 0px" width="100%">
-          <Box
-            direction="column"
-            align="center"
-            justify="center"
-            margin={{ right: "8px" }}
-          >
+          <Box direction="row" justify="end" margin="10px 0px" width="100%">
             <Box
-              round="100%"
-              background={{ color: " rgba(87, 186, 131, 0.4)" }}
-              width="25px"
-              height="25px"
-            ></Box>
-            <Text size="12px" weight={500} margin={{ top: "5px" }}>
-              Log
-            </Text>
-          </Box>
-          <Box direction="column" align="center" justify="center">
-            <Box
-              round="100%"
-              background={{ color: " rgba(255, 213, 0, 0.4)" }}
-              width="25px"
-              height="25px"
-            ></Box>
-            <Text size="12px" weight={500} margin={{ top: "5px" }}>
-              Plan
-            </Text>
+              direction="column"
+              align="center"
+              justify="center"
+              margin={{ right: "8px" }}
+            >
+              <Box
+                round="100%"
+                background={{ color: " rgba(87, 186, 131, 0.4)" }}
+                width="25px"
+                height="25px"
+              ></Box>
+              <Text size="12px" weight={500} margin={{ top: "5px" }}>
+                Log
+              </Text>
+            </Box>
+            <Box direction="column" align="center" justify="center">
+              <Box
+                round="100%"
+                background={{ color: " rgba(255, 213, 0, 0.4)" }}
+                width="25px"
+                height="25px"
+              ></Box>
+              <Text size="12px" weight={500} margin={{ top: "5px" }}>
+                Plan
+              </Text>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </>
-  );
+      </>
+    );
 };
