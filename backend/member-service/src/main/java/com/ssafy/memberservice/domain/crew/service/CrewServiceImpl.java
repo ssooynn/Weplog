@@ -10,6 +10,10 @@ import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingCntInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingDistanceInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingTimeInterface;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import com.ssafy.memberservice.infra.s3.S3Upload;
@@ -254,5 +258,14 @@ public class CrewServiceImpl implements CrewService {
 
         // 대기목록에서 삭제
         joinWaitingRepository.delete(findJoinWaiting);
+    }
+
+    @Override
+    public TotalRankingResponse getCrewLanking(Long crewId) {
+        List<TotalRankingDistanceInterface> totalRankingDistance = memberCrewRepository.findCrewRankingDistance(crewId);
+        List<TotalRankingTimeInterface> totalRankingTime = memberCrewRepository.findCrewRankingTime(crewId);
+        List<TotalRankingCntInterface> totalRankingCnt = memberCrewRepository.findCrewRankingCnt(crewId);
+
+        return TotalRankingResponse.create(totalRankingDistance, totalRankingTime, totalRankingCnt);
     }
 }
