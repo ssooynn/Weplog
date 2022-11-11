@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
@@ -53,7 +54,9 @@ public class CrewChatService {
 
     private final RedissonClient redissonClient;
 
-    private final static String KEY = "CREW_CHAT";
+    private static final String KEY = "CREW_CHAT";
+    private static final int WAIT_TIME = 2;
+    private static final int LEASE_TIME = 3;
 
 
     public CrewChatRoom makeRoom(String memberId, Long crewId) {
@@ -128,19 +131,63 @@ public class CrewChatService {
 
     public CrewChatRoom joinRoom(Long roomId, Member member) {
 
-//        RLock lock = redissonClient.getLock(KEY + roomId);
+        RLock lock = redissonClient.getLock(KEY + roomId);
 
-        CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
+        CrewChatRoom crewChatRoom = null;
 
-        Participant participant = Participant.from(member);
-        crewChatRoom.addParticipant(participant);
-        return crewChatRepository.save(crewChatRoom);
+        boolean isLocked = false;
+        try {
+            isLocked = lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if (!isLocked) {
+            log.info("lock 획득 실패 {} - {}", KEY, roomId);
+            throw new RuntimeException("Lock 획득 실패!");
+        }
+        try {
+            crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
+
+            Participant participant = Participant.from(member);
+            crewChatRoom.addParticipant(participant);
+            crewChatRoom = crewChatRepository.save(crewChatRoom);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+            log.info("Lock 반납");
+        }
+
+        return crewChatRoom;
     }
 
     public void quitRoom(Long roomId, Member member) {
-        CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
-        crewChatRoom.removeParticipant(member);
+        RLock lock = redissonClient.getLock(KEY + roomId);
+        boolean isLocked = false;
+        CrewChatRoom crewChatRoom = null;
+
+        try {
+            isLocked = lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if (!isLocked) {
+            log.info("lock 획득 실패 {} - {}", KEY, roomId);
+            throw new RuntimeException("Lock 획득 실패!");
+        }
+        try {
+            crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
+
+
+            crewChatRoom.removeParticipant(member);
+            crewChatRepository.save(crewChatRoom);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+            log.info("Lock 반납");
+        }
     }
 
     public List<ChatMessage> getCrewChats(Long crewId) {
