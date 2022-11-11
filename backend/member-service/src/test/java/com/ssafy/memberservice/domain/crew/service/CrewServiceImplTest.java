@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,177 +38,57 @@ class CrewServiceImplTest {
     @Autowired
     MemberCrewRepository memberCrewRepository;
 
-    @Test
-    @DisplayName("attend crew test -> concurrency complete O")
+    @Autowired
+    CrewService crewService;
 
-    @Transactional
-    public void attendCrewTest() throws InterruptedException {
-        // given
-//        Crew joinCrew = crewRepository.findById(8L).get();
+    /*********************************************************
+     * !!!!!!삽질 주의!!!!!
+    * 빈으로 등록되지 않아서 AOP가 Transaction을 관리해주지 못함.
+    * ********************************************************/
+//    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+//    String addCrewMemberTest(Long crewId, MemberCrew memberCrew, AtomicInteger successCount) {
+//        Crew findCrew = crewRepository.findByCrewIdForLock(crewId).get();
+//        // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
+//        if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
+//            System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
+//            memberCrewRepository.save(memberCrew);
+//            successCount.getAndIncrement();
+//            System.out.println("성공");
+//            return "성공";
+//        }else {
+//            System.out.println("참여자 수 넘었다고 인지");
+//            return "참여자 수 넘었다고 인지";
+//        }
+//    }
 //
-//        MemberCrew TEST_MEMBER_CREW4= new MemberCrew(null, null, findCrew, 0, 0, 0, "test4", "");
-//        MemberCrew TEST_MEMBER_CREW5= new MemberCrew(null, null, findCrew, 0, 0, 0, "test5", "");
-//        MemberCrew TEST_MEMBER_CREW6= new MemberCrew(null, null, findCrew, 0, 0, 0, "test6", "");
-//        MemberCrew TEST_MEMBER_CREW7= new MemberCrew(null, null, findCrew, 0, 0, 0, "test7", "");
-//        List<MemberCrew> TEST_MEMBER_LIST = new ArrayList<>();
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW1);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW2);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW3);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW4);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW5);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW6);
-//        TEST_MEMBER_LIST.add(TEST_MEMBER_CREW7);
-
-        AtomicInteger successCount = new AtomicInteger();
-        int numberOfExcute = 7;
-        ExecutorService service = Executors.newFixedThreadPool(7);
-        CountDownLatch latch = new CountDownLatch(numberOfExcute);
-
-        // when
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW1= new MemberCrew(null, null, findCrew, 0, 0, 0, "test1", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW1);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                } else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW2= new MemberCrew(null, null, findCrew, 0, 0, 0, "test2", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW2);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                }else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW3= new MemberCrew(null, null, findCrew, 0, 0, 0, "test3", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW3);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                }else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW4= new MemberCrew(null, null, findCrew, 0, 0, 0, "test4", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW4);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                } else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW5= new MemberCrew(null, null, findCrew, 0, 0, 0, "test5", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW5);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                }else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW6= new MemberCrew(null, null, findCrew, 0, 0, 0, "test6", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW6);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                }else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-        service.execute(() -> {
-            try {
-                Crew findCrew = crewRepository.findByCrewIdForLock(8L).get();
-                // 크루 최대 참여자 수 안넘는지 체크(최대참여자 수보다 작아야 로직 실행)
-                if (findCrew.getMemberCrewList().size() < findCrew.getMaxParticipantCnt()) {
-                    System.out.println("현재 인원 수 : " + findCrew.getMemberCrewList().size());
-                    MemberCrew TEST_MEMBER_CREW7= new MemberCrew(null, null, findCrew, 0, 0, 0, "test7", "");
-                    memberCrewRepository.save(TEST_MEMBER_CREW7);
-                    successCount.getAndIncrement();
-                    System.out.println("성공");
-                }else {
-                    System.out.println("참여자 수 넘었다고 인지");
-                }
-            } catch (ObjectOptimisticLockingFailureException oe) {
-                System.out.println("충돌감지");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            latch.countDown();
-        });
-
-        latch.await();
-
-        // then (총원 5, 현재원 1, 4번의 성공만 일어나야함.)
-        assertThat(successCount.get()).isEqualTo(4);
-    }
+//    /* 테스트 성공 */
+//    @Test
+//    @DisplayName("크루 참가 동시성 테스트 -> Service 직접 호출")
+//    void crewServiceTest() throws InterruptedException {
+//        AtomicInteger successCount = new AtomicInteger();
+//        int numberOfExcute = 7;
+//        ExecutorService service = Executors.newFixedThreadPool(7);
+//        CountDownLatch latch = new CountDownLatch(numberOfExcute);
+//
+//        // when
+//        for (int i = 0; i < numberOfExcute; i++) {
+//            int finalI = i;
+//            service.execute(() -> {
+//                try {
+//                    crewService.accessJoinCrew(UUID.fromString("11ed5e5f-d431-a2da-a087-db4453b45882"), (50000L + finalI));
+//                    System.out.println("TestId : " + finalI);
+//                    successCount.getAndIncrement();
+//                } catch (ObjectOptimisticLockingFailureException oe) {
+//                    System.out.println("충돌감지");
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//                latch.countDown();
+//            });
+//        }
+//        latch.await();
+//
+//        // then (총원 5, 현재원 1, 4번의 성공만 일어나야함.)
+//        assertThat(successCount.get()).isEqualTo(4);
+//    }
 }
