@@ -84,5 +84,14 @@ public class CrewController {
     public ResponseEntity<List<CrewSimpleResponse>> getMyCrewList(@ApiIgnore @RequestHeader("memberId") String memberId) {
         return ResponseEntity.ok(crewService.getMyCrewList(UUID.fromString(memberId)));
     }
+
+    @ApiOperation(value = "크루 가입 신청 거절하기")
+    @DeleteMapping("/deny/{joinWaitingId}")
+    public ResponseEntity denyCrewJoinCrew(@RequestHeader("memberId") String memberId,
+                           @PathVariable Long joinWaitingId) {
+        crewService.denyJoinCrew(UUID.fromString(memberId), joinWaitingId);
+
+        return ResponseEntity.ok().build();
+    }
 }
 
