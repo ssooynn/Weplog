@@ -1,6 +1,7 @@
 package com.ssafy.memberservice.domain.crew.service;
 
 import com.ssafy.memberservice.domain.crew.dto.*;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,4 +29,6 @@ public interface CrewService {
     List<CrewSimpleResponse> getMyCrewList(UUID memberId);
 
     void denyJoinCrew(UUID fromString, Long joinWaitingId);
+
+    TotalRankingResponse getCrewLanking(Long crewId);
 }
