@@ -2,6 +2,7 @@ package com.ssafy.memberservice.domain.crew.controller;
 
 import com.ssafy.memberservice.domain.crew.dto.*;
 import com.ssafy.memberservice.domain.crew.service.CrewService;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
 import com.ssafy.memberservice.global.security.auth.CustomUserDetails;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +93,12 @@ public class CrewController {
         crewService.denyJoinCrew(UUID.fromString(memberId), joinWaitingId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "크루 안의 기록 랭킹")
+    @GetMapping("/ranking/{crewId}")
+    public ResponseEntity<TotalRankingResponse> getCrewRanking(@PathVariable Long crewId) {
+        return ResponseEntity.ok(crewService.getCrewLanking(crewId));
     }
 }
 
