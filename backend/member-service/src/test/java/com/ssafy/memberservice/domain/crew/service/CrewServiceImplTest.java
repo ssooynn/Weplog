@@ -29,7 +29,7 @@ import static com.ssafy.memberservice.global.common.error.exception.NotMatchExce
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
 class CrewServiceImplTest {
 
     @Autowired

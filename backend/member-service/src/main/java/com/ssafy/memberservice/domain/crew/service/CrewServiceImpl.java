@@ -237,4 +237,22 @@ public class CrewServiceImpl implements CrewService {
         return memberCrewListByMemberId.stream().map(memberCrew -> CrewSimpleResponse.from(memberCrew.getCrew()))
                 .collect(Collectors.toList());
     }
+
+    // 크루 가입신청 거절하기
+    @Override
+    public void denyJoinCrew(UUID memberId, Long joinWaitingId) {
+        Member crewKing = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        JoinWaiting findJoinWaiting = joinWaitingRepository.findByIdWithMemberAndCrew(joinWaitingId)
+                .orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
+
+        // 허가하는 사람이 크루장인지 검사
+        if (!findJoinWaiting.getCrew().getCrewMaster().getId().equals(crewKing.getId())) {
+            throw new NotMatchException(CREW_KING_NOT_MATCH);
+        }
+
+        // 대기목록에서 삭제
+        joinWaitingRepository.delete(findJoinWaiting);
+    }
 }
