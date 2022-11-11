@@ -31,7 +31,7 @@ export function MainMYContents(props) {
     >
       <Suspense fallback={null}>
         <Island setPlomonOpen={props.setPlomonOpen} setIsPlomonClicked={props.setIsPlomonClicked}/>
-        <OrbitControls />
+        <OrbitControls minPolarAngle={0.5} maxPolarAngle={1.5} minDistance={20} maxDistance={50}/>
         <directionalLight color={"white"} position={[0, 10, 10]} />
         <directionalLight color={"white"} position={[-8.6, 10, -5]} />
         <directionalLight color={"white"} position={[8.6, 10, -5]} />

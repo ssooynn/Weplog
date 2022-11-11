@@ -5,9 +5,13 @@ import { DinoModel3 } from "../components/main/DinoModel3";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
+import CameraIcon from "../assets/icons/cameraIcon.svg";
+import HeartIcon from "../assets/icons/heartIcon.svg";
 import { Box } from "grommet";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
+
+
 const PlomonTableTitle = styled.div`
   padding-top: 8%;
   padding-left: 7%;
@@ -19,6 +23,43 @@ const PlomonTableTitle = styled.div`
   align-items: center;
 `
 
+const PlomonContentsArea = styled.div`
+  margin-top: 58vh;
+  width: 100vw;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+`
+
+const PlomonContentsName = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #232323;
+  margin-bottom: 2vh;
+`
+
+const PlomonContentsDescription = styled.div`
+  font-size: 16px;
+  font-weight: 400;
+  color: #232323;
+  line-height: 150%;
+`
+
+const PlomonContentsButtonsArea = styled.div`
+  margin-top: 5vh;
+  display: flex;
+  width: 100vw;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const PlomonContentsButton = styled.div`
+  height: 4vh;
+  margin: 0 5vw;
+  
+`
 
 function Plomon() {
     const mesh = useRef(null);
@@ -33,23 +74,23 @@ function Plomon() {
 
 export const Plomon3D = () => {
     const navigate = useNavigate();
-    const plomonRef = useRef();
+    // const plomonRef = useRef();
 
-    // --------------- function -------------
-    const handleCapture = () =>{
-        const plomon = plomonRef.current;
+    // // --------------- function -------------
+    // const handleCapture = () =>{
+    //     const plomon = plomonRef.current;
 
-    const filter = (plomon) => {
-        console.log(plomon);
-      return plomon.style.position !== "absolute";
-    };
+    // const filter = (plomon) => {
+    //     console.log(plomon);
+    //   return plomon.style.position !== "absolute";
+    // };
 
-    domtoimage.toSvg(plomon, { filter: filter }).then(function (dataUrl) {
-      /* do something */
-      // console.log(dataUrl);
-      saveAs(dataUrl, "card.svg");
-    });
-    }
+    // domtoimage.toSvg(plomon, { filter: filter }).then(function (dataUrl) {
+    //   /* do something */
+    //   // console.log(dataUrl);
+    //   saveAs(dataUrl, "card.svg");
+    // });
+    // }
 
     return (
         <div
@@ -63,27 +104,38 @@ export const Plomon3D = () => {
             display: "flex",
             justifyContent: "space-between",
             position: "relative",
+            direction: "column",
         }}
-        ref={plomonRef}
+        // ref={plomonRef}
         >
             <Box
-                
                 width="100%"
-                justify="start"
                 style={{ position: "absolute", zIndex:3 }}
             >
                 <PlomonTableTitle onClick={() => navigate("/main")}>
                     <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
                     재권
                 </PlomonTableTitle>
-                <button onClick={handleCapture} >클릭</button>
             </Box>
+            <PlomonContentsArea>
+              <PlomonContentsName>재권</PlomonContentsName>
+              <PlomonContentsDescription>무슨 생각을 하는지 알 수 없는 재권몬!<br /> 플로랜드의 마스코트야.</PlomonContentsDescription>
+              <PlomonContentsButtonsArea>
+                <PlomonContentsButton>
+                  <img src={CameraIcon}/>
+                </PlomonContentsButton>
+                <PlomonContentsButton>
+                  <img src={HeartIcon}/>
+                </PlomonContentsButton>
+              </PlomonContentsButtonsArea>
+              
+            </PlomonContentsArea>
             <Canvas
             camera={{position: [0, 10, 40]}}
             >
                 <Suspense fallback={null}>
                 <Plomon />
-                <OrbitControls />
+                <OrbitControls enableZoom={false} maxPolarAngle={1.5} minPolarAngle={1.5}/>
                 <directionalLight color={"white"} position={[0, 10, 10]} />
                 <directionalLight color={"white"} position={[-8.6, 10, -5]} />
                 <directionalLight color={"white"} position={[8.6, 10, -5]} />
