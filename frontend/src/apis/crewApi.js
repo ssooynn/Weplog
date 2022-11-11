@@ -96,6 +96,11 @@ const getExistCrewPlogging = async (success, fail) => {
   await authInstance.get(`/rooms`).then(success).catch(fail);
 };
 
+// 크루 채팅 기록 불러오기
+const getCrewChats = async (crewId, success, fail) => {
+  await authInstance.get(`/chat/${crewId}`).then(success).catch(fail);
+};
+
 export {
   getAllCrewList,
   createCrew,
@@ -109,4 +114,5 @@ export {
   createCrewRoom,
   getRoomByCrewId,
   getExistCrewPlogging,
+  getCrewChats,
 };
