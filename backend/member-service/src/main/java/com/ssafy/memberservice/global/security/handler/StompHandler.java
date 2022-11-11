@@ -29,6 +29,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,6 +40,7 @@ import static com.ssafy.memberservice.global.common.error.exception.NotFoundExce
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class StompHandler implements ChannelInterceptor {
 
     @Value("${token.secret}")
