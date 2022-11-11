@@ -26,4 +26,6 @@ public interface CrewService {
     List<CrewSimpleResponse> getCrewListNear(Double lat, Double lon);
 
     List<CrewSimpleResponse> getMyCrewList(UUID memberId);
+
+    void denyJoinCrew(UUID fromString, Long joinWaitingId);
 }

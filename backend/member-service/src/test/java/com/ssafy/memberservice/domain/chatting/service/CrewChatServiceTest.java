@@ -51,24 +51,24 @@ class CrewChatServiceTest {
 ////        aa.ifPresent(member -> crewChatService.pushData("636b500a5f7c4e2ccfeb38d4", new ChatMessage(MessageType.TALK, "4", Participant.from(member), "석희", LocalDateTime.now())));
 //    }
 
-    @Test
-    @DisplayName("방에 동시에 입장시 save 잘 되는지 확인")
-    public void 멀티쓰레드_방_입장() throws InterruptedException {
-        Member member = memberRepository.findByNickname("aa").orElseThrow(() -> new NotFoundException("없"));
-        int maxCnt = 10;
-
-        for (int i = 0; i < maxCnt; i++) {
-            new Thread(() -> {
-                CrewChatRoom crewChatRoom = crewChatService.joinRoom(20L, member);
-                System.out.println(crewChatRoom.getParticipantCnt());
-            }).start();
-        }
-
-
-        Thread.sleep(100); // 모든 스레드가 종료될 때까지 잠깐 대기
-        CrewChatRoom 방_없음 = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("방 없음"));
-        assertThat(방_없음.getParticipantCnt()).isEqualTo(maxCnt);
-    }
+//    @Test
+//    @DisplayName("방에 동시에 입장시 save 잘 되는지 확인")
+//    public void 멀티쓰레드_방_입장() throws InterruptedException {
+//        Member member = memberRepository.findByNickname("aa").orElseThrow(() -> new NotFoundException("없"));
+//        int maxCnt = 10;
+//
+//        for (int i = 0; i < maxCnt; i++) {
+//            new Thread(() -> {
+//                CrewChatRoom crewChatRoom = crewChatService.joinRoom(20L, member);
+//                System.out.println(crewChatRoom.getParticipantCnt());
+//            }).start();
+//        }
+//
+//
+//        Thread.sleep(100); // 모든 스레드가 종료될 때까지 잠깐 대기
+//        CrewChatRoom 방_없음 = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("방 없음"));
+//        assertThat(방_없음.getParticipantCnt()).isEqualTo(maxCnt);
+//    }
 
 
 //    @Test
