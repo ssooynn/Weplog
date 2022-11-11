@@ -4,6 +4,9 @@ import com.ssafy.memberservice.domain.crew.dto.CrewPloggingRecordDateInterface;
 import com.ssafy.memberservice.domain.crew.dto.CrewTotalRecordDtoInterface;
 import com.ssafy.memberservice.domain.crew.dto.Top3CrewDtoInterface;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingCntInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingDistanceInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingTimeInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -43,4 +46,16 @@ public interface MemberCrewRepository extends JpaRepository<MemberCrew, Long> {
 
     @Query("select mc from MemberCrew mc join fetch mc.crew join fetch mc.member where mc.member.id = :memberId")
     List<MemberCrew> findMemberCrewListByMemberId(UUID memberId);
+
+    @Query(value = "select mc.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, total_distance totalDistance, rank() over (order by total_distance desc) as ranking\n" +
+            "            from member_crew mc join member m on mc.member_id = m.member_id where mc.crew_id = :crewId", nativeQuery = true)
+    List<TotalRankingDistanceInterface> findCrewRankingDistance(Long crewId);
+
+    @Query(value = "select mc.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, total_time totalTime, rank() over (order by total_time desc) as ranking\n" +
+            "            from member_crew mc join member m on mc.member_id = m.member_id where mc.crew_id = :crewId", nativeQuery = true)
+    List<TotalRankingTimeInterface> findCrewRankingTime(Long crewId);
+
+    @Query(value = "select mc.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, total_cnt totalCnt, rank() over (order by total_cnt desc) as ranking\n" +
+            "            from member_crew mc join member m on mc.member_id = m.member_id where mc.crew_id = :crewId", nativeQuery = true)
+    List<TotalRankingCntInterface> findCrewRankingCnt(Long crewId);
 }
