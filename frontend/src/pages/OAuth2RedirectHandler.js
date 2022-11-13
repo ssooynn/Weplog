@@ -38,18 +38,18 @@ export const OAuth2RedirectHandler = (props) => {
             plomon: 1,
           };
           dispatch(setUser(user));
+          const from = localStorage.getItem("from");
+          if (from) {
+            localStorage.removeItem("from");
+            navigate(from);
+          } else {
+            navigate("/");
+          }
         },
         (err) => {
           console.log(err);
         }
       );
-      const from = localStorage.getItem("from");
-      if (from) {
-        localStorage.removeItem("from");
-        navigate(from);
-      } else {
-        navigate("/");
-      }
     }
   }, []);
 

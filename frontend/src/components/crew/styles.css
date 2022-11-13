@@ -64,9 +64,13 @@ img {
   height: 1.5rem;
   font-size: 14px;
 }
-.num-item.selected {
+.num-item.passed {
   background: rgba(87, 186, 131, 0.4);
 }
+.num-item.selected {
+  background: rgba(255, 213, 0, 0.4);
+}
+
 .num-item.current-day {
   background: rgba(87, 186, 131, 0.8);
 }

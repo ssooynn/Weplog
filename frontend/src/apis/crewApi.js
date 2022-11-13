@@ -53,11 +53,8 @@ const rejectCrewJoin = async (joinWatingId, success, fail) => {
 };
 
 //크루 가입신청 하기
-const createCrewJoin = async (crewId, params, success, fail) => {
-  await authInstance
-    .post(`/join/${crewId}`, { params: params })
-    .then(success)
-    .catch(fail);
+const createCrewJoin = async (crewId, request, success, fail) => {
+  await authInstance.post(`/join/${crewId}`, request).then(success).catch(fail);
 };
 
 // 내 크루 목록 조회
@@ -105,6 +102,11 @@ const getExistCrewPlogging = async (success, fail) => {
 const getCrewRankingList = async (crewId, success, fail) => {
   await authInstance.get(`/ranking/${crewId}`).then(success).catch(fail);
 };
+// 크루 채팅 기록 불러오기
+const getCrewChats = async (crewId, success, fail) => {
+  await authInstance.get(`/chat/${crewId}`).then(success).catch(fail);
+};
+
 export {
   getAllCrewList,
   createCrew,
@@ -120,4 +122,5 @@ export {
   getExistCrewPlogging,
   rejectCrewJoin,
   getCrewRankingList,
+  getCrewChats,
 };

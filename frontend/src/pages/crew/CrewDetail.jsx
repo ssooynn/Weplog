@@ -88,8 +88,7 @@ export const CrewDetail = () => {
         console.log(fail);
       }
     );
-
-  }
+  };
 
   useEffect(() => {
     if (loading) {
@@ -118,7 +117,12 @@ export const CrewDetail = () => {
             background={{ color: "white" }}
             round="10px 10px 0px 0px"
             height="20px"
-            border={{ color: "white", size: "3px", style: "solid", side: "all" }}
+            border={{
+              color: "white",
+              size: "3px",
+              style: "solid",
+              side: "all",
+            }}
           ></Box>
         </Box>
         <Box background={{ color: "white" }} pad="15px 30px 35px 30px">
@@ -148,60 +152,73 @@ export const CrewDetail = () => {
             </Box>
             <ProfileList memberList={crewData.memberList}></ProfileList>
           </Box>
-          <Box
-            direction="row"
-            margin="20px 0px"
-            justify="between"
-            width="250px"
-          >
-            <Text
-              size="14px"
-              weight={500}
-              color="#AEAEAE"
-              style={clicked === 0 ? clickedStyle : {}}
-              onClick={() => setClicked(0)}
+          {crewData.isMyCrew && (
+            <Box
+              direction="row"
+              margin="20px 0px"
+              justify="between"
+              width="250px"
             >
-              Weplog
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 1 ? clickedStyle : {}}
-              onClick={() => setClicked(1)}
-            >
-              TALK
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 2 ? clickedStyle : {}}
-              onClick={() => setClicked(2)}
-            >
-              Our Feed
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 3 ? clickedStyle : {}}
-              onClick={() => setClicked(3)}
-            >
-              Member
-            </Text>
-          </Box>
-          <Box direction="column">
-            {clicked === 0 && (
-              <CrewDetailWeplog
-                ploggingDateList={crewData.ploggingDateList}
-                crewId={crewId}
-              />
-            )}
-            {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
-            {clicked === 2 && <CrewDetailOurFeed />}
-            {clicked === 3 && <CrewDetailMember getCrew={getCrew} crewData={crewData} />}
-          </Box>
+              <Text
+                size="14px"
+                weight={500}
+                color="#AEAEAE"
+                style={clicked === 0 ? clickedStyle : {}}
+                onClick={() => setClicked(0)}
+              >
+                Weplog
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 1 ? clickedStyle : {}}
+                onClick={() => setClicked(1)}
+              >
+                TALK
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 2 ? clickedStyle : {}}
+                onClick={() => setClicked(2)}
+              >
+                Our Feed
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 3 ? clickedStyle : {}}
+                onClick={() => setClicked(3)}
+              >
+                Member
+              </Text>
+            </Box>
+          )}
+          {crewData.isMyCrew && (
+            <Box direction="column">
+              {clicked === 0 && (
+                <CrewDetailWeplog
+                  ploggingDateList={crewData.ploggingDateList}
+                  crewId={crewId}
+                  isMyCrew={crewData.isMyCrew}
+                />
+              )}
+              {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
+              {clicked === 2 && <CrewDetailOurFeed />}
+              {clicked === 3 && <CrewDetailMember />}
+            </Box>
+          )}
+          {!crewData.isMyCrew && <CrewDetailMember />}
+          {!crewData.isMyCrew && (
+            <CrewDetailWeplog
+              ploggingDateList={crewData.ploggingDateList}
+              crewId={crewId}
+              isMyCrew={crewData.isMyCrew}
+            />
+          )}
         </Box>
       </div>
     );

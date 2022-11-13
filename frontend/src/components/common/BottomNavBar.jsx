@@ -14,7 +14,7 @@ import CrewActive from "../../assets/images/crewActive.png";
 import { Box } from "grommet";
 import { StyledText } from "../Common";
 import { myInfoApi } from "../../apis/mypageApi";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 const NavBarText = ({ text, active }) => {
   return (
@@ -50,8 +50,6 @@ const IconButtonStyle = {
 let lastScrollTop = 0;
 let nowScrollTop = 0;
 
-
-
 export const NavBar = () => {
   const [show, handleShow] = useState("visible");
   const [opacity, setOpacity] = useState("1");
@@ -83,14 +81,13 @@ export const NavBar = () => {
       }
     });
 
-
     return () => {
       // window.removeEventListener("scroll", () => { });
       mounted = false;
     };
   }, []);
   return (
-    <NavBarDiv isShow={show} opacity={opacity}>
+    <NavBarDiv>
       <motion.div style={IconButtonStyle} whileTap={{ scale: 0.9 }}>
         <Link to="/main" style={{ textDecoration: "none" }}>
           <Box justify="end" height="100%" align="center">

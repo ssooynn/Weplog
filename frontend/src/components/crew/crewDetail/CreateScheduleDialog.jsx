@@ -44,6 +44,7 @@ export const CreateScheduleDialog = ({
       calendarReq,
       (response) => {
         console.log(response);
+        accept();
         handleClose();
       },
       (fail) => {
