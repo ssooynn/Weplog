@@ -30,12 +30,13 @@ export const OAuth2RedirectHandler = (props) => {
     } else {
       myPageProfileApi(
         (res) => {
+          console.log("user Info : ", res.data);
           const user = {
             name: res.data.name,
             nickname: res.data.nickname,
             weight: res.data.weight,
             profileImageUrl: res.data.profileImageUrl,
-            plomon: 1,
+            plomon: res.data.petId,
           };
           dispatch(setUser(user));
           const from = localStorage.getItem("from");

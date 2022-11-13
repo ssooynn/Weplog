@@ -70,7 +70,7 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
 
   const handlePloggingStart = () => {
     if (isMyCrew) {
-      if (roomId !== undefined) {
+      if (roomId === undefined) {
         createCrewRoom(crewId, (response) => {
           setRoomId((prev) => (prev = response.data.roomId));
           navigate("/plogging", {
