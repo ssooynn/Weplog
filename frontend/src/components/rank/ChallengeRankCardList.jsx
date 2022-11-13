@@ -1,20 +1,30 @@
-import { Box } from 'grommet'
-import React from 'react'
+import { Box, Text } from 'grommet'
+import React, { useState } from 'react'
 import { ChallengeRankCard } from './ChallengeRankCard'
 import { ChallengeRankTop3 } from './ChallengeRankTop3'
 import downArrowIcon from '../../assets/icons/downArrowIcon.svg'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 export const ChallengeRankCardList = (data) => {
+    console.log(data);
     const memberId = localStorage.getItem("memberId");
     const rankingList = data.list;
-    if (data.list === undefined || data.list.length < 3) {
-        return <Box>인원이 너무 적습니다.</Box>
-    }
-    const top3RankingList = data.list.slice(0, 4);
-    const otherRankingList = data.list.slice(4);
+    const [top3RankingList, setTop3RankingList] = useState([]);
+    const [otherRankingList, setOtherRankingList] = useState([]);
+    useEffect(() => {
+        if (rankingList === undefined || rankingList.length < 3) {
+            console.log(rankingList);
+            setTop3RankingList([]);
+            setOtherRankingList([]);
+        } else if (rankingList.length === 3) {
+            setTop3RankingList(rankingList);
+            setOtherRankingList([]);
+        } else if (rankingList.length > 4) {
+            setTop3RankingList(rankingList.slice(0, 4));
+            setOtherRankingList(rankingList.slice(4));
+        }
+    }, [rankingList])
     const rankType = data.rankType;
-    console.log(rankingList);
 
     const valueName = (user) => {
         switch (rankType) {
@@ -32,9 +42,13 @@ export const ChallengeRankCardList = (data) => {
         }
     }
     return (
+
         <Box width="100%" align='center'>
-            <ChallengeRankTop3 type="user" top3={top3RankingList} rankType={rankType}></ChallengeRankTop3>
-            {otherRankingList.map((user, index) => {
+            {top3RankingList.length < 3 ? <Text size="14px" weight={500} margin={{ top: "20px" }} alignSelf="center">
+                인원이 너무 적습니다.
+            </Text> : <ChallengeRankTop3 type="user" top3={top3RankingList} rankType={rankType}></ChallengeRankTop3>}
+
+            {otherRankingList.length > 0 && otherRankingList.map((user, index) => {
                 if (user.memberId === memberId) {
                     data.setMyRank(user.ranking);
                     data.setMyNickname(user.nickname);
@@ -44,7 +58,7 @@ export const ChallengeRankCardList = (data) => {
                 return < ChallengeRankCard key={index} rank={user.ranking} profileImgUrl={user.profileImageUrl} nickname={user.nickname} value={valueName(user)} my={user.memberId === memberId} />
             })
             }
-            <img src={downArrowIcon} alt="더보기" style={{ margin: "10px 0px" }} />
+            {/* <img src={downArrowIcon} alt="더보기" style={{ margin: "10px 0px" }} /> */}
         </Box>
     )
 }

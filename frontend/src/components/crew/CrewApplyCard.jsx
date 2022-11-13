@@ -1,21 +1,39 @@
 import { Box, Text } from "grommet";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { StyledProfile } from "../common/ProfileImg";
 import acceptIcon from "../../assets/icons/acceptIcon.svg";
 import rejectIcon from "../../assets/icons/rejectIcon.svg";
+import { approveCrewJoin, rejectCrewJoin } from "../../apis/crewApi";
 
-export const CrewApplyCard = (data) => {
-  console.log(data.bgimage);
+export const CrewApplyCard = ({ member, getCrew, getWaitingList }) => {
+  console.log(member);
   const navigate = useNavigate();
-  const goChallengeDetail = () => {
-    navigate(`/challenge/detail/${data.challengeId}`);
-  };
+
+  const approve = () => {
+    approveCrewJoin(member.joinWaitingId, (res) => {
+      alert(member.nickname + "멤버 승인")
+      console.log(res);
+      getCrew();
+      getWaitingList();
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const reject = () => {
+    rejectCrewJoin(member.joinWaitingId, (res) => {
+      alert(member.nickname + " 멤버 거절")
+      getCrew();
+      getWaitingList();
+    }, (err) => {
+      console.log(err);
+    })
+  }
   return (
     <Box
       background={{
-        image: `url(${data.bgimage})`,
         opacity: "strong",
         minHeight: "100px",
       }}
@@ -23,7 +41,6 @@ export const CrewApplyCard = (data) => {
       margin="10px 0px"
       round="small"
       elevation="medium"
-      onClick={goChallengeDetail}
     >
       <Box justify="around" pad="14px 18px">
         <Box direction="row" justify="between">
@@ -31,7 +48,7 @@ export const CrewApplyCard = (data) => {
             <StyledProfile
               height="30px"
               width="30px"
-              src="https://picsum.photos/100/100?random=48"
+              src={member.imageUrl}
             />
             <Text
               size="16px"
@@ -39,12 +56,12 @@ export const CrewApplyCard = (data) => {
               color="black"
               margin={{ left: "5px" }}
             >
-              댕댕
+              {member.nickname}
             </Text>
           </Box>
           <Box direction="row" align="center" width="45px" justify="between">
-            <img src={acceptIcon} width="20px" height="20px" alt="승인" />
-            <img src={rejectIcon} width="20px" height="20px" alt="거절" />
+            <img src={acceptIcon} width="20px" height="20px" alt="승인" onClick={approve} />
+            <img src={rejectIcon} width="20px" height="20px" alt="거절" onClick={reject} />
           </Box>
         </Box>
         <Text
@@ -53,10 +70,7 @@ export const CrewApplyCard = (data) => {
           color="black"
           margin={{ left: "5px", top: "5px" }}
         >
-          저 이 팀 꼭 가입하고 싶어요.저 이 팀 꼭 가입하고 싶어요저 이 팀 꼭
-          가입하고 싶어요저 이 팀 꼭 가입하고 싶어요 저 이 팀 꼭 가입하고
-          싶어요.저 이 팀 꼭 가입하고 싶어요저 이 팀 꼭 가입하고 싶어요저 이 팀
-          꼭 가입하고 싶어요
+          {member.comment ? member.comment : "작성내용이 없습니다."}
         </Text>
       </Box>
     </Box>
