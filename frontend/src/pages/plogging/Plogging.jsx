@@ -391,12 +391,12 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "ws://localhost:8081/ws-stomp",
+      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("http://localhost:8081/ws-stomp");
+        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -683,7 +683,7 @@ export const Plogging = () => {
           width: "100%",
           textAlign: "center",
           height: "calc(var(--vh, 1vh) * 100)",
-          background: "#040a07",
+          background: "#57BA83",
           color: "white",
           fontSize: "56px",
           display: "flex",

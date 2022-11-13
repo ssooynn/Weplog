@@ -48,6 +48,39 @@ const CrewDetailTalk = ({ crewId }) => {
   };
   // ENTER, QUIT, TALK, PING, POS
 
+  const handleMessageSort = (data) => {
+    // 1. 채팅일 때
+    if (data.type === "TALK") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: data.message,
+          sentTime: data.sendTime,
+          sender: data.sender.nickname,
+          direction:
+            User.nickname === data.sender.nickname ? "outgoing" : "incoming",
+          position: "single",
+          type: "message",
+          profileImg: data.sender.profileImageUrl,
+        },
+      ]);
+    }
+    // 4. 사용자 입장했을때/퇴장했을 떄
+    else if (data.type === "ENTER" || data.type === "QUIT") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: data.message,
+          sentTime: data.time,
+          sender: data.sender.nickname,
+          direction: "incoming",
+          position: "single",
+          type: data.type,
+        },
+      ]);
+    }
+  };
+
   //웹소켓 채팅 발행
   const publishChatting = (text) => {
     if (client != null) {
@@ -124,37 +157,39 @@ const CrewDetailTalk = ({ crewId }) => {
           console.log(response);
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
-          if (data.type === "TALK") {
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: data.message,
-                sentTime: data.sendTime,
-                sender: data.sender.nickname,
-                direction:
-                  User.nickname === data.sender.nickname
-                    ? "outgoing"
-                    : "incoming",
-                position: "single",
-                type: "message",
-                profileImg: data.sender.profileImageUrl,
-              },
-            ]);
-          }
-          // 4. 사용자 입장했을때/퇴장했을 떄
-          else if (data.type === "ENTER" || data.type === "QUIT") {
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: data.message,
-                sentTime: data.time,
-                sender: data.sender.nickname,
-                direction: "incoming",
-                position: "single",
-                type: data.type,
-              },
-            ]);
-          }
+          handleMessageSort(data);
+          // if (data.type === "TALK") {
+          //   console.log("sender : ", data.sender);
+          //   setMessages((prev) => [
+          //     ...prev,
+          //     {
+          //       text: data.message,
+          //       sentTime: data.sendTime,
+          //       sender: data.sender.nickname,
+          //       direction:
+          //         User.nickname === data.sender.nickname
+          //           ? "outgoing"
+          //           : "incoming",
+          //       position: "single",
+          //       type: "message",
+          //       profileImg: data.sender.profileImageUrl,
+          //     },
+          //   ]);
+          // }
+          // // 4. 사용자 입장했을때/퇴장했을 떄
+          // else if (data.type === "ENTER" || data.type === "QUIT") {
+          //   setMessages((prev) => [
+          //     ...prev,
+          //     {
+          //       text: data.message,
+          //       sentTime: data.time,
+          //       sender: data.sender.nickname,
+          //       direction: "incoming",
+          //       position: "single",
+          //       type: data.type,
+          //     },
+          //   ]);
+          // }
           // rideMembers.members[data.memberId] = data;
           // setRideMembers({ ...rideMembers });
         },
@@ -178,6 +213,9 @@ const CrewDetailTalk = ({ crewId }) => {
       crewId,
       (response) => {
         console.log(response);
+        response.data.forEach((message) => {
+          handleMessageSort(message);
+        });
       },
       (fail) => {
         console.log(fail);

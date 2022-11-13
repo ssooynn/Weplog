@@ -9,8 +9,11 @@ import {
   getMyCrewList,
   getMyNearCrewList,
   getTop3CrewList,
-  getAllCrewList
+  getAllCrewList,
 } from "../../apis/crewApi";
+import { Fab } from "@mui/material";
+import { BootstrapButton } from "../../components/common/Buttons";
+import { useNavigate } from "react-router-dom";
 
 export const Crew = () => {
   const [top3Distance, setTop3Distance] = useState([]);
@@ -20,7 +23,7 @@ export const Crew = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("DIS");
   const [crewList, setCrewList] = useState([]);
-
+  const navigate = useNavigate();
   const handleType = (type) => {
     setType(type);
   };
@@ -42,12 +45,15 @@ export const Crew = () => {
         setMyCrews((prev) => (prev = response.data));
         setLoading(false);
       });
-      getAllCrewList((res) => {
-        console.log(res);
-        setCrewList(res.data);
-      }, (err) => {
-        console.log(err);
-      })
+      getAllCrewList(
+        (res) => {
+          console.log(res);
+          setCrewList(res.data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
@@ -59,7 +65,7 @@ export const Crew = () => {
             }
           );
         },
-        (err) => { }
+        (err) => {}
       );
     }
     setLoading(false);
@@ -71,6 +77,21 @@ export const Crew = () => {
   else
     return (
       <motion.div>
+        <BootstrapButton
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            navigate("/crew/register");
+          }}
+          style={{
+            position: "fixed",
+            bottom: "9%",
+            right: "3%",
+            zIndex: "3",
+            width: "30%",
+          }}
+        >
+          크루 만들기
+        </BootstrapButton>
         <div style={{ position: "relative", width: "100%", height: "260px" }}>
           <img
             src={crewBanner}
@@ -149,21 +170,31 @@ export const Crew = () => {
               </Text>
             </Box>
           </Box>
-          {type === "TIME" && <ChallengeRankTop3 type={"crew"} top3={top3Time} />}
-          {type === "DIS" && <ChallengeRankTop3 type={"crew"} top3={top3Distance} />}
+          {type === "TIME" && (
+            <ChallengeRankTop3 type={"crew"} top3={top3Time} />
+          )}
+          {type === "DIS" && (
+            <ChallengeRankTop3 type={"crew"} top3={top3Distance} />
+          )}
         </Box>
 
         <Box pad="medium" width="100%" margin={{ bottom: "30px" }}>
           <Text size="18px" weight={500} margin="20px 10px 0px 10px">
             모든 크루 List
           </Text>
-          <Box direction="row" wrap={true} justify="start" margin={{ left: "4px" }}>
-            {crewList.map((crew, index) => <Box direction="row" justify="between" key={index} width="50%">
-              <CrewCard crew={crew}></CrewCard>
-            </Box>)}
+          <Box
+            direction="row"
+            wrap={true}
+            justify="start"
+            margin={{ left: "4px" }}
+          >
+            {crewList.map((crew, index) => (
+              <Box direction="row" justify="between" key={index} width="50%">
+                <CrewCard crew={crew}></CrewCard>
+              </Box>
+            ))}
           </Box>
         </Box>
-
-      </motion.div >
+      </motion.div>
     );
 };

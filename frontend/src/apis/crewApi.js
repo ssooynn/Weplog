@@ -48,11 +48,8 @@ const approveCrewJoin = async (joinWatingId, success, fail) => {
 };
 
 //크루 가입신청 하기
-const createCrewJoin = async (crewId, params, success, fail) => {
-  await authInstance
-    .post(`/join/${crewId}`, { params: params })
-    .then(success)
-    .catch(fail);
+const createCrewJoin = async (crewId, request, success, fail) => {
+  await authInstance.post(`/join/${crewId}`, request).then(success).catch(fail);
 };
 
 // 내 크루 목록 조회

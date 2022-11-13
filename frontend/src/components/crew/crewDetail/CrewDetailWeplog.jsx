@@ -6,10 +6,15 @@ import { CrewCalender } from "../CrewCalender";
 import { CrewPlanCard } from "../CrewPlanCard";
 import { useNavigate } from "react-router-dom";
 import { PloggingButtonCrew } from "../../common/Buttons.jsx";
-import { createCrewRoom, getRoomByCrewId } from "../../../apis/crewApi";
+import {
+  createCrewJoin,
+  createCrewRoom,
+  getRoomByCrewId,
+} from "../../../apis/crewApi";
 import { getCrewSchedule } from "../../../apis/calenderApi";
+import { CrewJoinDialog } from "./CrewJoinDialog";
 
-const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
+const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [roomId, setRoomId] = useState();
@@ -45,6 +50,49 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
   const handleOpen = () => {
     setOpen(true);
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleJoinCrew = (comment) => {
+    createCrewJoin(
+      crewId,
+      { comment: comment },
+      (response) => {
+        console.log(response);
+        // 알러트
+        handleClose();
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+  };
+
+  const handlePloggingStart = () => {
+    if (isMyCrew) {
+      if (roomId !== undefined) {
+        createCrewRoom(crewId, (response) => {
+          setRoomId((prev) => (prev = response.data.roomId));
+          navigate("/plogging", {
+            state: {
+              ploggingType: "crew",
+              roomId: response.data.roomId,
+            },
+          });
+        });
+      } else {
+        navigate("/plogging", {
+          state: {
+            ploggingType: "crew",
+            roomId: roomId,
+          },
+        });
+      }
+    } else {
+      handleOpen();
+    }
+  };
+
   useEffect(() => {
     if (loading) {
       getRoomByCrewId(
@@ -90,7 +138,7 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
             >
               Plogging Plan
             </Text>
-            <Text
+            {/* <Text
               size="12px"
               color="#00853b"
               weight={500}
@@ -98,7 +146,7 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
               onClick={handleOpen}
             >
               플로깅 일정 등록하기
-            </Text>
+            </Text> */}
           </Box>
           {scheduels.map((schedule, index) => {
             return <CrewPlanCard key={index} data={schedule} />;
@@ -107,31 +155,19 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList }) => {
           <Box width="100%" align="center">
             <PloggingButtonCrew
               whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                if (roomId !== undefined) {
-                  createCrewRoom(crewId, (response) => {
-                    setRoomId((prev) => (prev = response.data.roomId));
-                    navigate("/plogging", {
-                      state: {
-                        ploggingType: "crew",
-                        roomId: response.data.roomId,
-                      },
-                    });
-                  });
-                } else {
-                  navigate("/plogging", {
-                    state: {
-                      ploggingType: "crew",
-                      roomId: roomId,
-                    },
-                  });
-                }
-              }}
+              onClick={handlePloggingStart}
             >
-              Plogging!
+              {isMyCrew ? "Plogging!" : "크루 가입 신청하기"}
             </PloggingButtonCrew>
           </Box>
         </Box>
+        <CrewJoinDialog
+          open={open}
+          onDismiss={() => {
+            setOpen(false);
+          }}
+          accept={handleJoinCrew}
+        />
       </motion.div>
     );
 };
