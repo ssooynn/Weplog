@@ -28,6 +28,7 @@ const Profile3rd = styled.img`
 `;
 
 export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
+  console.log(top3);
   const changeImage = (id) => {
     if (type === 'user') {
       return top3[id].profileImageUrl;

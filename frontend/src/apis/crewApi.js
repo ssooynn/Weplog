@@ -47,6 +47,11 @@ const approveCrewJoin = async (joinWatingId, success, fail) => {
   await authInstance.post(`/access/${joinWatingId}`).then(success).catch(fail);
 };
 
+//크루 가입신청 거절하기
+const rejectCrewJoin = async (joinWatingId, success, fail) => {
+  await authInstance.post(`/deny/${joinWatingId}`).then(success).catch(fail);
+};
+
 //크루 가입신청 하기
 const createCrewJoin = async (crewId, params, success, fail) => {
   await authInstance
@@ -96,6 +101,10 @@ const getExistCrewPlogging = async (success, fail) => {
   await authInstance.get(`/rooms`).then(success).catch(fail);
 };
 
+//크루 랭킹
+const getCrewRankingList = async (crewId, success, fail) => {
+  await authInstance.get(`/ranking/${crewId}`).then(success).catch(fail);
+};
 export {
   getAllCrewList,
   createCrew,
@@ -109,4 +118,6 @@ export {
   createCrewRoom,
   getRoomByCrewId,
   getExistCrewPlogging,
+  rejectCrewJoin,
+  getCrewRankingList,
 };
