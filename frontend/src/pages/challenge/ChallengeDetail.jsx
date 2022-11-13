@@ -90,6 +90,11 @@ export const ChallengeDetail = () => {
       console.log(err);
     })
   }
+  const [rankType, setRankType] = useState("");
+  const [myRank, setMyRank] = useState("");
+  const [myRankValue, setMyRankValue] = useState("");
+  const [myProfile, setMyProfile] = useState("");
+  const [myNickname, setMyNickname] = useState("");
   return (
     <motion.div>
       <div style={{ position: "relative" }}>
@@ -173,11 +178,13 @@ export const ChallengeDetail = () => {
       {/* arr.includes(valuetoFind) */}
       {/* 내 랭크*/}
       <Box direction="column" pad="0px 8%" width="100%" margin="20px 0px">
-        <Text size="16px" weight={400}>
-          내 랭킹
-        </Text>
+        {challengeRanking !== undefined && challengeRanking.length > 3 &&
+          <Text size="16px" weight={400}>
+            내 랭킹
+          </Text>}
         <Box width="100%" align="center">
-          <ChallengeRankCard></ChallengeRankCard>
+          {challengeRanking !== undefined && challengeRanking.length > 3 && <ChallengeRankCard my={true} rank={myRank} profileImgUrl={myProfile} nickname={myNickname} value={myRankValue}></ChallengeRankCard>}
+
         </Box>
       </Box>
 
@@ -186,7 +193,7 @@ export const ChallengeDetail = () => {
         <Text size="16px" weight={400}>
           참여자 기여도 Ranking
         </Text>
-        <ChallengeRankCardList list={challengeRanking}></ChallengeRankCardList>
+        <ChallengeRankCardList rankType={rankType} list={challengeRanking} setMyRank={setMyRank} setMyNickname={setMyNickname} setMyProfile={setMyProfile} setMyRankValue={setMyRankValue}></ChallengeRankCardList>
 
         {challenge.myChallenge ? <Button bigpinkround="true" style={{ margin: "10px 0px" }} onClick={giveUpChallenge}>
           챌린지 포기하기

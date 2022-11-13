@@ -6,11 +6,14 @@ import ploggingLogIcon from "../../assets/icons/ploggingLogIcon.png";
 import ploggingQuestIcon from "../../assets/icons/ploggingQuestIcon.png";
 import ploggingChallengeIcon from "../../assets/icons/ploggingChallengeIcon.png";
 import ploggingCrewIcon from "../../assets/icons/ploggingCrewIcon.png";
-import { ChallengeCard } from "../../components/challenge/ChallengeCard";
+import { ChallengeCard, ChallengeCardList } from "../../components/challenge/ChallengeCard";
 import { useNavigate } from "react-router-dom";
 import { myAchievementApi } from "../../apis/achievementApi";
 import { myPageInfoApi, myPageProfileApi } from "../../apis/mypageApi";
 import { m } from "framer-motion";
+import { challengeIngListAPi } from "../../apis/memberChallengeApi";
+import { getMyCrewList } from "../../apis/crewApi";
+import { CrewCard } from "../../components/crew/CrewCard";
 
 const ProfileImg = styled.img`
   width: 60px;
@@ -36,7 +39,8 @@ export const Mypage = () => {
   const [ploggingCnt, setPloggingCnt] = useState(0);
   const [distance, setDistance] = useState(0);
   const [time, setTime] = useState(0);
-
+  const [challengeList, setChallengeList] = useState([]);
+  const [crewList, setCrewList] = useState([]);
 
   const navigate = useNavigate();
   const goPage = (url) => {
@@ -85,6 +89,24 @@ export const Mypage = () => {
     })
   }
 
+  const getMyChallengeList = () => {
+    challengeIngListAPi((res) => {
+      setChallengeList(res.data);
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  const getCrewList = () => {
+    getMyCrewList((res) => {
+      setCrewList(res.data);
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
   const secChangeTime = (seconds) => {
     var hour = parseInt(seconds / 3600);
     var min = parseInt((seconds % 3600) / 60);
@@ -105,6 +127,8 @@ export const Mypage = () => {
     getAchievement();
     getProfile();
     getInfo();
+    getMyChallengeList();
+    getCrewList();
   }, [])
   return (
     <Box>
@@ -128,6 +152,7 @@ export const Mypage = () => {
           </Box>
         </Box>
         <img
+          alt="더보기"
           src={rightArrowIcon}
           width="30px"
           height="30px"
@@ -147,7 +172,7 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingLogIcon} width="30px" height="30px" />
+            <img alt="플로깅" src={ploggingLogIcon} width="30px" height="30px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 플로깅 기록
             </Text>
@@ -204,7 +229,7 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingQuestIcon} width="30px" height="30px" />
+            <img alt="도전과제" src={ploggingQuestIcon} width="30px" height="30px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 도전 과제
             </Text>
@@ -264,7 +289,7 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingChallengeIcon} width="27px" height="27px" />
+            <img alt="챌린지" src={ploggingChallengeIcon} width="27px" height="27px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 챌린지
             </Text>
@@ -273,7 +298,7 @@ export const Mypage = () => {
             챌린지 모두 보기
           </Text>
         </Box>
-        {/* <ChallengeCard></ChallengeCard> */}
+        {challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={challengeList}></ChallengeCardList>}
       </Box>
 
       {/* 내 크루 */}
@@ -287,16 +312,19 @@ export const Mypage = () => {
       >
         <Box direction="row" justify="between" align="center" width="100%">
           <Box direction="row" align="center">
-            <img src={ploggingCrewIcon} width="27px" height="27px" />
+            <img alt="크루" src={ploggingCrewIcon} width="27px" height="27px" />
             <Text size="16px" weight={500} margin="0px 10px">
               내 크루
             </Text>
           </Box>
-          <Text size="12px" weight={500} color="#575757">
-            크루 모두 보기
-          </Text>
         </Box>
-        {/* <ChallengeCard></ChallengeCard> */}
+
+        <Box direction="row" wrap={true} justify="start" margin={{ left: "4px" }}>
+          {crewList.map((crew, index) => <Box direction="row" justify="between" key={index} width="50%">
+            <CrewCard crew={crew}></CrewCard>
+          </Box>)}
+        </Box>
+
       </Box>
     </Box >
   );
