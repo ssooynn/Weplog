@@ -208,10 +208,14 @@ export const CrewDetail = () => {
               )}
               {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
               {clicked === 2 && <CrewDetailOurFeed />}
-              {clicked === 3 && <CrewDetailMember />}
+              {clicked === 3 && (
+                <CrewDetailMember getCrew={getCrew} crewData={crewData} />
+              )}
             </Box>
           )}
-          {!crewData.isMyCrew && <CrewDetailMember />}
+          {!crewData.isMyCrew && (
+            <CrewDetailMember getCrew={getCrew} crewData={crewData} />
+          )}
           {!crewData.isMyCrew && (
             <CrewDetailWeplog
               ploggingDateList={crewData.ploggingDateList}
