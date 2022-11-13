@@ -102,7 +102,7 @@ const CrewDetailMember = ({ crewData, getCrew }) => {
             </Text>}
 
             <Box width="100%" align="center">
-              {rankList !== undefined && rankList.length > 3 && <ChallengeRankCard my={true} rank={myRank} rofileImgUrl={myProfile} nickname={myNickname} value={myRankValue}></ChallengeRankCard>}
+              {rankList !== undefined && rankList.length > 3 && <ChallengeRankCard my={true} rank={myRank} profileImgUrl={myProfile} nickname={myNickname} value={myRankValue}></ChallengeRankCard>}
             </Box>
           </Box>
           {<ChallengeRankCardList rankType={rankType} list={rankList} setMyRank={setMyRank} setMyNickname={setMyNickname} setMyProfile={setMyProfile} setMyRankValue={setMyRankValue} />}
