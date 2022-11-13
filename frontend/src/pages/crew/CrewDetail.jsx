@@ -56,6 +56,7 @@ export const CrewDetail = () => {
   const [clicked, setClicked] = useState(0);
   const [crewData, setCrewData] = useState();
   const [loading, setLoading] = useState(true);
+  const [reloading, setReloading] = useState(false);
   const clickedStyle = {
     color: "#00853B",
     textDecoration: "underline",
@@ -70,29 +71,35 @@ export const CrewDetail = () => {
     });
   };
 
+  const getCrew = () => {
+    getCrewDetail(
+      crewId,
+      (response) => {
+        console.log(response);
+        setCrewData(response.data);
+        if (
+          response.data.isCrewMaster === true ||
+          response.data.isCrewMaster === "true"
+        ) {
+        }
+        setLoading(false);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+
+  }
+
   useEffect(() => {
     if (loading) {
-      getCrewDetail(
-        crewId,
-        (response) => {
-          console.log(response);
-          setCrewData(response.data);
-          if (
-            response.data.isCrewMaster === true ||
-            response.data.isCrewMaster === "true"
-          ) {
-          }
-          setLoading(false);
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+      getCrew();
     }
     return () => {
       setLoading(false);
     };
   }, []);
+
   if (loading) return <Spinner />;
   else
     return (
@@ -111,6 +118,7 @@ export const CrewDetail = () => {
             background={{ color: "white" }}
             round="10px 10px 0px 0px"
             height="20px"
+            border={{ color: "white", size: "3px", style: "solid", side: "all" }}
           ></Box>
         </Box>
         <Box background={{ color: "white" }} pad="15px 30px 35px 30px">
@@ -192,7 +200,7 @@ export const CrewDetail = () => {
             )}
             {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
             {clicked === 2 && <CrewDetailOurFeed />}
-            {clicked === 3 && <CrewDetailMember />}
+            {clicked === 3 && <CrewDetailMember getCrew={getCrew} crewData={crewData} />}
           </Box>
         </Box>
       </div>
