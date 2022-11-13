@@ -12,6 +12,16 @@ export const ChallengeRankCardList = (data) => {
     const [top3RankingList, setTop3RankingList] = useState([]);
     const [otherRankingList, setOtherRankingList] = useState([]);
     useEffect(() => {
+        if (rankingList !== undefined && rankingList.length > 0) {
+            for (let i = 0; i < rankingList.length; i++) {
+                if (rankingList[i].memberId === memberId) {
+                    data.setMyRank(rankingList[i].ranking);
+                    data.setMyNickname(rankingList[i].nickname);
+                    data.setMyProfile(rankingList[i].profileImageUrl);
+                    data.setMyRankValue(valueName(rankingList[i]))
+                }
+            }
+        }
         if (rankingList === undefined || rankingList.length < 3) {
             console.log(rankingList);
             setTop3RankingList([]);
@@ -19,9 +29,9 @@ export const ChallengeRankCardList = (data) => {
         } else if (rankingList.length === 3) {
             setTop3RankingList(rankingList);
             setOtherRankingList([]);
-        } else if (rankingList.length > 4) {
+        } else if (rankingList.length >= 4) {
             setTop3RankingList(rankingList.slice(0, 4));
-            setOtherRankingList(rankingList.slice(4));
+            setOtherRankingList(rankingList.slice(3));
         }
     }, [rankingList])
     const rankType = data.rankType;
@@ -49,12 +59,6 @@ export const ChallengeRankCardList = (data) => {
             </Text> : <ChallengeRankTop3 type="user" top3={top3RankingList} rankType={rankType}></ChallengeRankTop3>}
 
             {otherRankingList.length > 0 && otherRankingList.map((user, index) => {
-                if (user.memberId === memberId) {
-                    data.setMyRank(user.ranking);
-                    data.setMyNickname(user.nickname);
-                    data.setMyProfile(user.profileImageUrl);
-                    data.setMyRankValue(valueName(user))
-                }
                 return < ChallengeRankCard key={index} rank={user.ranking} profileImgUrl={user.profileImageUrl} nickname={user.nickname} value={valueName(user)} my={user.memberId === memberId} />
             })
             }
