@@ -20,6 +20,8 @@ import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 // import ChatSound from "../../assets/sounds/chatNoti.mp3";
 import { useSelector } from "react-redux";
+import { dateToDetailString } from "../../../utils/util";
+import { getCrewChats } from "../../../apis/crewApi";
 
 var client = null;
 
@@ -46,6 +48,39 @@ const CrewDetailTalk = ({ crewId }) => {
   };
   // ENTER, QUIT, TALK, PING, POS
 
+  const handleMessageSort = (data) => {
+    // 1. 채팅일 때
+    if (data.type === "TALK") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: data.message,
+          sentTime: data.sendTime,
+          sender: data.sender.nickname,
+          direction:
+            User.nickname === data.sender.nickname ? "outgoing" : "incoming",
+          position: "single",
+          type: "message",
+          profileImg: data.sender.profileImageUrl,
+        },
+      ]);
+    }
+    // 4. 사용자 입장했을때/퇴장했을 떄
+    else if (data.type === "ENTER" || data.type === "QUIT") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: data.message,
+          sentTime: data.time,
+          sender: data.sender.nickname,
+          direction: "incoming",
+          position: "single",
+          type: data.type,
+        },
+      ]);
+    }
+  };
+
   //웹소켓 채팅 발행
   const publishChatting = (text) => {
     if (client != null) {
@@ -67,12 +102,12 @@ const CrewDetailTalk = ({ crewId }) => {
   const initSocketClient = () => {
     client = new StompJs.Client({
       // brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
-      brokerURL: "ws://localhost:8081/ws-stomp",
+      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("http://localhost:8081/ws-stomp");
+        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -122,37 +157,39 @@ const CrewDetailTalk = ({ crewId }) => {
           console.log(response);
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
-          if (data.type === "TALK") {
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: data.message,
-                sentTime: data.sendTime,
-                sender: data.sender.nickname,
-                direction:
-                  User.nickname === data.sender.nickname
-                    ? "outgoing"
-                    : "incoming",
-                position: "single",
-                type: "message",
-                profileImg: data.sender.profileImageUrl,
-              },
-            ]);
-          }
-          // 4. 사용자 입장했을때/퇴장했을 떄
-          else if (data.type === "ENTER" || data.type === "QUIT") {
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: data.message,
-                sentTime: data.time,
-                sender: data.sender.nickname,
-                direction: "incoming",
-                position: "single",
-                type: data.type,
-              },
-            ]);
-          }
+          handleMessageSort(data);
+          // if (data.type === "TALK") {
+          //   console.log("sender : ", data.sender);
+          //   setMessages((prev) => [
+          //     ...prev,
+          //     {
+          //       text: data.message,
+          //       sentTime: data.sendTime,
+          //       sender: data.sender.nickname,
+          //       direction:
+          //         User.nickname === data.sender.nickname
+          //           ? "outgoing"
+          //           : "incoming",
+          //       position: "single",
+          //       type: "message",
+          //       profileImg: data.sender.profileImageUrl,
+          //     },
+          //   ]);
+          // }
+          // // 4. 사용자 입장했을때/퇴장했을 떄
+          // else if (data.type === "ENTER" || data.type === "QUIT") {
+          //   setMessages((prev) => [
+          //     ...prev,
+          //     {
+          //       text: data.message,
+          //       sentTime: data.time,
+          //       sender: data.sender.nickname,
+          //       direction: "incoming",
+          //       position: "single",
+          //       type: data.type,
+          //     },
+          //   ]);
+          // }
           // rideMembers.members[data.memberId] = data;
           // setRideMembers({ ...rideMembers });
         },
@@ -171,10 +208,19 @@ const CrewDetailTalk = ({ crewId }) => {
 
   // 웹소켓 초기화
   useEffect(() => {
-    if (client === null) {
-      initSocketClient();
-    }
-
+    initSocketClient();
+    getCrewChats(
+      crewId,
+      (response) => {
+        console.log(response);
+        response.data.forEach((message) => {
+          handleMessageSort(message);
+        });
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
     return () => {
       if (client !== null) {
         disConnect();
@@ -220,12 +266,12 @@ const CrewDetailTalk = ({ crewId }) => {
                 <Avatar src={message.profileImg} name={message.sender} />
                 <Message.Footer
                   sender={message.sender}
-                  sentTime={message.sentTime}
+                  sentTime={dateToDetailString(message.sentTime)}
                 />
               </Message>
             );
           else if (message.type === "ENTER" || message.type === "QUIT")
-            return <MessageSeparator content={message.text} />;
+            return <MessageSeparator key={index} content={message.text} />;
         })}
       </MessageList>
       <MessageInput
