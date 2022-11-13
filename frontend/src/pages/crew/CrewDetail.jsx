@@ -140,60 +140,73 @@ export const CrewDetail = () => {
             </Box>
             <ProfileList memberList={crewData.memberList}></ProfileList>
           </Box>
-          <Box
-            direction="row"
-            margin="20px 0px"
-            justify="between"
-            width="250px"
-          >
-            <Text
-              size="14px"
-              weight={500}
-              color="#AEAEAE"
-              style={clicked === 0 ? clickedStyle : {}}
-              onClick={() => setClicked(0)}
+          {crewData.isMyCrew && (
+            <Box
+              direction="row"
+              margin="20px 0px"
+              justify="between"
+              width="250px"
             >
-              Weplog
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 1 ? clickedStyle : {}}
-              onClick={() => setClicked(1)}
-            >
-              TALK
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 2 ? clickedStyle : {}}
-              onClick={() => setClicked(2)}
-            >
-              Our Feed
-            </Text>
-            <Text
-              size="14px"
-              weight={400}
-              color="#AEAEAE"
-              style={clicked === 3 ? clickedStyle : {}}
-              onClick={() => setClicked(3)}
-            >
-              Member
-            </Text>
-          </Box>
-          <Box direction="column">
-            {clicked === 0 && (
-              <CrewDetailWeplog
-                ploggingDateList={crewData.ploggingDateList}
-                crewId={crewId}
-              />
-            )}
-            {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
-            {clicked === 2 && <CrewDetailOurFeed />}
-            {clicked === 3 && <CrewDetailMember />}
-          </Box>
+              <Text
+                size="14px"
+                weight={500}
+                color="#AEAEAE"
+                style={clicked === 0 ? clickedStyle : {}}
+                onClick={() => setClicked(0)}
+              >
+                Weplog
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 1 ? clickedStyle : {}}
+                onClick={() => setClicked(1)}
+              >
+                TALK
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 2 ? clickedStyle : {}}
+                onClick={() => setClicked(2)}
+              >
+                Our Feed
+              </Text>
+              <Text
+                size="14px"
+                weight={400}
+                color="#AEAEAE"
+                style={clicked === 3 ? clickedStyle : {}}
+                onClick={() => setClicked(3)}
+              >
+                Member
+              </Text>
+            </Box>
+          )}
+          {crewData.isMyCrew && (
+            <Box direction="column">
+              {clicked === 0 && (
+                <CrewDetailWeplog
+                  ploggingDateList={crewData.ploggingDateList}
+                  crewId={crewId}
+                  isMyCrew={crewData.isMyCrew}
+                />
+              )}
+              {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
+              {clicked === 2 && <CrewDetailOurFeed />}
+              {clicked === 3 && <CrewDetailMember />}
+            </Box>
+          )}
+          {!crewData.isMyCrew && <CrewDetailMember />}
+          {!crewData.isMyCrew && (
+            <CrewDetailWeplog
+              ploggingDateList={crewData.ploggingDateList}
+              crewId={crewId}
+              isMyCrew={crewData.isMyCrew}
+            />
+          )}
         </Box>
       </div>
     );

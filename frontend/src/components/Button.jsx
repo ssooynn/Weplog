@@ -38,6 +38,20 @@ const StyledButton = styled(motion.button)`
       width: 100%;
       box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
     `}
+
+    ${(props) =>
+    props.smallgreenround &&
+    css`
+      border-radius: 10px;
+      border: 0px;
+      width: 120px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 400;
+      font-size: 14px;
+      color: white;
+      background: #57ba83;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
+    `}
     
     ${(props) =>
     props.bigpinkround &&
@@ -53,6 +67,8 @@ const StyledButton = styled(motion.button)`
       width: 100%;
       box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
     `}
+
+    
 
   ${(props) =>
     props.bigpink &&

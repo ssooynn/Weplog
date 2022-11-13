@@ -26,7 +26,7 @@ export const PloggingStart = () => {
   const [loading, setLoading] = useState(true);
   const geocoder = new kakao.maps.services.Geocoder();
   const [ploggingCrews, setPloggingCrews] = useState([]);
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state.user.user);
   // function
   const handleClose = () => {
     setOpen(false);
@@ -75,7 +75,7 @@ export const PloggingStart = () => {
   //hooks
   useEffect(() => {
     if (loading) {
-      if (localStorage.getItem("accessToken") === null) {
+      if (User === null || User === undefined) {
         setLoading(false);
         window.location.href = "/login";
       } else {
