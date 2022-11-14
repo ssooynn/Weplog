@@ -20,7 +20,7 @@ public class PloggingReq {
     private int calorie;
     private Long crewId;
     private List<CoordinateDto> coordinates = new ArrayList<>();
-    public Plogging toEntity(Member member, Crew crew){
+    public Plogging toEntity(Member member, Crew crew, String address){
         return Plogging.builder()
                 .distance(distance)
                 .time(time)
@@ -29,6 +29,7 @@ public class PloggingReq {
                 .startLat(coordinates.get(0).getLat())
                 .startLng(coordinates.get(0).getLng())
                 .crew(crew == null ? null : crew)
+                .startLoc(address)
                 .build();
     }
 }

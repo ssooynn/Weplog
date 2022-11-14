@@ -26,3 +26,5 @@ logging:
     com.ssafy.ploggingservice: DEBUG
 
 kafka-ip: 127.0.0.1:9092
+
+kakao-id: 4d5deb7bab2f81566af27762cf47c6e8
