@@ -10,6 +10,7 @@ import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
 import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 
 import com.ssafy.memberservice.domain.memberdetail.dto.*;
+import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
+
+import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -34,13 +37,11 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public MyPageRes getMyPage(UUID uuid) {
-        Optional<Member> member = memberRepository.findById(uuid);
-        Optional<MemberPet> memberPet = memberPetRepository.findGrowingPetByMemberId(uuid);
-        if (member.isPresent() && memberPet.isPresent()){
-            System.out.println(member);
-            return new MyPageRes(member.get(), memberPet.get());
-        }
-        return new MyPageRes();
+        Member member = memberRepository.findById(uuid)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+
+        return new MyPageRes(member);
     }
 
     @Override
