@@ -3,13 +3,13 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import googleLoginIcon from "../assets/icons/googleLoginBtn.png";
 import kakaoLoginIcon from "../assets/icons/kakaoLoginBtn.png";
-import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import {
   AUTH_URL_KAKAO,
   AUTH_URL_GOOGLE,
   OAUTH2_REDIRECT_URI,
 } from "../apis/api";
+import { useEffect } from "react";
 //투명도 있는 그라데이션
 const GradientBlack = styled.div`
   background: linear-gradient(
@@ -26,7 +26,6 @@ export const Login = () => {
   //변수
   //bgImg 랜덤으로 설정
   const bgImgNum = Math.floor(Math.random() * 6) + 1;
-  const Navigate = useNavigate();
 
   //함수
   //회원가입 페이지 요청
@@ -45,10 +44,11 @@ export const Login = () => {
   const kakaoLogin = () => {
     window.location.href = AUTH_URL_KAKAO + OAUTH2_REDIRECT_URI;
   };
+
   return (
     <Box
       height="100vh"
-      background={{ image: `url(/assets/images/Login/Login${bgImgNum}.jpg)` }}
+      background={{ image: `url(/assets/images/Login/Login${bgImgNum}-progressive.jpeg)` }}
     >
       <GradientBlack>
         <Box

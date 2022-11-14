@@ -27,6 +27,22 @@ const authFormInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      config.headers["memberId"] = localStorage.getItem("memberId");
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 // 내 플로깅 리스트 가져오기
 const getPloggingList = async (params, success, fail) => {
   await authInstance.get(`/`, { params: params }).then(success).catch(fail);
