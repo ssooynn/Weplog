@@ -35,7 +35,7 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public MyPageRes getMyPage(UUID uuid) {
         Optional<Member> member = memberRepository.findById(uuid);
-        Optional<MemberPet> memberPet = memberPetRepository.findByLevel(uuid);
+        Optional<MemberPet> memberPet = memberPetRepository.findGrowingPetByMemberId(uuid);
         if (member.isPresent() && memberPet.isPresent()){
             System.out.println(member);
             return new MyPageRes(member.get(), memberPet.get());

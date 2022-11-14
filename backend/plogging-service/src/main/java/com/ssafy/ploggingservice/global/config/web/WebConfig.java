@@ -21,9 +21,9 @@ public class WebConfig implements WebMvcConfigurer {
 //        resolvers.add(loginMemberArgumentResolver);
 //    }
 
-    @Override
-    public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
-    }
+//    @Override
+//    public void addCorsMappings(final CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
+//    }
 }
