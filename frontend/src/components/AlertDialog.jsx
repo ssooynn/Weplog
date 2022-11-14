@@ -86,6 +86,34 @@ const ArticleBoxProfileTime = styled.div`
   justify-content: flex-start;
 `;
 
+function getPrettyPostingTime(PostingTime) {
+  if (PostingTime) {
+    let today = new Date();
+    let nowYear = Number(today.getFullYear());
+    let nowMonth = Number(today.getMonth()) + 1;
+    let nowDay = Number(today.getDate());
+    let nowHour = Number(today.getHours());
+    let nowMin = Number(today.getMinutes());
+
+    let postingYear = Number(PostingTime.slice(0, 4));
+    let postingMonth = Number(PostingTime.slice(5, 7));
+    let postingDay = Number(PostingTime.slice(8, 10));
+    let postingHour = Number(PostingTime.slice(11, 13));
+    let postingMin = Number(PostingTime.slice(14, 16));
+
+    if (nowYear === postingYear && nowMonth === postingMonth) {
+      if (nowDay === postingDay) {
+        if (nowHour === postingHour) {
+          return String(nowMin - postingMin) + '분전';
+        } else { return String(nowHour - postingHour) + '시간전'; };
+      } else { return String(nowDay - postingDay) + '일전'; };
+    } else { return String(postingYear) + '년 ' + String(postingMonth) + '월 ' + String(postingDay) + '일'; };
+  } else { return ''};
+  
+};
+
+
+
 export const AlertDialog = ({
   open,
   handleClose,
@@ -121,7 +149,6 @@ export const AlertDialog = ({
           {desc}
         </DialogContentText>
       </DialogContent>
-
       <Box
         direction="row"
         justify="center"
@@ -155,6 +182,7 @@ export const AlertDialog = ({
 };
 
 export const DetailDialog = ({ open, handleClose, plogData }) => {
+  console.log(plogData);
   return (
     <Dialog
       open={open}
@@ -175,14 +203,14 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
         }}
       >
         <ArticleBox>
-          <ArticleBoxImg src={plogData.ProfileImgURL} />
+          <ArticleBoxImg src={plogData.imageUrl} />
           <ArticleBoxProfileArea>
             <ArticleBoxProfileImgArea>
-              <ArticleBoxProfileImg src={plogData.ProfileImgURL} />
+              <ArticleBoxProfileImg src={plogData.profileImageUrl} />
             </ArticleBoxProfileImgArea>
             <ArticleBoxProfileTextArea>
-              <ArticleBoxProfileName>{plogData.Name}</ArticleBoxProfileName>
-              <ArticleBoxProfileTime>{plogData.Time}분전</ArticleBoxProfileTime>
+              <ArticleBoxProfileName>{plogData.nickname}</ArticleBoxProfileName>
+              <ArticleBoxProfileTime>{getPrettyPostingTime(plogData.createdDate)}</ArticleBoxProfileTime>
             </ArticleBoxProfileTextArea>
           </ArticleBoxProfileArea>
         </ArticleBox>
