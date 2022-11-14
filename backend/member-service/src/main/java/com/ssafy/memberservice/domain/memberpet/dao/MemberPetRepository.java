@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
     @Query("select m from MemberPet m where m.member.id=:id")
-    Slice<MemberPet> getMemberPetsByMemberId(UUID id);
+    List<MemberPet> getMemberPetsByMemberId(UUID id);
 
     @Query("select m.pet.id from MemberPet m where m.member.id =:id")
     List<Long> getMemberPetsByKind(UUID id);

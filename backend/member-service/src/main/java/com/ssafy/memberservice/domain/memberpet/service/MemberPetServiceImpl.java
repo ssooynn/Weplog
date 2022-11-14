@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +25,17 @@ import static com.ssafy.memberservice.global.common.error.exception.DuplicateExc
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberPetServiceImpl implements MemberPetService{
 
     private final PetRepository petRepository;
     private final MemberRepository memberRepository;
     private final MemberPetRepository memberPetRepository;
     @Override
-    public Slice<MemberPetRes> getMyPets(UUID userId) {
-        Slice<MemberPetRes> list = memberPetRepository.getMemberPetsByMemberId(userId).map(MemberPetRes::new);
+    public List<MemberPetRes> getMyPets(UUID userId) {
+        List<MemberPetRes> list = memberPetRepository.getMemberPetsByMemberId(userId)
+                .stream().map(memberPet -> new MemberPetRes(memberPet))
+                .collect(Collectors.toList());
         return list;
     }
 
@@ -42,6 +46,7 @@ public class MemberPetServiceImpl implements MemberPetService{
     }
 
     @Override
+    @Transactional
     public void postMyPet(UUID id, Long petId) {
         Pet pet = petRepository.findById(petId).get();
         Member member = memberRepository.findById(id).get();
