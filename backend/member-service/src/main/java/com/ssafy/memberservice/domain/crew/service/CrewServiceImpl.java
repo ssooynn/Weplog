@@ -10,6 +10,10 @@ import com.ssafy.memberservice.domain.member.dao.MemberRepository;
 import com.ssafy.memberservice.domain.member.domain.Member;
 import com.ssafy.memberservice.domain.membercrew.dao.MemberCrewRepository;
 import com.ssafy.memberservice.domain.membercrew.domain.MemberCrew;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingCntInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingDistanceInterface;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
+import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingTimeInterface;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import com.ssafy.memberservice.infra.s3.S3Upload;
@@ -19,12 +23,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,6 +58,7 @@ public class CrewServiceImpl implements CrewService {
     private final JoinWaitingRepository joinWaitingRepository;
 
     private final CrewChatService crewChatService;
+    private final EntityManager em;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String restApiKey;
@@ -134,9 +144,14 @@ public class CrewServiceImpl implements CrewService {
         if (!findJoinWaiting.getCrew().getCrewMaster().getId().equals(crewKing.getId())) {
             throw new NotMatchException(CREW_KING_NOT_MATCH);
         }
+        Long crewId = findJoinWaiting.getCrew().getId();
+
+        // 영속성 컨텍스트 초기화
+        em.clear();
 
         // 크루 최대 참여자 수 안넘는지 체크
-        Crew joinCrew = findJoinWaiting.getCrew();
+        Crew joinCrew = crewRepository.findByCrewIdForLock(crewId).get();
+        System.out.println("현재원 수:" + joinCrew.getMemberCrewList().size());
         if (joinCrew.getMemberCrewList().size() >= joinCrew.getMaxParticipantCnt()) {
             throw new NotMatchException(CREW_MAX_PARTICIPANT_CNT_NOT_MATCH);
         }
@@ -225,5 +240,32 @@ public class CrewServiceImpl implements CrewService {
 
         return memberCrewListByMemberId.stream().map(memberCrew -> CrewSimpleResponse.from(memberCrew.getCrew()))
                 .collect(Collectors.toList());
+    }
+
+    // 크루 가입신청 거절하기
+    @Override
+    public void denyJoinCrew(UUID memberId, Long joinWaitingId) {
+        Member crewKing = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        JoinWaiting findJoinWaiting = joinWaitingRepository.findByIdWithMemberAndCrew(joinWaitingId)
+                .orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
+
+        // 허가하는 사람이 크루장인지 검사
+        if (!findJoinWaiting.getCrew().getCrewMaster().getId().equals(crewKing.getId())) {
+            throw new NotMatchException(CREW_KING_NOT_MATCH);
+        }
+
+        // 대기목록에서 삭제
+        joinWaitingRepository.delete(findJoinWaiting);
+    }
+
+    @Override
+    public TotalRankingResponse getCrewLanking(Long crewId) {
+        List<TotalRankingDistanceInterface> totalRankingDistance = memberCrewRepository.findCrewRankingDistance(crewId);
+        List<TotalRankingTimeInterface> totalRankingTime = memberCrewRepository.findCrewRankingTime(crewId);
+        List<TotalRankingCntInterface> totalRankingCnt = memberCrewRepository.findCrewRankingCnt(crewId);
+
+        return TotalRankingResponse.create(totalRankingDistance, totalRankingTime, totalRankingCnt);
     }
 }

@@ -86,6 +86,9 @@ dependencies {
 
     // mysql point
     implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.12.Final'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20220924'
 }
 
 dependencyManagement {

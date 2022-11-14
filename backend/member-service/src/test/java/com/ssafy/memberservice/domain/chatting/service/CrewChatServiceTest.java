@@ -18,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -56,7 +55,7 @@ class CrewChatServiceTest {
 //    @DisplayName("방에 동시에 입장시 save 잘 되는지 확인")
 //    public void 멀티쓰레드_방_입장() throws InterruptedException {
 //        Member member = memberRepository.findByNickname("aa").orElseThrow(() -> new NotFoundException("없"));
-//        int maxCnt = 5;
+//        int maxCnt = 10;
 //
 //        for (int i = 0; i < maxCnt; i++) {
 //            new Thread(() -> {
@@ -67,40 +66,9 @@ class CrewChatServiceTest {
 //
 //
 //        Thread.sleep(100); // 모든 스레드가 종료될 때까지 잠깐 대기
-////        CrewChatRoom 방_없음 = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("방 없음"));
-////        assertThat(방_없음.getParticipantCnt()).isEqualTo(maxCnt);
+//        CrewChatRoom 방_없음 = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("방 없음"));
+//        assertThat(방_없음.getParticipantCnt()).isEqualTo(maxCnt);
 //    }
-////
-//    @Test
-//    @DisplayName("방에 동시에 퇴장시 save 잘 되는지 확인")
-//    public void 멀티쓰레드_방_퇴장() throws InterruptedException {
-//        Member member = memberRepository.findByNickname("aa").orElseThrow(() -> new NotFoundException("없"));
-//        int maxCnt = 2;
-//
-//        for (int i = 0; i < maxCnt; i++) {
-//            new Thread(() -> {
-//                crewChatService.quitRoom(20L, member);
-//            }).start();
-//        }
-//
-//
-//        Thread.sleep(100); // 모든 스레드가 종료될 때까지 잠깐 대기
-////        CrewChatRoom 방_없음 = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("방 없음"));
-////        assertThat(방_없음.getParticipantCnt()).isEqualTo(1);
-//    }
-////
-//    @Test
-//    void createRoom() {
-//        Member member = memberRepository.findById(UUID.fromString("11ed5cdf-54b4-a2d6-9ef0-01920c02d9f1")).orElseThrow(() -> new NotFoundException("djqt"));
-//
-//        crewChatService.makeRoom(member.getId().toString(), 20L);
-//        CrewChatRoom crewChatRoom = crewChatRepository.findById(20L).orElseThrow(() -> new NotFoundException("없어?"));
-//        System.out.println(crewChatRoom.getChatId());
-//
-//    }
-
-
-
 
 
 //    @Test

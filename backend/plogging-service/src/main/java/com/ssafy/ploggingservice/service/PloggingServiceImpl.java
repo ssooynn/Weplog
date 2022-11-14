@@ -11,10 +11,16 @@ import com.ssafy.ploggingservice.messagequeue.KafkaProducer;
 import com.ssafy.ploggingservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -37,6 +43,9 @@ public class PloggingServiceImpl implements PloggingService {
     private final CoordinateRepository coordinateRepository;
     private final CrewRepository crewRepository;
     private final KafkaProducer kafkaProducer;
+
+    @Value("${kakao-id}")
+    private String restApiKey;
 
     // 플로깅 후 사진 등록
     @Override
@@ -100,8 +109,41 @@ public class PloggingServiceImpl implements PloggingService {
                     .orElseThrow(() -> new NotFoundException(CREW_NOT_FOUND));
         }
 
+        // 시작 주소 가져오기
+        ResponseEntity<String> res = null;
+//        try {
+        RestTemplate rest = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // REST_API_KEY
+        headers.set("Authorization", "KakaoAK " + restApiKey);
+
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        // x: 경도 longitude, y: 위도 latitude
+        String apiURL = "https://dapi.kakao.com//v2/local/geo/coord2regioncode?" +
+                "x=" + ploggingReq.getCoordinates().get(0).getLng() + "&" +
+                "y=" + ploggingReq.getCoordinates().get(0).getLat();
+//            URI uri = new URI(apiURL);
+
+        res = rest.exchange(apiURL, HttpMethod.GET, entity, String.class);
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        String address = null;
+        try {
+            JSONObject locJsonObj1 = new JSONObject(res.getBody());
+            log.info("카카오에서 주소 가져오기 -> {}", locJsonObj1);
+            JSONArray locJsonArr = new JSONArray(locJsonObj1.getJSONArray("documents"));
+            JSONObject locJsonObj2 = (JSONObject) locJsonArr.get(0);
+            address = locJsonObj2.getString("region_1depth_name") + " " + locJsonObj2.getString("region_2depth_name");
+        } catch (JSONException e) {
+            log.error(e.getMessage());
+        }
+
         // 플로깅 기록 저장
-        Plogging savePlogging = ploggingRepository.save(ploggingReq.toEntity(findMember, findCrew));
+        Plogging savePlogging = ploggingRepository.save(ploggingReq.toEntity(findMember, findCrew, address));
 
         // 카프카로 exit-plogging 토픽에 플로깅 기록 전달
         KafkaPloggingDto kafkaPloggingDto = KafkaPloggingDto.create(memberId, ploggingReq);

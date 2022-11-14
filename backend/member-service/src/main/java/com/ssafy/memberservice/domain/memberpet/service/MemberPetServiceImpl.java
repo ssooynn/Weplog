@@ -7,14 +7,19 @@ import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import com.ssafy.memberservice.domain.memberpet.dto.MemberPetRes;
 import com.ssafy.memberservice.domain.pet.dao.PetRepository;
 import com.ssafy.memberservice.domain.pet.domain.Pet;
+import com.ssafy.memberservice.global.common.error.exception.DuplicateException;
+import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.ssafy.memberservice.global.common.error.exception.DuplicateException.GROWING_PET_DUPLICATED;
 
 @Service
 @Slf4j
@@ -40,6 +45,12 @@ public class MemberPetServiceImpl implements MemberPetService{
     public void postMyPet(UUID id, Long petId) {
         Pet pet = petRepository.findById(petId).get();
         Member member = memberRepository.findById(id).get();
+
+        Optional<MemberPet> findGrowingPet = memberPetRepository.findGrowingPetByMemberId(id);
+        if (findGrowingPet.isPresent()) {
+            throw new DuplicateException(GROWING_PET_DUPLICATED);
+        }
+
         memberPetRepository.save(new MemberPet(member, pet));
     }
 
