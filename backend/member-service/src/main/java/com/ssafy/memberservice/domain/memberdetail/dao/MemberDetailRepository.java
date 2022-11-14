@@ -23,11 +23,11 @@ public interface MemberDetailRepository extends JpaRepository<MemberDetail, Long
             "            from member_detail pr join member m on pr.member_id = m.member_id", nativeQuery = true)
     List<TotalRankingDistanceInterface> findTotalRankingDistance();
 
-    @Query(value = "select pr.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, time time, rank() over (order by time desc) as ranking\n" +
+    @Query(value = "select pr.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, time totalTime, rank() over (order by time desc) as ranking\n" +
             "            from member_detail pr join member m on pr.member_id = m.member_id", nativeQuery = true)
     List<TotalRankingTimeInterface> findTotalRankingTime();
 
-    @Query(value = "select pr.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, time time, rank() over (order by time desc) as ranking\n" +
+    @Query(value = "select pr.member_id memberId, m.name name, m.nickname nickname, m.profile_image_url profileImageUrl, plogging_cnt totalCnt, rank() over (order by plogging_cnt desc) as ranking\n" +
             "            from member_detail pr join member m on pr.member_id = m.member_id", nativeQuery = true)
     List<TotalRankingCntInterface> findTotalRankingCnt();
 }
