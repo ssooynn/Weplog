@@ -142,3 +142,21 @@ export const dateToDetailString = (text) => {
     year + "년 " + month + "월 " + day + "일 " + hour + "시 " + minute + "분"
   );
 };
+
+export const httpToHttps = (url) => {
+  // console.log(url.split("://")[0], url.split("://")[1]);
+  return url.split("://")[0] + "s://" + url.split("://")[1];
+};
+
+export const convertStringToColor = (color) => {
+  if (color === "RED") return "#FF0000";
+  if (color === "YELLOW") return "#FFFF00";
+  if (color === "BLUE") return "#0000FF";
+  if (color === "GREEN") return "#008000";
+  if (color === "PURPLE") return "#800080";
+  if (color === "ORANGE") return "#FFA500";
+  if (color === "PINK") return "#FFC0CB";
+  if (color === "BROWN") return "#A52A2A";
+  if (color === "AQUAMARINE") return "#7FFFD4";
+  if (color === "GRAY") return "#808080";
+};
