@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
 import { Plomon3D } from "./pages/Plomon3D.jsx";
 import { useLocation } from "react-router-dom";
+import { MypageChallenge } from "./pages/mypage/MypageChallenge.jsx";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -123,6 +124,7 @@ export const Router = () => {
         <Route path="/mypage/user" element={<MypageUser />} />
         <Route path="/mypage/achievement" element={<MypageAchievement />} />
         <Route path="/main/plomon3d" element={<Plomon3D />} />
+        <Route path="/mypage/challenge" element={<MypageChallenge />} />
       </Route>
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/login" element={<Login />} />

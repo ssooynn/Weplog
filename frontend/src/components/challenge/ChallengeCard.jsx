@@ -90,7 +90,7 @@ export const ChallengeCard = ({ challenge }) => {
 export const ChallengeCardList = ({ ChallengeList }) => {
   return (
     <Box width="100%">
-      {ChallengeList !== undefined && ChallengeList.length > 0 ? ChallengeList.map((challenge, idx) => <div key={idx}> <ChallengeCard challenge={challenge} /></div>) : <div></div>}
+      {ChallengeList !== undefined && ChallengeList.length > 0 ? ChallengeList.map((challenge, idx) => <div key={idx}> <ChallengeCard challenge={challenge} /></div>) : <div>챌린지가 없습니다.</div>}
     </Box>
   )
 }
