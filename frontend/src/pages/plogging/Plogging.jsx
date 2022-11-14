@@ -25,8 +25,10 @@ import {
   calcCalories,
   calcDistance,
   container,
+  convertStringToColor,
   getDistanceFromLatLonInKm,
   GrommetTheme,
+  httpToHttps,
   timeToString,
 } from "../../utils/util";
 import {
@@ -101,6 +103,7 @@ export const Plogging = () => {
   const [ready, setReady] = useState(false);
   const [tic, setTic] = useState(3);
   const [time, setTime] = useState(0);
+  const [plogMembers, setPlogMembers] = useState({ members: [] });
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -391,12 +394,12 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io:8085/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
       webSocketFactory: () => {
-        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io:8085/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -594,6 +597,7 @@ export const Plogging = () => {
               minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
+          publishLocation(gps.lat, gps.lng);
           if (garbages.length < 1) {
             getGarbageList(
               gps,
@@ -733,6 +737,28 @@ export const Plogging = () => {
             handleMapClick(mouseEvent.latLng);
           }}
         >
+          {plogMembers &&
+            plogMembers.members.map((member, idx) => {
+              console.log(member);
+              return (
+                <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                  // 커스텀 오버레이가 표시될 위치입니다
+                  position={{ lat: member.lat, lng: member.lng }}
+                  key={idx}
+                >
+                  {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                  <Avatar
+                    src={httpToHttps(member.profileImageUrl)}
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      border: `3px inset ${convertStringToColor(member.color)}`,
+                    }}
+                  />
+                </CustomOverlayMap>
+              );
+            })}
+
           {markerPositions.length > 0 &&
             markerPositions.map((marker, index) => {
               return (
