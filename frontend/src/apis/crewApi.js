@@ -98,10 +98,7 @@ const getCrewWaitingList = async (crewId, success, fail) => {
 
 //플로깅 채팅 만들기
 const createCrewRoom = async (crewId, success, fail) => {
-  await authInstance
-    .post(`/room`, { crewId: crewId })
-    .then(success)
-    .catch(fail);
+  await authInstance.post(`/room`, crewId).then(success).catch(fail);
 };
 
 // 크루 아이디로 룸 불러오기
