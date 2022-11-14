@@ -26,6 +26,7 @@ import {
   calcDistance,
   container,
   convertStringToColor,
+  dateToDetailString,
   getDistanceFromLatLonInKm,
   GrommetTheme,
   httpToHttps,
@@ -136,7 +137,7 @@ export const Plogging = () => {
   const audioPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state.user.user);
   // console.log(User);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -200,6 +201,9 @@ export const Plogging = () => {
         },
       ];
     });
+    if (client != null) {
+      publishMarker(markerPosition);
+    }
     setMarkerOpen(false);
   };
 
@@ -325,17 +329,17 @@ export const Plogging = () => {
 
   const handleMessageSend = (text) => {
     publishChatting(text);
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: text,
-        sentTime: new Date(),
-        sender: "localSender",
-        direction: "outgoing",
-        position: "single",
-        type: "message",
-      },
-    ]);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   {
+    //     text: text,
+    //     sentTime: new Date(),
+    //     sender: "localSender",
+    //     direction: "outgoing",
+    //     position: "single",
+    //     type: "message",
+    //   },
+    // ]);
   };
 
   // 쓰레기통, 쓰레기많은거, 목적지, 식당
@@ -450,18 +454,21 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
-            if (data.sender !== User.nickname)
-              setMessages((prev) => [
-                ...prev,
-                {
-                  text: data.text,
-                  sentTime: data.time,
-                  sender: data.sender,
-                  direction: "incoming",
-                  position: "single",
-                  type: "message",
-                },
-              ]);
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.message,
+                sentTime: data.sendTime,
+                sender: data.sender.nickname,
+                direction:
+                  User.nickname === data.sender.nickname
+                    ? "outgoing"
+                    : "incoming",
+                position: "single",
+                type: "message",
+                profileImg: data.sender.profileImageUrl,
+              },
+            ]);
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
@@ -471,7 +478,7 @@ export const Plogging = () => {
               setCrewMarker((prev) => [
                 ...prev,
                 {
-                  sender: data.sender,
+                  sender: data.sender.nickname,
                   lat: data.lat,
                   lng: data.lng,
                   pingType: data.pingType,
@@ -493,7 +500,7 @@ export const Plogging = () => {
               {
                 text: data.message,
                 sentTime: data.time,
-                sender: data.sender,
+                sender: data.sender.nickname,
                 direction: "incoming",
                 position: "single",
                 type: data.type,
@@ -734,6 +741,7 @@ export const Plogging = () => {
           isPanto={true}
           style={{ width: "100%", height: "60%" }}
           onClick={(_t, mouseEvent) => {
+            console.log(_t, mouseEvent);
             handleMapClick(mouseEvent.latLng);
           }}
         >
@@ -826,12 +834,12 @@ export const Plogging = () => {
 
         {/* 종료 버튼 */}
         <Box
-          width="100%"
           align="end"
           justify="start"
           style={{
             position: "absolute",
             top: 0,
+            right: 0,
             zIndex: "15",
           }}
         >
@@ -900,15 +908,26 @@ export const Plogging = () => {
                         key={index}
                         model={{
                           message: message.text,
-                          sentTime: "보낸 시간",
+                          sentTime: message.sentTime,
                           sender: message.sender,
                           direction: message.direction,
                           position: message.position,
                         }}
-                      />
+                      >
+                        <Avatar
+                          src={message.profileImg}
+                          name={message.sender}
+                        />
+                        <Message.Footer
+                          sender={message.sender}
+                          sentTime={dateToDetailString(message.sentTime)}
+                        />
+                      </Message>
                     );
                   else if (message.type === "ENTER" || message.type === "QUIT")
-                    return <MessageSeparator content={message.text} />;
+                    return (
+                      <MessageSeparator key={index} content={message.text} />
+                    );
                 })}
               </MessageList>
               <MessageInput

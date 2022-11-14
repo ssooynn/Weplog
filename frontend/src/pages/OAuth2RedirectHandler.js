@@ -30,7 +30,7 @@ export const OAuth2RedirectHandler = (props) => {
     } else {
       myPageProfileApi(
         (res) => {
-          console.log("user Info : ", res.data);
+          console.log("user Info : ", res);
           const user = {
             name: res.data.name,
             nickname: res.data.nickname,
