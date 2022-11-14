@@ -3,6 +3,7 @@ package com.ssafy.memberservice.domain.chatting.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.memberservice.domain.chatting.dao.redis.PloggingChatRepository;
 import com.ssafy.memberservice.domain.chatting.domain.Participant;
+import com.ssafy.memberservice.domain.chatting.domain.redis.CrewChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.redis.PloggingChatRoom;
 import com.ssafy.memberservice.domain.chatting.domain.enums.Color;
 import com.ssafy.memberservice.domain.chatting.domain.enums.MessageType;
@@ -18,6 +19,8 @@ import com.ssafy.memberservice.global.common.error.exception.DuplicateException;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.JOINWAITING_NOT_FOUND;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.USER_NOT_FOUND;
@@ -44,7 +48,12 @@ public class PloggingChatService {
 
     private final MemberRepository memberRepository;
 
-    private final ObjectMapper mapper;
+//    private final RedissonClient redissonClient;
+//
+//    private static final String KEY = "PLOGGING_CHAT";
+//    private static final int WAIT_TIME = 2;
+//    private static final int LEASE_TIME = 3;
+
 
     public PloggingChatRoomResponse makeRoom(String memberId, Long crewId) {
         // 멤버가 해당 크루인지 확인
@@ -64,17 +73,35 @@ public class PloggingChatService {
         return PloggingChatRoomResponse.of(ploggingChatRoom);
     }
 
-    public PloggingChatRoom joinRoom(Member member, String roomId) {
+    synchronized public PloggingChatRoom joinRoom(Member member, String roomId) {
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
+//        RLock lock = redissonClient.getLock(KEY + roomId);
+//
+//        CrewChatRoom crewChatRoom = null;
+//
+//        boolean isLocked = false;
+//        try {
+//            isLocked = lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        if (!isLocked) {
+//            log.info("lock 획득 실패 {} - {}", KEY, roomId);
+//            throw new RuntimeException("Lock 획득 실패!");
+//        }
+//
+//        try {
+            Participant participant = Participant.from(member);
+            Color newColor = getNewColor(ploggingChatRoom);
+            participant.setColor(newColor.name());
 
+            ploggingChatRoom.addParticipant(participant);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//        }
 
-        Participant participant = Participant.from(member);
-        Color newColor = getNewColor(ploggingChatRoom);
-        participant.setColor(newColor.name());
-
-        ploggingChatRoom.addParticipant(participant);
-
-        return ploggingChatRoom;
+        return ploggingChatRepository.save(ploggingChatRoom);
     }
 
     private Color getNewColor(PloggingChatRoom ploggingChatRoom) {
@@ -131,11 +158,12 @@ public class PloggingChatService {
         sendChatMessage(chatMessage);
     }
 
-    public void quitRoom(String roomId, Member member) {
+    synchronized public void quitRoom(String roomId, Member member) {
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
         ploggingChatRoom.getParticipantMap().remove(member.getId().toString());
 
+        ploggingChatRepository.save(ploggingChatRoom);
 //        if (ploggingChatRoom.getPlayerMap().size() == 0) {
 //            ploggingChatRepository.deleteById(roomId);
 //        }

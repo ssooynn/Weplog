@@ -52,13 +52,14 @@ public class CrewChatService {
 
     private final MongoTemplate mongoTemplate;
 
-    private final RedissonClient redissonClient;
+//    private final RedissonClient redissonClient;
+//
+//    private static final String KEY = "CREW_CHAT";
+//    private static final int WAIT_TIME = 2;
+//    private static final int LEASE_TIME = 3;
 
-    private static final String KEY = "CREW_CHAT";
-    private static final int WAIT_TIME = 2;
-    private static final int LEASE_TIME = 3;
 
-
+    @Transactional
     public CrewChatRoom makeRoom(String memberId, Long crewId) {
         // 멤버가 해당 크루인지 확인
         MemberCrew memberCrew = memberCrewRepository.findMemberCrewByMemberIdAndCrewId(UUID.fromString(memberId), crewId).orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
@@ -96,6 +97,7 @@ public class CrewChatService {
     /**
      * 채팅방에 메시지 발송
      */
+    @Transactional
     public void sendChatMessage(ChatMessage chatMessage) {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         if (MessageType.ENTER.equals(chatMessage.getType())) {
@@ -114,6 +116,7 @@ public class CrewChatService {
 
     }
 
+    @Transactional
     public void pushData(String chatId, ChatMessage chatMessage) {
         Query query = new Query().addCriteria(Criteria.where("_id").is(new ObjectId(chatId)));
         Update update = new Update();
@@ -122,6 +125,7 @@ public class CrewChatService {
         mongoTemplate.updateFirst(query, update, "chats");
     }
 
+    @Transactional
     public void sendChatMessage(ChatMessage chatMessage, String memberId) {
         Member member = memberRepository.findById(UUID.fromString(memberId)).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         chatMessage.setSender(Participant.from(member));
@@ -129,65 +133,50 @@ public class CrewChatService {
         sendChatMessage(chatMessage);
     }
 
-    public CrewChatRoom joinRoom(Long roomId, Member member) {
+    synchronized public CrewChatRoom joinRoom(Long roomId, Member member) {
 
-        RLock lock = redissonClient.getLock(KEY + roomId);
+//        RLock lock = redissonClient.getLock(KEY + roomId);
 
-        CrewChatRoom crewChatRoom = null;
+//        try {
+//            if (!lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS)) {
+//                log.info("lock 획득 실패 {} - {}", KEY, roomId);
+//                throw new RuntimeException("Lock 획득 실패!");
+//            }
 
-        boolean isLocked = false;
-        try {
-            isLocked = lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (!isLocked) {
-            log.info("lock 획득 실패 {} - {}", KEY, roomId);
-            throw new RuntimeException("Lock 획득 실패!");
-        }
-        try {
-            crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
+            CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
 
             Participant participant = Participant.from(member);
             crewChatRoom.addParticipant(participant);
-            crewChatRoom = crewChatRepository.save(crewChatRoom);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            lock.unlock();
-            log.info("Lock 반납");
-        }
 
-        return crewChatRoom;
+            return crewChatRepository.save(crewChatRoom);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            lock.unlock();
+//            log.info("Lock 반납");
+//        }
     }
 
-    public void quitRoom(Long roomId, Member member) {
+    synchronized public void quitRoom(Long roomId, Member member) {
 
-        RLock lock = redissonClient.getLock(KEY + roomId);
-        boolean isLocked = false;
-        CrewChatRoom crewChatRoom = null;
+//        RLock lock = redissonClient.getLock(KEY + roomId);
 
-        try {
-            isLocked = lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (!isLocked) {
-            log.info("lock 획득 실패 {} - {}", KEY, roomId);
-            throw new RuntimeException("Lock 획득 실패!");
-        }
-        try {
-            crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
+//        try {
+//            if (!lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.SECONDS)) {
+//                log.info("lock 획득 실패 {} - {}", KEY, roomId);
+//                throw new RuntimeException("Lock 획득 실패!");
+//            }
+            CrewChatRoom crewChatRoom = crewChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
 
             crewChatRoom.removeParticipant(member);
             crewChatRepository.save(crewChatRoom);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            lock.unlock();
-            log.info("Lock 반납");
-        }
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            lock.unlock();
+//            log.info("Lock 반납");
+//        }
     }
 
     public List<ChatMessage> getCrewChats(Long crewId) {
