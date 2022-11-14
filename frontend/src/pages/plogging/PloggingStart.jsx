@@ -209,7 +209,11 @@ export const PloggingStart = () => {
             Plogging!
           </BootstrapButton>
         </Box>
-        <PloggingTypeBottomSheet open={open} onDismiss={handleClose} />
+        <PloggingTypeBottomSheet
+          open={open}
+          onDismiss={handleClose}
+          crews={ploggingCrews}
+        />
       </motion.div>
     );
 };
