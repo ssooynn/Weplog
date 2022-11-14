@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.memberservice.domain.chatting.pubsub.CrewChatSubscriber;
 import com.ssafy.memberservice.domain.chatting.pubsub.PloggingChatSubscriber;
+import org.redisson.spring.data.connection.RedissonConnectionFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

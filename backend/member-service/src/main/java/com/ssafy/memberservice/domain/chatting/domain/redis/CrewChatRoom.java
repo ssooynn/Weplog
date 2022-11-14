@@ -47,6 +47,8 @@ public class CrewChatRoom implements Serializable {
     public void removeParticipant(Member member) {
 
         this.participantCnt--;
-        this.participantMap.remove(member.getId());
+        if (this.participantMap != null) {
+            this.participantMap.remove(member.getId().toString());
+        }
     }
 }
