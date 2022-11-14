@@ -88,6 +88,7 @@ const CrewDetailTalk = ({ crewId }) => {
         destination: "/pub/crew/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "TALK",
@@ -102,12 +103,13 @@ const CrewDetailTalk = ({ crewId }) => {
   const initSocketClient = () => {
     client = new StompJs.Client({
       // brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
-      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io:8085/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io:8085/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -135,6 +137,7 @@ const CrewDetailTalk = ({ crewId }) => {
           destination: "/pub/crew/chat/message",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            memberId: localStorage.getItem("memberId"),
           },
           // body: JSON.stringify({
           //   type: "ENTER",
@@ -195,6 +198,7 @@ const CrewDetailTalk = ({ crewId }) => {
         },
         {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         }
       );
     }
