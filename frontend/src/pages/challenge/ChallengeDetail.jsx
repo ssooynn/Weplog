@@ -147,7 +147,7 @@ export const ChallengeDetail = () => {
               >
                 <ProgressBar
                   id="progress"
-                  value={challenge.progressRage}
+                  value={challenge.progressRate}
                   min="0"
                   max="100"
                 ></ProgressBar>

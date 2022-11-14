@@ -27,6 +27,22 @@ const authFormInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      config.headers["memberId"] = localStorage.getItem("memberId");
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 // 나의 모든 펫 조회하기
 const getAllMyPet = async (success, fail) => {
   await authInstance.get(`/mypet`).then(success).catch(fail);
