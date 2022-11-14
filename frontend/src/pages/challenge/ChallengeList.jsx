@@ -12,6 +12,7 @@ import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
 import { myPageProfileApi } from "../../apis/mypageApi";
 import { challengeIngListAPi } from "../../apis/memberChallengeApi";
 import { useSelector } from "react-redux";
+import { Loading } from "../../components/common/Loading";
 
 export const ChallengeList = () => {
   const navigate = useNavigate();
