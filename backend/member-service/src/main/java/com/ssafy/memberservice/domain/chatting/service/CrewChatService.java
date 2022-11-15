@@ -101,10 +101,10 @@ public class CrewChatService {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         if (MessageType.ENTER.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 방에 입장했습니다.");
-            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
+            chatMessage.getSender().setNickname("[알림]");
         } else if (MessageType.QUIT.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 방에서 나갔습니다.");
-            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
+            chatMessage.getSender().setNickname("[알림]");
         } else {
             CrewChatRoom crewChatRoom = crewChatRepository.findById(Long.valueOf(chatMessage.getRoomId())).orElseThrow(() -> new NotFoundException("해당 방이 존재하지 않습니다."));
             pushData(crewChatRoom.getChatId(), chatMessage);
