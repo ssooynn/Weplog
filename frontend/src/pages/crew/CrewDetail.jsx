@@ -211,7 +211,7 @@ export const CrewDetail = () => {
                 />
               )}
               {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
-              {clicked === 2 && <CrewDetailOurFeed />}
+              {clicked === 2 && <CrewDetailOurFeed crewId={crewId} />}
               {clicked === 3 && (
                 <CrewDetailMember getCrew={getCrew} crewData={crewData} />
               )}

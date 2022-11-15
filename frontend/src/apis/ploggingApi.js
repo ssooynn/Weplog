@@ -62,8 +62,8 @@ const getPloggingDetail = async (ploggingId, success, fail) => {
 };
 
 // 플로깅 종료
-const exitPlogging = async (params, success, fail) => {
-  await authInstance.post(`/exit`, params).then(success).catch(fail);
+const exitPlogging = async (ploggingReq, success, fail) => {
+  await authInstance.post(`/exit`, ploggingReq).then(success).catch(fail);
 };
 
 //최근 피드 리스트 조회

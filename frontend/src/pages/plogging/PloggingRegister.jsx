@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { container } from "../../utils/util";
+import { container, timeToString } from "../../utils/util";
 import { Avatar, Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
@@ -281,7 +281,7 @@ export const PloggingRegister = () => {
               </Box>
               <Box align="end" direction="row">
                 <StyledText
-                  text={data.time}
+                  text={timeToString(data.time)}
                   weight="bold"
                   size="20px"
                   color={contentColor}
