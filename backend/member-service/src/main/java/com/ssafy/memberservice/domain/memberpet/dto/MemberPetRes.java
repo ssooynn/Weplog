@@ -17,6 +17,7 @@ public class MemberPetRes {
     String name;
     String file_url;
     String description;
+    Long petId;
 
     @Builder
     public MemberPetRes(MemberPet memberPet){
@@ -27,6 +28,7 @@ public class MemberPetRes {
         this.name = memberPet.getName().name();
         this.file_url = memberPet.getFileUrl();
         this.description = memberPet.getPet().getDescription();
+        this.petId = memberPet.getPet().getId();
     }
 
 }
