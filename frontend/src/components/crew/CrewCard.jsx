@@ -77,7 +77,21 @@ export const CrewCard = ({ crew }) => {
           <Text size="14x" weight={500}>
             {crew.name}
           </Text>
-          <Text size="12px">{crew.description}</Text>
+          <Text
+            size="12px"
+            style={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
+              display: "-webkit-box",
+              WebkitLineClamp: "2",
+              // 원하는 라인수
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {crew.description}
+          </Text>
         </Box>
         <Box direction="row" justify="between" align="center">
           {crew.memberList && <ProfileList members={crew.memberList} />}
