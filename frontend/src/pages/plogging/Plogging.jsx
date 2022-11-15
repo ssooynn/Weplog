@@ -811,6 +811,31 @@ export const Plogging = () => {
               );
             })}
 
+          {crewMarker.length > 0 &&
+            crewMarker.map((marker, index) => {
+              return (
+                <CustomOverlayMap
+                  key={index}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                >
+                  <Box
+                    width="45px"
+                    height="45px"
+                    align="center"
+                    background={{ color: "white", opacity: 0.6 }}
+                    round="small"
+                  >
+                    <Image
+                      sizes="30px"
+                      fit="cover"
+                      src={setMarkerImage(marker.pingType)}
+                    />
+                    <StyledText text={marker.sender} size="9px" weight="bold" />
+                  </Box>
+                </CustomOverlayMap>
+              );
+            })}
+
           {markerPositions.length > 0 &&
             markerPositions.map((marker, index) => {
               return (
