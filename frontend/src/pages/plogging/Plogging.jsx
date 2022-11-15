@@ -74,6 +74,8 @@ import userIcon from "../../assets/icons/userIcon.svg";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import ChatSound from "../../assets/sounds/chatNoti.mp3";
+import MarkerSound from "../../assets/sounds/markerNoti.mp3";
+
 import { exitPlogging, getGarbageList } from "../../apis/ploggingApi";
 import { useSelector } from "react-redux";
 
@@ -137,6 +139,7 @@ export const Plogging = () => {
   const [crewMarker, setCrewMarker] = useState([]);
   const [visible, setVisible] = useState(false);
   const audioPlayer = useRef(null);
+  const markerPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const User = useSelector((state) => state.user.user);
@@ -161,6 +164,12 @@ export const Plogging = () => {
   const playAudio = () => {
     audioPlayer.current.pause();
     audioPlayer.current.play();
+  };
+
+  // 소리 재생
+  const playMarkerAudio = () => {
+    markerPlayer.current.pause();
+    markerPlayer.current.play();
   };
 
   // 나가기 방지
@@ -464,6 +473,7 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
+            playAudio();
             setMessages((prev) => [
               ...prev,
               {
@@ -494,16 +504,16 @@ export const Plogging = () => {
                   pingType: data.pingType,
                 },
               ]);
-              playAudio();
+              playMarkerAudio();
             }
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
             // if (!plogMembersId.has(data.sender.id)) {
-              plogMembersId.set(data.sender.id, data);
-              // setPlogMembersCnt(plogMembersCnt + 1);
-              console.log("ㅇㅇ" , plogMembersId);
-              console.log("ㅇㅇ" , data);
+            plogMembersId.set(data.sender.id, data);
+            // setPlogMembersCnt(plogMembersCnt + 1);
+            console.log("ㅇㅇ", plogMembersId);
+            console.log("ㅇㅇ", data);
             // }
             // 라이드어스랑 로직 똑같음
             // if (data.sender.nickname === User.nickname) {
@@ -516,7 +526,7 @@ export const Plogging = () => {
             if (data.type === "QUIT") {
               plogMembersId.delete(data.sender.id);
             }
-
+            playAudio();
             setMessages((prev) => [
               ...prev,
               {
@@ -606,7 +616,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude + 0.0001*time,
+          lat: coords.latitude + 0.0001 * time,
           lng: coords.longitude,
         };
         publishLocation(gps.lat, gps.lng);
@@ -682,7 +692,7 @@ export const Plogging = () => {
         });
       }
     },
-    ready ? 1000 : null
+    ready ? 3000 : null
   );
 
   // 웹소켓 초기화
@@ -787,7 +797,9 @@ export const Plogging = () => {
                     style={{
                       width: "35px",
                       height: "35px",
-                      border: `3px inset ${convertStringToColor(member.sender.color)}`,
+                      border: `3px inset ${convertStringToColor(
+                        member.sender.color
+                      )}`,
                     }}
                   />
                 </CustomOverlayMap>
@@ -964,7 +976,6 @@ export const Plogging = () => {
                 attachButton={false}
                 onSend={(innerHtml, textContent, innerText, nodes) => {
                   handleMessageSend(textContent);
-                  playAudio();
                 }}
                 style={{
                   background: "#fff",
@@ -1064,6 +1075,7 @@ export const Plogging = () => {
           </Grommet>
         )}
         <audio ref={audioPlayer} src={ChatSound} />
+        <audio ref={markerPlayer} src={MarkerSound} />
       </motion.div>
     );
 };
