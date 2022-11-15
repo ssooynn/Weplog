@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map as KakaoMap as KakaoMap,
+  Map as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
