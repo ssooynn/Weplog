@@ -353,6 +353,7 @@ export const Plogging = () => {
         },
         body: JSON.stringify({
           type: "POS",
+          roomId: roomId,
           lat: lat,
           lng: lng,
         }),
@@ -371,6 +372,7 @@ export const Plogging = () => {
         },
         body: JSON.stringify({
           type: "PING",
+          roomId: roomId,
           lat: marker.lat,
           lng: marker.lng,
           pingType: marker.pingType,
