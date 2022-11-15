@@ -513,6 +513,10 @@ export const Plogging = () => {
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
+            if (data.type === "QUIT") {
+              plogMembersId.delete(data.sender.id);
+            }
+
             setMessages((prev) => [
               ...prev,
               {
