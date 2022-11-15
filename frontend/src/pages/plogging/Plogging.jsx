@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map as KakaoMap as KakaoMap,
+  Map as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
@@ -502,12 +502,12 @@ export const Plogging = () => {
             if (!plogMembersId.has(data.sender.id)) {
               plogMembersId.set(data.sender.id, plogMembersCnt);
               setPlogMembersCnt(plogMembersCnt + 1);
-              console.log("ㅇㅇ" , plogMembersId);
+              console.log("ㅇㅇ", plogMembersId);
             }
             // 라이드어스랑 로직 똑같음
             // if (data.sender.nickname === User.nickname) {
-              plogMembers.members[plogMembersId.get(data.sender.id)] = data;
-              setPlogMembers({ ...plogMembers });
+            plogMembers.members[plogMembersId.get(data.sender.id)] = data;
+            setPlogMembers({ ...plogMembers });
             // }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
@@ -601,7 +601,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude + 0.0001*time,
+          lat: coords.latitude + 0.0001 * time,
           lng: coords.longitude,
         };
         publishLocation(gps.lat, gps.lng);
@@ -782,7 +782,9 @@ export const Plogging = () => {
                     style={{
                       width: "35px",
                       height: "35px",
-                      border: `3px inset ${convertStringToColor(member.sender.color)}`,
+                      border: `3px inset ${convertStringToColor(
+                        member.sender.color
+                      )}`,
                     }}
                   />
                 </CustomOverlayMap>
