@@ -507,8 +507,8 @@ export const Plogging = () => {
             // }
             // 라이드어스랑 로직 똑같음
             // if (data.sender.nickname === User.nickname) {
-              plogMembers.members[plogMembersId.get(data.sender.id)] = data;
-              setPlogMembers({ ...plogMembers });
+            //   plogMembers.members[plogMembersId.get(data.sender.id)] = data;
+            //   setPlogMembers({ ...plogMembers });
             // }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
@@ -768,8 +768,8 @@ export const Plogging = () => {
             handleMapClick(mouseEvent.latLng);
           }}
         >
-          {plogMembers &&
-            plogMembers.members.map((member, idx) => {
+          {plogMembersId.size > 0 &&
+            Array.from(plogMembersId.values()).map((member, idx) => {
               console.log(member);
               return (
                 <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
