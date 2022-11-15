@@ -78,7 +78,7 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Box width="145px" align="center">
+        <Box width="145px" align="center" justify="center">
           <Carousel activeChild={activeSlide} onChild={setActiveSlide}>
             {crews &&
               crews.map((crew, index) => {
@@ -86,7 +86,7 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
                   <Text
                     size="18px"
                     weight={500}
-                    margin={{ left: "7px" }}
+                    margin={{ left: "15px", right: "15px" }}
                     key={index}
                   >
                     {crew.crewName}
