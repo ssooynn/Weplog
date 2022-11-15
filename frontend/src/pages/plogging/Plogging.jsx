@@ -213,7 +213,12 @@ export const Plogging = () => {
       ];
     });
     if (crewId != null && client != null) {
-      publishMarker(markerPosition);
+      publishMarker({
+        sender: User.nickname,
+        lat: markerPosition.lat,
+        lng: markerPosition.lng,
+        pingType: index,
+      });
     }
     setMarkerOpen((prev) => (prev = false));
   };
@@ -492,20 +497,20 @@ export const Plogging = () => {
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
-            if (data.sender !== User.nickname) {
-              setVisible(true);
-              // 마커 리스트 저장
-              setCrewMarker((prev) => [
-                ...prev,
-                {
-                  sender: data.sender.nickname,
-                  lat: data.lat,
-                  lng: data.lng,
-                  pingType: data.pingType,
-                },
-              ]);
-              playMarkerAudio();
-            }
+            // if (data.sender !== User.nickname) {
+            setVisible(true);
+            // 마커 리스트 저장
+            setCrewMarker((prev) => [
+              ...prev,
+              {
+                sender: data.sender.nickname,
+                lat: data.lat,
+                lng: data.lng,
+                pingType: data.pingType,
+              },
+            ]);
+            playMarkerAudio();
+            // }
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
@@ -784,7 +789,7 @@ export const Plogging = () => {
         >
           {plogMembersId.size > 0 &&
             Array.from(plogMembersId.values()).map((member, idx) => {
-              console.log(member);
+              // console.log(member);
               return (
                 <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
                   // 커스텀 오버레이가 표시될 위치입니다
