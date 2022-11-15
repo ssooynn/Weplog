@@ -74,7 +74,20 @@ export const CrewCard = ({ crew }) => {
         }}
       >
         <Box direction="column" width="100%" height="70px">
-          <Text size="14x" weight={500}>
+          <Text
+            size="14x"
+            weight={500}
+            style={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
+              display: "-webkit-box",
+              WebkitLineClamp: "1",
+              // 원하는 라인수
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             {crew.name}
           </Text>
           <Text
