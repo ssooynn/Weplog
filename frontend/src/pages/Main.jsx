@@ -14,6 +14,7 @@ import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
 import PlomonSample4 from "../assets/PlomonSample4.gif";
 import Switch from '@mui/material/Switch';
+import { getAllMyPet } from '../apis/memberPetApi'
 
 
 
@@ -125,7 +126,7 @@ const PlomonName = styled.div`
 `
 
 const PlomonState = styled.div`
-  background-color: #57BA83;
+  background-color: ${props => props.lev === 1 ? "#A6A6A6" : "#57BA83"};
   color: white;
   font-size: 10px;
   font-weight: 500;
@@ -184,9 +185,24 @@ export const Main = () => {
   const [open, setOpen] = useState(false);
   const [plomonOpen, setPlomonOpen] = useState(false);
   const [isPlomonClicked, setIsPlomonClicked] = useState(false);
+  const [allMyPet, setAllMyPet] = useState([]);
+  const [targetPlomon, setTargetPlomon] = useState([]);
 
   useEffect(()=>{
   },[plomonOpen, isPlomonClicked]);
+
+  useEffect(()=>{
+    getAllMyPet(
+      (res) => {
+        console.log(res.data);
+        setAllMyPet(res.data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
+  },[])
 
 
   return (
@@ -209,7 +225,6 @@ export const Main = () => {
         justify="between"
         style={{ position: "absolute" }}
       >
-        {/* {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((myPetData, idx)=><div key={idx}>{myPetData}</div>)} */}
         <MainCategoryContainer>
           <MainMyCategory onClick={() => navigate("/main")}>MY</MainMyCategory>
           <MainExploreCategory onClick={() => navigate("/mainexplore")}>
@@ -237,26 +252,13 @@ export const Main = () => {
         모아보기
       </PlomonTableTitle>
       <PlomonTableArea>
-        <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false)) }>
-          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample1}/>
-          <PlomonName>재권</PlomonName>
-          <PlomonState>Baby</PlomonState>
-        </SmallPlomon>
-        <SmallPlomon>
-          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample2}/>
-          <PlomonName>피스</PlomonName>
-          <PlomonState>Baby</PlomonState>
-        </SmallPlomon>
-        <SmallPlomon>
-          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample3}/>
-          <PlomonName>키치</PlomonName>
-          <PlomonState>Baby</PlomonState>
-        </SmallPlomon>
-        <SmallPlomon>
-          <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={PlomonSample4}/>
-          <PlomonName>레이</PlomonName>
-          <PlomonState>Baby</PlomonState>
-        </SmallPlomon>
+        {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>
+          <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false), setTargetPlomon(pet)) }>
+            <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={pet.file_url}/>
+            <PlomonName>{pet.name}</PlomonName>
+            <PlomonState lev={pet.level}>{pet.level === 1 ? 'Baby' : 'Adult'}</PlomonState>
+          </SmallPlomon>
+        )}
       </PlomonTableArea>
       </BottomSheet>
 
@@ -269,12 +271,12 @@ export const Main = () => {
       >
       <PlomonTableTitle onClick={() => (isPlomonClicked===false ? (setPlomonOpen(false), setOpen(true)): setPlomonOpen(false))}>
         <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
-        재권
+        {targetPlomon.name}
       </PlomonTableTitle>
       <PlomonTableArea>
         <SmallPlomon>
-          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={PlomonSample1} onClick={() => navigate("/main/plomon3d")}/>
-          <PlomonDetailName>재권</PlomonDetailName>
+          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={targetPlomon.file_url} onClick={() => navigate("/main/plomon3d")}/>
+          <PlomonDetailName>{targetPlomon.name}</PlomonDetailName>
           <PlomonDetailState>Baby</PlomonDetailState>
           <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
             <PlomonDetailText>
@@ -302,7 +304,7 @@ export const Main = () => {
       </PlomonTableArea>
       </BottomSheet>
 
-      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked}/>
+      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked} setTargetPlomon={setTargetPlomon}/>
     </div>
   );
 };

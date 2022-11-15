@@ -68,4 +68,8 @@ const getPetLevel = async (level, success, fail) => {
   await authInstance.get(`/pet/${level}`).then(success).catch(fail);
 };
 
+
+
+
+
 export { getAllMyPet, getMyPetDetail, postMyPet, getMyPetKinds, getPetLevel };
