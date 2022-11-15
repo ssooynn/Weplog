@@ -503,6 +503,7 @@ export const Plogging = () => {
               plogMembersId.set(data.sender.id, plogMembersCnt);
               setPlogMembersCnt(plogMembersCnt + 1);
               console.log("ㅇㅇ" , plogMembersId);
+              console.log("ㅇㅇ" , data);
             }
             // 라이드어스랑 로직 똑같음
             // if (data.sender.nickname === User.nickname) {
