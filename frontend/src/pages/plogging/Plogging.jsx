@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map as KakaoMap,
+  Map as KakaoMap as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
@@ -104,7 +104,9 @@ export const Plogging = () => {
   const [ready, setReady] = useState(false);
   const [tic, setTic] = useState(3);
   const [time, setTime] = useState(0);
-  const [plogMembers, setPlogMembers] = useState(new Map());
+  const [plogMembers, setPlogMembers] = useState({ members: [] });
+  const [plogMembersId, setPlogMembersId] = useState(new Map());
+  const [plogMembersCnt, setPlogMembersCnt] = useState(0);
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -402,13 +404,15 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
+      // brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
+      brokerURL: "ws://localhost:8000/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
         memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        // return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        return SockJS("http://localhost:8000/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -495,22 +499,16 @@ export const Plogging = () => {
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
+            if (!plogMembersId.has(data.sender.id)) {
+              plogMembersId.set(data.sender.id, plogMembersCnt);
+              setPlogMembersCnt(plogMembersCnt + 1);
+              console.log("ㅇㅇ" , plogMembersId);
+            }
             // 라이드어스랑 로직 똑같음
-            // let index = plogMembers.findIndex(
-            //   (prev) => prev.nickname === data.sender.nickname
-            // );
-            // console.log(index);
-            // if (index !== -1) {
-            //   const temp = [...plogMembers];
-            //   temp[index] = data;
-            //   setPlogMembers([...temp]);
-            // } else {
-            //   setPlogMembers((prev) => [...prev, data]);
+            // if (data.sender.nickname === User.nickname) {
+              plogMembers.members[plogMembersId.get(data.sender.id)] = data;
+              setPlogMembers({ ...plogMembers });
             // }
-            setPlogMembers(
-              (prev) => (prev = new Map(prev.set(data.sender.id, data)))
-            );
-            // console.log(plogMembers);
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
@@ -603,7 +601,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude,
+          lat: coords.latitude + 0.0001*time,
           lng: coords.longitude,
         };
         publishLocation(gps.lat, gps.lng);
@@ -769,28 +767,27 @@ export const Plogging = () => {
             handleMapClick(mouseEvent.latLng);
           }}
         >
-          {plogMembers.forEach((value, key, map) => {
-            console.log(plogMembers);
-            return (
-              <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                // 커스텀 오버레이가 표시될 위치입니다
-                position={{ lat: value.lat, lng: value.lng }}
-                key={key}
-              >
-                {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                <Avatar
-                  src={httpToHttps(value.sender.profileImageUrl)}
-                  style={{
-                    width: "35px",
-                    height: "35px",
-                    border: `3px inset ${convertStringToColor(
-                      value.sender.color
-                    )}`,
-                  }}
-                />
-              </CustomOverlayMap>
-            );
-          })}
+          {plogMembers &&
+            plogMembers.members.map((member, idx) => {
+              console.log(member);
+              return (
+                <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                  // 커스텀 오버레이가 표시될 위치입니다
+                  position={{ lat: member.lat, lng: member.lng }}
+                  key={idx}
+                >
+                  {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                  <Avatar
+                    src={httpToHttps(member.sender.profileImageUrl)}
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      border: `3px inset ${convertStringToColor(member.sender.color)}`,
+                    }}
+                  />
+                </CustomOverlayMap>
+              );
+            })}
 
           {markerPositions.length > 0 &&
             markerPositions.map((marker, index) => {
