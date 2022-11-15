@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Box, Carousel, Text } from "grommet";
+import { Box, Carousel, Grommet, Text } from "grommet";
 import React, { useState } from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CloseBtn from "../../assets/images/close.png";
@@ -12,6 +12,14 @@ import { motion } from "framer-motion";
 import SinglePlog from "../../assets/images/singlePlog.png";
 import CrewPlog from "../../assets/images/crewPlog.png";
 import { useNavigate } from "react-router-dom";
+
+const grommetCustom = {
+  carousel: {
+    animation: {
+      duration: 300,
+    },
+  },
+};
 
 export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
   const [roomId, setRoomId] = useState("");
@@ -78,22 +86,31 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Box width="145px" align="center" justify="center">
-          <Carousel activeChild={activeSlide} onChild={setActiveSlide}>
-            {crews &&
-              crews.map((crew, index) => {
-                return (
-                  <Text
-                    size="18px"
-                    weight={500}
-                    margin={{ left: "15px", right: "15px" }}
-                    key={index}
-                  >
-                    {crew.crewName}
-                  </Text>
-                );
-              })}
-          </Carousel>
+        <Box width="165px" align="center" justify="center">
+          <Grommet theme={grommetCustom}>
+            <Carousel
+              activeChild={activeSlide}
+              onChild={setActiveSlide}
+              controls="arrows"
+              alignSelf="center"
+              wrap
+            >
+              {crews &&
+                crews.map((crew, index) => {
+                  return (
+                    <Box align="center" key={index} justify="center">
+                      <Text
+                        size="18px"
+                        weight={500}
+                        margin={{ left: "15px", right: "15px" }}
+                      >
+                        {crew.crewName}
+                      </Text>
+                    </Box>
+                  );
+                })}
+            </Carousel>
+          </Grommet>
           <motion.button
             style={{
               background: "none",
@@ -106,7 +123,7 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
             whileTap={{ scale: 1.2 }}
             children={
               <Box
-                width="145px"
+                width="165px"
                 align="center"
                 style={{ borderRadius: "8px" }}
                 gap="medium"
