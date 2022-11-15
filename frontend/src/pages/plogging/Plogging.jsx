@@ -405,14 +405,14 @@ export const Plogging = () => {
   const initSocketClient = () => {
     client = new StompJs.Client({
       // brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
-      brokerURL: "ws://localhost:8000/member-service/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
         memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        // return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
-        return SockJS("http://localhost:8000/member-service/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        // return SockJS("http://localhost:8000/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
