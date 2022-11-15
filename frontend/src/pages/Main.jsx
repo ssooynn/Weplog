@@ -184,8 +184,11 @@ export const Main = () => {
   const [open, setOpen] = useState(false);
   const [plomonOpen, setPlomonOpen] = useState(false);
   const [isPlomonClicked, setIsPlomonClicked] = useState(false);
+
   useEffect(()=>{
-},[plomonOpen, isPlomonClicked]);
+  },[plomonOpen, isPlomonClicked]);
+
+
   return (
     <div
       style={{
@@ -206,6 +209,7 @@ export const Main = () => {
         justify="between"
         style={{ position: "absolute" }}
       >
+        {/* {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((myPetData, idx)=><div key={idx}>{myPetData}</div>)} */}
         <MainCategoryContainer>
           <MainMyCategory onClick={() => navigate("/main")}>MY</MainMyCategory>
           <MainExploreCategory onClick={() => navigate("/mainexplore")}>

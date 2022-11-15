@@ -1,24 +1,35 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {OrbitControls} from '@react-three/drei';
 import { SnowIsland } from "./Snow_island";
-import { DinoModel1 } from "./DinoModel1";
-import { DinoModel2 } from "./DinoModel2";
-import { DinoModel3 } from "./DinoModel3";
-import { DinoModel4 } from "./DinoModel4";
-import { DinoModel5 } from "./DinoModel5";
+import { Plomon } from "./Plomon";
+import { getAllMyPet } from '../../apis/memberPetApi'
+
 
 function Island(props) {
   const mesh = useRef(null);
-  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.0005));
+  const [allMyPet, setAllMyPet] = useState([]);
+  const [plomonStates, setPlomonStates] = useState([[[0, 23, 11], 0, 9], [[-8, 15.2, 26], 0, 0], [[-20, 14, 13], 0, 3], [[-21, 15.2, -7], 0, 2], [[-7, 15, -21], 0, 10], [[22, 38, 0], 0.5, 13]]); //[position, direction, speed, animationIndex]
+  // useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.0005));
+  useEffect(()=>{
+    getAllMyPet(
+      (res) => {
+        console.log(res.data);
+        setAllMyPet(res.data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  },[])
   return (
     <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
-        <DinoModel1 scale={0.08} position={[0, 23, 11]} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
-        <DinoModel2 scale={0.08} position={[-8, 15.2, 26]} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
-        <DinoModel3 scale={0.08} position={[-15, 15.2, -14]} rotation={[0, -90, 0]} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
-        <DinoModel4 scale={0.08} position={[-22, 14, 6]} rotation={[0, 80, 0]} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
-        <DinoModel5 scale={0.08} position={[22, 38, 0]} rotation={[0, 80, 0]} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
+        {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>
+        <Plomon key={idx} name={pet.name} position={plomonStates[idx][0]} speed={plomonStates[idx][1]} animationIndex={plomonStates[idx][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
+        )}
+        {/* <Plomon name="피스" position={plomonStates[4][0]} speed={plomonStates[4][1]} animationIndex={plomonStates[4][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
+        <Plomon name="재권" position={plomonStates[1][0]} speed={plomonStates[1][1]} animationIndex={plomonStates[1][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/> */}
       <meshLambertMaterial attach="material" />
     </mesh>
   );
