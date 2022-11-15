@@ -294,7 +294,7 @@ export const Mypage = () => {
               내 챌린지
             </Text>
           </Box>
-          <Text size="12px" weight={500} color="#575757">
+          <Text size="12px" weight={500} color="#575757" onClick={() => navigate("/mypage/challenge")}>
             챌린지 모두 보기
           </Text>
         </Box>

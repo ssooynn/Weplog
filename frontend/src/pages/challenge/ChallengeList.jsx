@@ -24,7 +24,6 @@ export const ChallengeList = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState("");
   const user = useSelector(state => state.user.user);
-  console.log(user);
 
   useEffect(() => {
     if (loading) {
