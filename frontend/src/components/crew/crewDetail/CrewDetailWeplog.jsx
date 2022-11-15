@@ -77,14 +77,17 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
             state: {
               ploggingType: "crew",
               roomId: response.data.roomId,
+              crewId: crewId,
             },
           });
         });
       } else {
+        console.log(roomId, crewId);
         navigate("/plogging", {
           state: {
             ploggingType: "crew",
             roomId: roomId,
+            crewId: crewId,
           },
         });
       }
