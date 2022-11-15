@@ -2,15 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
-export function DinoModel1(props) {
-  // props.petId = 1
-  const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
-  // if (props.petId === 1) {setModelGLB("/재권.glb")};
-  const { nodes, materials, animations } = useGLTF(modelGLB);
+export function Plomon1(props) {
+  const { nodes, materials, animations } = useGLTF("/피스.glb");
   const { ref, actions, names } = useAnimations(animations);
-  const [index, setIndex] = useState(9);
+  const [index, setIndex] = useState(0); // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
   const mesh = useRef(null);
-  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+  // useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
     actions[names[index]].reset().fadeIn(0.5).play()
@@ -20,7 +17,7 @@ export function DinoModel1(props) {
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>
-        <group name="Dino011">
+        <group name="Dino021">
           <group name="Mesh2">
             <group name="Body_A3">
               <skinnedMesh
@@ -87,3 +84,5 @@ export function DinoModel1(props) {
     </group>
   );
 }
+
+useGLTF.preload("/피스.glb");
