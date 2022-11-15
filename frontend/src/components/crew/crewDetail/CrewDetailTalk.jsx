@@ -103,13 +103,13 @@ const CrewDetailTalk = ({ crewId }) => {
   const initSocketClient = () => {
     client = new StompJs.Client({
       // brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
-      brokerURL: "wss://k7a1061.p.ssafy.io:8085/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
         memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a1061.p.ssafy.io:8085/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);

@@ -61,6 +61,7 @@ export const PloggingStart = () => {
         state: {
           ploggingType: "single",
           roomId: null,
+          crewId: null,
         },
       });
     }

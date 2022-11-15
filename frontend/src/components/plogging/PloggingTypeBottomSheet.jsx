@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Box } from "grommet";
+import { Box, Carousel, Text } from "grommet";
 import React, { useState } from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CloseBtn from "../../assets/images/close.png";
@@ -15,24 +15,29 @@ import { useNavigate } from "react-router-dom";
 
 export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
   const [roomId, setRoomId] = useState("");
+  const [crewId, setCrewId] = useState("");
+  const [activeSlide, setActiveSlide] = useState(0);
   const navigate = useNavigate();
   const handleChange = (event) => {
     setRoomId(event.target.value);
   };
-  const handleCrewPlogging = (isSingle, roomId) => {
+  const handleCrewPlogging = (isSingle) => {
     navigate("/plogging", {
       state: {
         ploggingType: isSingle ? "single" : "crew",
-        roomId: roomId,
+        roomId: isSingle ? null : crews[activeSlide].roomId,
+        crewId: isSingle ? null : crews[activeSlide].crewId,
       },
     });
   };
+
   return (
     <BottomSheet
       open={open}
       onDismiss={() => {
         onDismiss();
       }}
+      style={{ zIndex: 1005 }}
     >
       <Box direction="row" justify="between" margin="20px">
         <Box width="24px" />
@@ -44,10 +49,10 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
       </Box>
-      <Box height="25vh" direction="row" justify="center">
+      <Box height="25vh" direction="row" justify="center" margin="50px">
         <motion.button
           onClick={() => {
-            handleCrewPlogging(true, null);
+            handleCrewPlogging(true);
           }}
           whileTap={{ scale: 1.2 }}
           children={
@@ -73,28 +78,22 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Box>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-simple-select-helper-label">크루</InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-              value={roomId}
-              label="크루"
-              onChange={handleChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {crews &&
-                crews.map((crew, index) => {
-                  <MenuItem value={crew.roomId} key={index}>
+        <Box width="145px" align="center">
+          <Carousel activeChild={activeSlide} onChild={setActiveSlide}>
+            {crews &&
+              crews.map((crew, index) => {
+                return (
+                  <Text
+                    size="18px"
+                    weight={500}
+                    margin={{ left: "7px" }}
+                    key={index}
+                  >
                     {crew.crewName}
-                  </MenuItem>;
-                })}
-            </Select>
-            <FormHelperText>크루를 선택하세요!</FormHelperText>
-          </FormControl>
+                  </Text>
+                );
+              })}
+          </Carousel>
           <motion.button
             style={{
               background: "none",
@@ -102,7 +101,7 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
               fontFamily: "gwtt",
             }}
             onClick={() => {
-              handleCrewPlogging(false, null);
+              handleCrewPlogging(false);
             }}
             whileTap={{ scale: 1.2 }}
             children={

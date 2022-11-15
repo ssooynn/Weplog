@@ -26,6 +26,7 @@ import {
   calcDistance,
   container,
   convertStringToColor,
+  dateToDetailString,
   getDistanceFromLatLonInKm,
   GrommetTheme,
   httpToHttps,
@@ -136,7 +137,7 @@ export const Plogging = () => {
   const audioPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state.user.user);
   // console.log(User);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
@@ -149,7 +150,7 @@ export const Plogging = () => {
     });
 
   const [messages, setMessages] = useState([]);
-  const { ploggingType, roomId } = locations.state;
+  const { ploggingType, roomId, crewId } = locations.state;
   let vh = 0;
 
   // ------------------함수-----------------------------
@@ -200,11 +201,13 @@ export const Plogging = () => {
         },
       ];
     });
-    setMarkerOpen(false);
+    if (crewId != null && client != null) {
+      publishMarker(markerPosition);
+    }
+    setMarkerOpen((prev) => (prev = false));
   };
 
   const handleMapClick = (latLng) => {
-    setMarkerOpen(true);
     setMarker(undefined);
     setMarkerPosition((prev) => {
       return (prev = {
@@ -294,7 +297,7 @@ export const Plogging = () => {
         {
           calorie: data.kcal,
           coordinates: mapData.latlng,
-          crewId: ploggingType === "single" ? null : null,
+          crewId: crewId,
           distance: data.totalDistance,
           time: time,
         },
@@ -325,17 +328,17 @@ export const Plogging = () => {
 
   const handleMessageSend = (text) => {
     publishChatting(text);
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: text,
-        sentTime: new Date(),
-        sender: "localSender",
-        direction: "outgoing",
-        position: "single",
-        type: "message",
-      },
-    ]);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   {
+    //     text: text,
+    //     sentTime: new Date(),
+    //     sender: "localSender",
+    //     direction: "outgoing",
+    //     position: "single",
+    //     type: "message",
+    //   },
+    // ]);
   };
 
   // 쓰레기통, 쓰레기많은거, 목적지, 식당
@@ -346,6 +349,7 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "POS",
@@ -363,6 +367,7 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "PING",
@@ -381,6 +386,7 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "TALK",
@@ -394,12 +400,13 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k7a1061.p.ssafy.io:8085/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a1061.p.ssafy.io:8085/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -427,6 +434,7 @@ export const Plogging = () => {
           destination: "/pub/plogging/chat/message",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            memberId: localStorage.getItem("memberId"),
           },
           // body: JSON.stringify({
           //   type: "ENTER",
@@ -450,18 +458,21 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
-            if (data.sender !== User.nickname)
-              setMessages((prev) => [
-                ...prev,
-                {
-                  text: data.text,
-                  sentTime: data.time,
-                  sender: data.sender,
-                  direction: "incoming",
-                  position: "single",
-                  type: "message",
-                },
-              ]);
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: data.message,
+                sentTime: data.sendTime,
+                sender: data.sender.nickname,
+                direction:
+                  User.nickname === data.sender.nickname
+                    ? "outgoing"
+                    : "incoming",
+                position: "single",
+                type: "message",
+                profileImg: data.sender.profileImageUrl,
+              },
+            ]);
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
@@ -471,7 +482,7 @@ export const Plogging = () => {
               setCrewMarker((prev) => [
                 ...prev,
                 {
-                  sender: data.sender,
+                  sender: data.sender.nickname,
                   lat: data.lat,
                   lng: data.lng,
                   pingType: data.pingType,
@@ -484,6 +495,8 @@ export const Plogging = () => {
           else if (data.type === "POS") {
             // 라이드어스랑 로직 똑같음
             if (data.sender !== User.nickname) {
+              plogMembers.members[data.memberId] = data;
+              setPlogMembers({ ...plogMembers });
             }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
@@ -493,7 +506,7 @@ export const Plogging = () => {
               {
                 text: data.message,
                 sentTime: data.time,
-                sender: data.sender,
+                sender: data.sender.nickname,
                 direction: "incoming",
                 position: "single",
                 type: data.type,
@@ -505,6 +518,7 @@ export const Plogging = () => {
         },
         {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         }
       );
     }
@@ -513,6 +527,7 @@ export const Plogging = () => {
   const disConnect = () => {
     if (client != null) {
       if (client.connected) client.deactivate();
+      client = null;
     }
   };
 
@@ -578,7 +593,7 @@ export const Plogging = () => {
           lat: coords.latitude,
           lng: coords.longitude,
         };
-
+        publishLocation(gps.lat, gps.lng);
         // console.log("gps : ", gps);
         // 이전이랑 위치가 같을 때
         if (
@@ -597,7 +612,7 @@ export const Plogging = () => {
               minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
-          publishLocation(gps.lat, gps.lng);
+
           if (garbages.length < 1) {
             getGarbageList(
               gps,
@@ -656,6 +671,7 @@ export const Plogging = () => {
 
   // 웹소켓 초기화
   useEffect(() => {
+    console.log(ploggingType, client);
     if (ploggingType === "crew" && client === null) {
       initSocketClient();
     }
@@ -734,6 +750,9 @@ export const Plogging = () => {
           isPanto={true}
           style={{ width: "100%", height: "60%" }}
           onClick={(_t, mouseEvent) => {
+            console.log(_t, mouseEvent, markerOpen);
+
+            setMarkerOpen((prev) => (prev = true));
             handleMapClick(mouseEvent.latLng);
           }}
         >
@@ -826,12 +845,12 @@ export const Plogging = () => {
 
         {/* 종료 버튼 */}
         <Box
-          width="100%"
           align="end"
           justify="start"
           style={{
             position: "absolute",
             top: 0,
+            right: 0,
             zIndex: "15",
           }}
         >
@@ -900,15 +919,26 @@ export const Plogging = () => {
                         key={index}
                         model={{
                           message: message.text,
-                          sentTime: "보낸 시간",
+                          sentTime: message.sentTime,
                           sender: message.sender,
                           direction: message.direction,
                           position: message.position,
                         }}
-                      />
+                      >
+                        <Avatar
+                          src={message.profileImg}
+                          name={message.sender}
+                        />
+                        <Message.Footer
+                          sender={message.sender}
+                          sentTime={dateToDetailString(message.sentTime)}
+                        />
+                      </Message>
                     );
                   else if (message.type === "ENTER" || message.type === "QUIT")
-                    return <MessageSeparator content={message.text} />;
+                    return (
+                      <MessageSeparator key={index} content={message.text} />
+                    );
                 })}
               </MessageList>
               <MessageInput
@@ -1003,7 +1033,7 @@ export const Plogging = () => {
         <MarkerDialog
           open={markerOpen}
           handleClose={() => {
-            setMarkerOpen(false);
+            setMarkerOpen((prev) => false);
           }}
           handleMarker={handleMarker}
         />
