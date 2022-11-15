@@ -179,7 +179,7 @@ public class PloggingChatService {
         List<MemberCrew> memberCrewListByMemberId = memberCrewRepository.findMemberCrewListByMemberId(UUID.fromString(memberId));
         List<ActivateCrewPloggingResponse> activateCrewPloggingResponses = new ArrayList<>();
         memberCrewListByMemberId.forEach(memberCrew -> {
-            Optional<PloggingChatRoom> byCrewId = ploggingChatRepository.findByCrewId(memberCrew.getId());
+            Optional<PloggingChatRoom> byCrewId = ploggingChatRepository.findByCrewId(memberCrew.getCrew().getId());
             if (byCrewId.isPresent()) {
                 PloggingChatRoom ploggingChatRoom = byCrewId.get();
                 activateCrewPloggingResponses.add(ActivateCrewPloggingResponse.of(ploggingChatRoom.getRoomId(), memberCrew.getCrew().getName(), memberCrew.getId()));
