@@ -36,7 +36,6 @@ import static com.ssafy.memberservice.global.common.error.exception.NotFoundExce
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class PloggingChatService {
     private final RedisTemplate redisTemplate;
 
