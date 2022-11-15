@@ -145,6 +145,7 @@ export const dateToDetailString = (text) => {
 
 export const httpToHttps = (url) => {
   // console.log(url.split("://")[0], url.split("://")[1]);
+  if (url.split("://")[0] !== "http") return url; 
   return url.split("://")[0] + "s://" + url.split("://")[1];
 };
 
