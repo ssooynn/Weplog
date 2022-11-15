@@ -526,7 +526,7 @@ export const Plogging = () => {
             if (data.type === "QUIT") {
               plogMembersId.delete(data.sender.id);
             }
-            playAudio();
+            // playAudio();
             setMessages((prev) => [
               ...prev,
               {
