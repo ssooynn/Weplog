@@ -53,6 +53,25 @@ spring:
           filters:
 #            - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+        # SockJS route
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/ws-stomp/info/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+              #            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+        #            - RemoveResponseHeader= Access-Control-Allow-Origin# SockJS route
+        # Normal Websocket route
+        - id: member-service
+          uri: lb:ws://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/ws-stomp/**
+          filters:
+              #            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+        #            - RemoveResponseHeader= Access-Control-Allow-Origin
 #            - RemoveResponseHeader= Access-Control-Allow-Origin
         - id: member-service
           uri: lb://MEMBER-SERVICE
