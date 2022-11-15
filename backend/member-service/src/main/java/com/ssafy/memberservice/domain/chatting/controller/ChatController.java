@@ -70,7 +70,7 @@ public class ChatController {
     public void message(PloggingChatMessage message, @Header(HttpHeaders.AUTHORIZATION) String token) {
 
         log.info("token - {}",token);
-        log.info("message - {}",message.getMessage());
+        log.info("message - {} - {} - {}",message.getMessage(), message.getLng(), message.getLng());
 
         String memberId = jwtTokenProvider.getSubject(parseBearerToken(token));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
