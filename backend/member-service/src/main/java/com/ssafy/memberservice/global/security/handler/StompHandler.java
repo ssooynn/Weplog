@@ -40,7 +40,6 @@ import static com.ssafy.memberservice.global.common.error.exception.NotFoundExce
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class StompHandler implements ChannelInterceptor {
 
     @Value("${token.secret}")
@@ -94,6 +93,7 @@ public class StompHandler implements ChannelInterceptor {
                         .sessionId(sessionId)
                         .roomId(roomId)
                         .roomType(RoomType.CREW)
+                        .memberId(memberId)
                         .build());
 
                 CrewChatRoom crewChatRoom = crewChatService.joinRoom(Long.valueOf(roomId), member);
