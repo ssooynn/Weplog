@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map,
+  Map as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
@@ -104,7 +104,7 @@ export const Plogging = () => {
   const [ready, setReady] = useState(false);
   const [tic, setTic] = useState(3);
   const [time, setTime] = useState(0);
-  const [plogMembers, setPlogMembers] = useState({ members: [] });
+  const [plogMembers, setPlogMembers] = useState(new Map());
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -496,10 +496,21 @@ export const Plogging = () => {
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
             // 라이드어스랑 로직 똑같음
-            if (data.sender !== User.nickname) {
-              plogMembers.members[data.memberId] = data;
-              setPlogMembers({ ...plogMembers });
-            }
+            // let index = plogMembers.findIndex(
+            //   (prev) => prev.nickname === data.sender.nickname
+            // );
+            // console.log(index);
+            // if (index !== -1) {
+            //   const temp = [...plogMembers];
+            //   temp[index] = data;
+            //   setPlogMembers([...temp]);
+            // } else {
+            //   setPlogMembers((prev) => [...prev, data]);
+            // }
+            setPlogMembers(
+              (prev) => (prev = new Map(prev.set(data.sender.id, data)))
+            );
+            // console.log(plogMembers);
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
@@ -747,7 +758,7 @@ export const Plogging = () => {
         {/* 지도 박스 */}
 
         {/* 지도 */}
-        <Map
+        <KakaoMap
           center={mapData.center}
           isPanto={true}
           style={{ width: "100%", height: "60%" }}
@@ -758,27 +769,28 @@ export const Plogging = () => {
             handleMapClick(mouseEvent.latLng);
           }}
         >
-          {plogMembers &&
-            plogMembers.members.map((member, idx) => {
-              console.log(member);
-              return (
-                <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                  // 커스텀 오버레이가 표시될 위치입니다
-                  position={{ lat: member.lat, lng: member.lng }}
-                  key={idx}
-                >
-                  {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                  <Avatar
-                    src={httpToHttps(member.profileImageUrl)}
-                    style={{
-                      width: "35px",
-                      height: "35px",
-                      border: `3px inset ${convertStringToColor(member.color)}`,
-                    }}
-                  />
-                </CustomOverlayMap>
-              );
-            })}
+          {plogMembers.forEach((value, key, map) => {
+            console.log(plogMembers);
+            return (
+              <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                // 커스텀 오버레이가 표시될 위치입니다
+                position={{ lat: value.lat, lng: value.lng }}
+                key={key}
+              >
+                {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                <Avatar
+                  src={httpToHttps(value.sender.profileImageUrl)}
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    border: `3px inset ${convertStringToColor(
+                      value.sender.color
+                    )}`,
+                  }}
+                />
+              </CustomOverlayMap>
+            );
+          })}
 
           {markerPositions.length > 0 &&
             markerPositions.map((marker, index) => {
@@ -843,7 +855,7 @@ export const Plogging = () => {
               strokeStyle={"solid"} // 선의 스타일입니다
             />
           )}
-        </Map>
+        </KakaoMap>
 
         {/* 종료 버튼 */}
         <Box
