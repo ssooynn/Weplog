@@ -5,17 +5,30 @@ import { SnowIsland } from "./Snow_island";
 import { Plomon } from "./Plomon";
 import { getAllMyPet } from '../../apis/memberPetApi'
 
+function getRandomIndexList(num) {
+  if (num) {
+      let indexs = []
+      for (let i=0; i<num; i++) {
+        indexs.push(i);};
+      const randomIndexList = [];
+      while(indexs.length > 0){
+        let movenum = indexs.splice(Math.floor(Math.random() * indexs.length),1)[0];
+        randomIndexList.push(movenum);};
+        return randomIndexList;
+    } else { return ''}
+  };
 
 function Island(props) {
   const mesh = useRef(null);
   const [allMyPet, setAllMyPet] = useState([]);
-  const [plomonStates, setPlomonStates] = useState([[[0, 23, 11], 0, 9], [[-8, 15.2, 26], 0, 0], [[-20, 14, 13], 0, 3], [[-21, 15.2, -7], 0, 2], [[-7, 15, -21], 0, 10], [[22, 38, 0], 0.5, 13]]); //[position, direction, speed, animationIndex]
-  // useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.0005));
+  const [plomonStates, setPlomonStates] = useState([[[0, 23, 11], [0, -90, 0], 0, 0.02, 9], [[-8, 15.2, 26], [0, -0.4, 0], 0, 0, 0], [[-20, 14, 13], [0, -1, 0], 0, 0, 3], [[-21, 15.2, -7], [0, -2, 0], 0, 0, 2], [[-7, 15, -21], [0, -2.6, 0], 0, 0, 17], [[22, 38, 0], [0, 0, 0], 0.5, 0, 13]]); //[position, rotation, speed, rSpeed, animationIndex]
+  const [randomIndexList, setRandomIndexList] = useState([]);
+  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.0005));
   useEffect(()=>{
     getAllMyPet(
       (res) => {
-        console.log(res.data);
         setAllMyPet(res.data);
+        setRandomIndexList(getRandomIndexList(res.data.length));
       },
       (err) => {
         console.log(err);
@@ -25,11 +38,12 @@ function Island(props) {
   return (
     <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
-        {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>
-        <Plomon key={idx} name={pet.name} position={plomonStates[idx][0]} speed={plomonStates[idx][1]} animationIndex={plomonStates[idx][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
+        {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>(
+          randomIndexList[idx] < 6 ?
+          <Plomon key={idx} name={pet.name} position={plomonStates[randomIndexList[idx]][0]} rotation={plomonStates[randomIndexList[idx]][1]} speed={plomonStates[randomIndexList[idx]][2]} rSpeed={plomonStates[randomIndexList[idx]][3]} animationIndex={plomonStates[randomIndexList[idx]][4]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true), props.setTargetPlomon(pet))}/>
+          : console.log('no')
+        )
         )}
-        {/* <Plomon name="피스" position={plomonStates[4][0]} speed={plomonStates[4][1]} animationIndex={plomonStates[4][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/>
-        <Plomon name="재권" position={plomonStates[1][0]} speed={plomonStates[1][1]} animationIndex={plomonStates[1][2]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true))}/> */}
       <meshLambertMaterial attach="material" />
     </mesh>
   );
@@ -41,7 +55,7 @@ export function MainMYContents(props) {
     camera={{position: [-40, 15, 0]}}
     >
       <Suspense fallback={null}>
-        <Island setPlomonOpen={props.setPlomonOpen} setIsPlomonClicked={props.setIsPlomonClicked}/>
+        <Island setPlomonOpen={props.setPlomonOpen} setIsPlomonClicked={props.setIsPlomonClicked} setTargetPlomon={props.setTargetPlomon}/>
         <OrbitControls minPolarAngle={0.5} maxPolarAngle={1.5} minDistance={20} maxDistance={50}/>
         <directionalLight color={"white"} position={[0, 10, 10]} />
         <directionalLight color={"white"} position={[-8.6, 10, -5]} />
