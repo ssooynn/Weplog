@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map,
+  Map as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
@@ -105,6 +105,8 @@ export const Plogging = () => {
   const [tic, setTic] = useState(3);
   const [time, setTime] = useState(0);
   const [plogMembers, setPlogMembers] = useState({ members: [] });
+  const [plogMembersId, setPlogMembersId] = useState(new Map());
+  const [plogMembersCnt, setPlogMembersCnt] = useState(0);
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -402,13 +404,15 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
+      // brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
+      brokerURL: "ws://localhost:8000/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
         memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        // return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        return SockJS("http://localhost:8000/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -495,11 +499,16 @@ export const Plogging = () => {
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
-            // 라이드어스랑 로직 똑같음
-            if (data.sender !== User.nickname) {
-              plogMembers.members[data.memberId] = data;
-              setPlogMembers({ ...plogMembers });
+            if (!plogMembersId.has(data.sender.id)) {
+              plogMembersId.set(data.sender.id, plogMembersCnt);
+              setPlogMembersCnt(plogMembersCnt + 1);
+              console.log("ㅇㅇ" , plogMembersId);
             }
+            // 라이드어스랑 로직 똑같음
+            // if (data.sender.nickname === User.nickname) {
+              plogMembers.members[plogMembersId.get(data.sender.id)] = data;
+              setPlogMembers({ ...plogMembers });
+            // }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
@@ -592,7 +601,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude,
+          lat: coords.latitude + 0.0001*time,
           lng: coords.longitude,
         };
         publishLocation(gps.lat, gps.lng);
@@ -747,7 +756,7 @@ export const Plogging = () => {
         {/* 지도 박스 */}
 
         {/* 지도 */}
-        <Map
+        <KakaoMap
           center={mapData.center}
           isPanto={true}
           style={{ width: "100%", height: "60%" }}
@@ -769,11 +778,11 @@ export const Plogging = () => {
                 >
                   {/* 커스텀 오버레이에 표시할 내용입니다 */}
                   <Avatar
-                    src={httpToHttps(member.profileImageUrl)}
+                    src={httpToHttps(member.sender.profileImageUrl)}
                     style={{
                       width: "35px",
                       height: "35px",
-                      border: `3px inset ${convertStringToColor(member.color)}`,
+                      border: `3px inset ${convertStringToColor(member.sender.color)}`,
                     }}
                   />
                 </CustomOverlayMap>
@@ -843,7 +852,7 @@ export const Plogging = () => {
               strokeStyle={"solid"} // 선의 스타일입니다
             />
           )}
-        </Map>
+        </KakaoMap>
 
         {/* 종료 버튼 */}
         <Box
