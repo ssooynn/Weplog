@@ -125,10 +125,10 @@ public class PloggingChatService {
 //        chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
         if (MessageType.ENTER.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 플로깅에 참여했습니다.");
-            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
+            chatMessage.getSender().setNickname("[알림]");
         } else if (MessageType.QUIT.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender().getNickname() + "님이 플로깅을 종료했습니다.");
-            chatMessage.setSender(Participant.builder().nickname("[알림]").build());
+            chatMessage.getSender().setNickname("[알림]");
         } else if (MessageType.POS.equals(chatMessage.getType())) {
 
         } else if (MessageType.PING.equals(chatMessage.getType())) {
