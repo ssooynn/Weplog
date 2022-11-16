@@ -45,7 +45,7 @@ ${(props) =>
     0 0 0 450px white;
     transition: 2s;
     `}
-      `
+`
 export const DrawingCharacter = () => {
   const [eggs, setEggs] = useState([1, 2, 3]);
   const [select, setSelect] = useState(null);
