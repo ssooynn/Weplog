@@ -140,7 +140,7 @@ public class CrewServiceImpl implements CrewService {
 
         // 신청 완료
         joinWaitingRepository.save(JoinWaiting.create(findMember, findCrew, request.getComment()));
-        notificationService.send(findCrew.getCrewMaster().getId(), "가입 승인이 완료 됐습니다!!","message");
+        notificationService.send(findCrew.getCrewMaster().getId(), findMember.getNickname() + "님이 크루 가입을 신청했습니다!!","message");
 
 
         return CreateCrewResponse.from(findCrew.getId());
