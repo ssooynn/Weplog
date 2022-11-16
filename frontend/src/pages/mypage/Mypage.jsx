@@ -140,10 +140,10 @@ export const Mypage = () => {
         align="center"
         width="100%"
       >
-        <Box direction="row" width="50%" justify="between" align="center">
+        <Box direction="row" width="80%" justify="start" align="center">
           <ProfileImg src={`${profile}`}></ProfileImg>
-          <Box direction="row" align="center" justify="between" width="60px">
-            <Text size="18px" weight={500}>
+          <Box direction="row" align="center" justify="between" style={{ minWidth: "60px" }} margin={{ left: "15px" }}>
+            <Text size="18px" weight={500} margin={{ right: "8px" }}>
               {nickname}
             </Text>
             <Text size="14px" weight={400}>
@@ -319,7 +319,7 @@ export const Mypage = () => {
           </Box>
         </Box>
 
-        <Box direction="row" wrap={true} justify="start" margin={{ left: "4px" }}>
+        <Box direction="row" wrap={true} justify="start" margin={{ left: "4px" }} width="100%">
           {crewList.map((crew, index) => <Box direction="row" justify="between" key={index} width="50%">
             <CrewCard crew={crew}></CrewCard>
           </Box>)}
