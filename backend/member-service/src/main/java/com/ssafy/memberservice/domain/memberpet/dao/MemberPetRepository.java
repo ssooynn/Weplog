@@ -24,4 +24,7 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
 
     @Query("select m from MemberPet m where m.currentLevel = 1")
     Optional<MemberPet> findByLevel(UUID uuid);
+
+    @Query("select mp from MemberPet mp join fetch mp.pet where mp.id = :memberPetId")
+    Optional<MemberPet> findByIdWithPet(Long memberPetId);
 }

@@ -4,6 +4,8 @@ import com.ssafy.ploggingservice.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -39,6 +41,9 @@ public class Plogging extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
+
+    @OneToMany(mappedBy = "plogging")
+    List<Coordinate> coordinates = new ArrayList<>();
 
     public void updateImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;

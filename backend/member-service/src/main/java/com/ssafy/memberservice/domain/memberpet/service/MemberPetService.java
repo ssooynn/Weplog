@@ -13,4 +13,6 @@ public interface MemberPetService {
     public List<Integer> getMyPetsKind(UUID id);
 
     MemberPetRes getMyPet(UUID id, Long petId);
+
+    Long transformMyPetImage(Long memberPetId);
 }

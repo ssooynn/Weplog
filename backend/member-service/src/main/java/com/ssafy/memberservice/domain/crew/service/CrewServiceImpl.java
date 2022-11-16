@@ -15,6 +15,7 @@ import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingDistanceInter
 import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
 import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingTimeInterface;
 import com.ssafy.memberservice.domain.notification.service.NotificationService;
+import com.ssafy.memberservice.global.common.error.exception.DuplicateException;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import com.ssafy.memberservice.infra.s3.S3Upload;
@@ -39,9 +40,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.ssafy.memberservice.global.common.error.exception.DuplicateException.JOIN_CREW_DUPLICATED;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.*;
 import static com.ssafy.memberservice.global.common.error.exception.NotMatchException.CREW_KING_NOT_MATCH;
 import static com.ssafy.memberservice.global.common.error.exception.NotMatchException.CREW_MAX_PARTICIPANT_CNT_NOT_MATCH;
@@ -123,6 +126,13 @@ public class CrewServiceImpl implements CrewService {
     // 크루 참가 신청하기
     @Override
     public CreateCrewResponse signCrew(UUID memberId, Long crewId, SignCrewRequest request) {
+        // 이미 가입 신청했는지 확인하기
+        Optional<JoinWaiting> joinWaitingByMemberIdAndCrewId =
+                joinWaitingRepository.findByMemberIdAndCrewId(memberId, crewId);
+        if (joinWaitingByMemberIdAndCrewId.isPresent()) {
+            throw new DuplicateException(JOIN_CREW_DUPLICATED);
+        }
+
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Crew findCrew = crewRepository.findById(crewId)
