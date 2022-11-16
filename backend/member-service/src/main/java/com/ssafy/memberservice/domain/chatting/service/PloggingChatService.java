@@ -181,7 +181,7 @@ public class PloggingChatService {
             Optional<PloggingChatRoom> byCrewId = ploggingChatRepository.findByCrewId(memberCrew.getCrew().getId());
             if (byCrewId.isPresent()) {
                 PloggingChatRoom ploggingChatRoom = byCrewId.get();
-                activateCrewPloggingResponses.add(ActivateCrewPloggingResponse.of(ploggingChatRoom.getRoomId(), memberCrew.getCrew().getName(), memberCrew.getId()));
+                activateCrewPloggingResponses.add(ActivateCrewPloggingResponse.of(ploggingChatRoom.getRoomId(), memberCrew.getCrew().getName(), memberCrew.getCrew().getId()));
             }
         });
 
