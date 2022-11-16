@@ -1,0 +1,102 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+}
+
+group = 'com.ssafy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "2021.0.4")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+
+    // mysql
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.0'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    // spring config server와 연동
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-config
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-amqp'
+
+    // feign cline
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+
+    // resilience4j
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-circuitbreaker-resilience4j'
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zipkin
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-zipkin', version: '2.2.8.RELEASE'
+
+    // aws s3
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+
+    // swagger
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    implementation group: 'org.springframework.kafka', name: 'spring-kafka'
+
+    // https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus'
+
+    // uuid-gen
+    implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
+
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+    // mysql point
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.12.Final'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20220924'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
