@@ -47,7 +47,7 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
       }}
       style={{ zIndex: 1005 }}
     >
-      <Box direction="row" justify="between" margin="20px">
+      <Box direction="row" justify="between">
         <Box width="24px" />
         <StyledText text="플로깅 선택" weight="bold" size="16px" />
         <img
@@ -57,27 +57,35 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
       </Box>
-      <Box height="25vh" direction="row" justify="center" margin="50px">
+      <Box
+        height="25vh"
+        direction="row"
+        justify="center"
+        margin={{ bottom: "50px" }}
+      >
         <motion.button
           onClick={() => {
             handleCrewPlogging(true);
           }}
           whileTap={{ scale: 1.2 }}
           children={
-            <Box
-              width="145px"
-              align="center"
-              style={{ borderRadius: "8px" }}
-              gap="medium"
-            >
-              <img src={SinglePlog} width="96px" />
-              <StyledText
-                text="혼자 하기"
-                color="black"
-                weight="bold"
-                size="18px"
-              />
-            </Box>
+            <>
+              <Box height="40px"></Box>
+              <Box
+                width="165px"
+                align="center"
+                style={{ borderRadius: "8px" }}
+                gap="medium"
+              >
+                <img src={SinglePlog} width="96px" />
+                <StyledText
+                  text="혼자 하기"
+                  color="black"
+                  weight="bold"
+                  size="18px"
+                />
+              </Box>
+            </>
           }
           style={{
             background: "none",
@@ -86,30 +94,51 @@ export const PloggingTypeBottomSheet = ({ crews, open, onDismiss }) => {
           }}
         />
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Box width="165px" align="center" justify="center">
+        <Box width="165px" align="center" justify="center" height="100%">
           <Grommet theme={grommetCustom}>
-            <Carousel
-              activeChild={activeSlide}
-              onChild={setActiveSlide}
-              controls="arrows"
-              alignSelf="center"
-              wrap
-            >
-              {crews &&
-                crews.map((crew, index) => {
-                  return (
-                    <Box align="center" key={index} justify="center">
-                      <Text
-                        size="18px"
-                        weight={500}
-                        margin={{ left: "15px", right: "15px" }}
+            <Box height="40px">
+              <Carousel
+                activeChild={activeSlide}
+                onChild={setActiveSlide}
+                controls="arrows"
+                alignSelf="center"
+                height="40px"
+                wrap
+              >
+                {crews &&
+                  crews.map((crew, index) => {
+                    return (
+                      <Box
+                        align="center"
+                        key={index}
+                        justify="center"
+                        height="40px"
                       >
-                        {crew.crewName}
-                      </Text>
-                    </Box>
-                  );
-                })}
-            </Carousel>
+                        <Text
+                          alignSelf="center"
+                          textAlign="center"
+                          wordBreak="break-all"
+                          size="14px"
+                          weight={500}
+                          margin={{ left: "15px", right: "15px" }}
+                          style={{
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                            display: "-webkit-box",
+                            WebkitLineClamp: "1",
+                            // 원하는 라인수
+                            WebkitBoxOrient: "vertical",
+                          }}
+                        >
+                          {crew.crewName}
+                        </Text>
+                      </Box>
+                    );
+                  })}
+              </Carousel>
+            </Box>
           </Grommet>
           <motion.button
             style={{
