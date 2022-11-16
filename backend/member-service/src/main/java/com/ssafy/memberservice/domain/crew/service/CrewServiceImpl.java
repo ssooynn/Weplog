@@ -14,6 +14,7 @@ import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingCntInterface;
 import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingDistanceInterface;
 import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingResponse;
 import com.ssafy.memberservice.domain.memberdetail.dto.TotalRankingTimeInterface;
+import com.ssafy.memberservice.domain.notification.service.NotificationService;
 import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import com.ssafy.memberservice.infra.s3.S3Upload;
@@ -59,6 +60,8 @@ public class CrewServiceImpl implements CrewService {
 
     private final CrewChatService crewChatService;
     private final EntityManager em;
+
+    private final NotificationService notificationService;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String restApiKey;
@@ -160,6 +163,8 @@ public class CrewServiceImpl implements CrewService {
         memberCrewRepository.save(MemberCrew.create(findJoinWaiting.getMember(), findJoinWaiting.getCrew()));
         // 대기목록에서 삭제
         joinWaitingRepository.delete(findJoinWaiting);
+
+        notificationService.send(findJoinWaiting.getMember().getId(), "가입 승인이 완료 됐습니다!!");
     }
 
     // 크루 참가 대기자들 보기
