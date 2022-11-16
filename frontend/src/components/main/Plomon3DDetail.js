@@ -2,23 +2,19 @@ import React, { useRef, useState, useEffect } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
-export function Plomon(props) {
+export function Plomon3DDetail(props) {
   const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
   const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
-  const [zSpeed, setZSpeed] = useState(props.speed);
   const mesh = useRef(null);
-
-  useFrame(() => {mesh.current.position.z += zSpeed;
-    if(mesh.current.position.z > 1000) {mesh.current.position.z = -500
-    }});
-  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += props.rSpeed));
+  console.log('^^',props)
+    //   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
     actions[names[Number(props.animationIndex)]].reset().fadeIn(0.5).play() // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
     // In the clean-up phase, fade it out
     return () => actions[names[Number(props.animationIndex)]]
-  }, [])
+  }, [],)
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>

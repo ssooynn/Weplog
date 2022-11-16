@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { container } from "../../utils/util";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { Box, Spinner } from "grommet";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +27,7 @@ export const PloggingStart = () => {
   const [loading, setLoading] = useState(true);
   const geocoder = new kakao.maps.services.Geocoder();
   const [ploggingCrews, setPloggingCrews] = useState([]);
+  const [recentLog, setRecentLog] = useState([]);
   const User = useSelector((state) => state.user.user);
   // function
   const handleClose = () => {
@@ -100,6 +101,17 @@ export const PloggingStart = () => {
               { lat: position.coords.latitude, lng: position.coords.longitude },
               (response) => {
                 console.log(response);
+                setRecentLog(response.data);
+                getExistCrewPlogging(
+                  (response) => {
+                    console.log(response);
+                    setPloggingCrews(response.data);
+                    setLoading(false);
+                  },
+                  (fail) => {
+                    console.log(fail);
+                  }
+                );
               },
               (fail) => {
                 console.log(fail);
@@ -111,16 +123,6 @@ export const PloggingStart = () => {
               ...prev,
               errMsg: err.message,
             }));
-          }
-        );
-        getExistCrewPlogging(
-          (response) => {
-            console.log(response);
-            setPloggingCrews(response.data);
-            setLoading(false);
-          },
-          (fail) => {
-            console.log(fail);
           }
         );
       }
@@ -159,6 +161,19 @@ export const PloggingStart = () => {
               }, // 마커이미지의 크기입니다
             }}
           ></MapMarker>
+          {recentLog.length > 0 &&
+            recentLog.map((log, index) => {
+              return (
+                <Polyline
+                  key={index}
+                  path={[log]}
+                  strokeWeight={5} // 선의 두께 입니다
+                  strokeColor={"#030ff1"} // 선의 색깔입니다
+                  strokeOpacity={0.7} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                  strokeStyle={"solid"} // 선의 스타일입니다
+                />
+              );
+            })}
         </Map>
         {/* 주소, 챌린지 선택 박스 */}
         <Box
