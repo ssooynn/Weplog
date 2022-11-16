@@ -5,8 +5,8 @@ import { Plomon3DDetail } from "../components/main/Plomon3DDetail";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
-import CameraIcon from "../assets/icons/cameraIcon.svg";
-import HeartIcon from "../assets/icons/heartIcon.svg";
+import HeartCareIcon from "../assets/icons/HeartCareIcon.png";
+import {ReactComponent as HeartPopIcon} from "../assets/icons/HeartPopIcon.svg";
 import { Box } from "grommet";
 import { getMyPetDetail } from '../apis/memberPetApi'
 
@@ -55,10 +55,86 @@ const PlomonContentsButtonsArea = styled.div`
 `
 
 const PlomonContentsButton = styled.div`
-  height: 4vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // height: 4vh;
   margin: 0 5vw;
-  
+  // background-color:white;
+  // padding:10px;
+  // border-radius:10px
 `
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+const opacityDuration = 1;
+
+const colors = ["#fce473", "#f68b39", "#ed6c63", "#847bb9", "#97cd76", "#35b1d1"]
+
+function Bubble({ id, onAnimationEnd }) {
+  const [position, setPosition] = useState({ x: 0, y: -230});
+  const [opacity, setOpacity] = useState(1);
+  const size = useRef(random(0.8, 1.2));
+
+  const element = useRef();
+  const emoji = useRef(Math.floor(random(0, colors.length - 1)));
+
+  const initialOptions = useRef({
+    animationDuration: random(8, 12),
+    element,
+    onAnimationEnd,
+    id
+  });
+
+  useEffect(() => {
+    const {
+      animationDuration,
+      element,
+      onAnimationEnd,
+      id
+    } = initialOptions.current;
+
+    element.current.addEventListener("transitionend", (event) => {
+      if (event.propertyName === "opacity") {
+        onAnimationEnd(id);
+      }
+    });
+
+    setTimeout(() => {
+      setPosition((prevState) => ({
+        ...prevState,
+        x: random(-340, 340),
+        y: random(-1800, -2000)
+      }));
+    }, 5);
+
+    setTimeout(() => {
+      setOpacity(0);
+    }, (animationDuration - opacityDuration));
+  }, []);
+
+  return (
+    <div
+      style={{
+        top: 0,
+        color: "red",
+        fontSize: "2em",
+        left: "50%",
+        opacity,
+        pointerEvents: "none",
+        position: "absolute",
+        transform: `translate(calc(-50% + ${position.x}px), calc(-100% + ${position.y}px)) scale(${size.current})`,
+        textShadow: "0 0 5px rgba(0, 0, 0, .25)",
+        transition: `transform ${initialOptions.current.animationDuration}s linear, opacity ${opacityDuration}s ease-in-out`
+      }}
+      ref={element}
+    >
+      <HeartPopIcon fill={colors[emoji.current]} />
+    </div>
+  );
+}
 
 
 function Plomon(props) {
@@ -84,6 +160,10 @@ export const Plomon3D = () => {
   const location = useLocation();
   const gottenPetId = location.state.gottenPetId;
   const [myPetDetail, setMyPetDetail] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const cleanLike = useRef((id) => {
+    setLikes((currentLikes) => currentLikes.filter((like) => like !== id));
+  });
 
 
   useEffect(() => {
@@ -105,23 +185,6 @@ export const Plomon3D = () => {
 
 
 
-  // const plomonRef = useRef();
-
-  // // --------------- function -------------
-  // const handleCapture = () =>{
-  //     const plomon = plomonRef.current;
-
-  // const filter = (plomon) => {
-  //     console.log(plomon);
-  //   return plomon.style.position !== "absolute";
-  // };
-
-  // domtoimage.toSvg(plomon, { filter: filter }).then(function (dataUrl) {
-  //   /* do something */
-  //   // console.log(dataUrl);
-  //   saveAs(dataUrl, "card.svg");
-  // });
-  // }
 
   return (
     <div
@@ -156,15 +219,20 @@ export const Plomon3D = () => {
               {item}
             </div>
             )) : <></>}
-          {/* {replaceBrTag(myPetDetail.description)} */}
+
           </PlomonContentsDescription>
         <PlomonContentsButtonsArea>
-          <PlomonContentsButton>
-            <img src={CameraIcon} />
+          <PlomonContentsButton onClick={() => setLikes((prevLikes) => [...prevLikes, new Date().getTime()])}>
+            <div style={{objectFit:'cover', width:'50px', height:'40px', display:'flex', flexDirection: 'row', justifyContent: 'center'}}>
+              <img src={HeartCareIcon} style={{objectFit:'cover', width:'40px', height:'40px'}} />
+            </div>
+            <div style={{fontSize:'10px', fontWeight:'500', paddingTop:'3px'}}>
+              쓰다듬기
+            </div>
           </PlomonContentsButton>
-          <PlomonContentsButton>
-            <img src={HeartIcon} />
-          </PlomonContentsButton>
+          {likes ? (likes.map((id) => (
+              <Bubble onAnimationEnd={cleanLike.current} key={id} id={id} />
+            ))): <></>}
         </PlomonContentsButtonsArea>
 
       </PlomonContentsArea>
