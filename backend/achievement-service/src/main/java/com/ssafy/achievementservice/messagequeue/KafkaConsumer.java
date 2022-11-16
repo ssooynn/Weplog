@@ -75,7 +75,7 @@ public class KafkaConsumer {
         UUID memberId = UUID.fromString((String) map.get("memberId"));
         Integer distance = (Integer) map.get("distance");
         Integer time = (Integer) map.get("time");
-        Boolean isGroupPlogging = (Boolean) map.get("isGroupPlogging");
+        Long crewId = (Long) map.get("crewId");
 
         List<MemberAchievement> memberAchievementList = memberAchievementRepository.findByMemberIdAndTypeListWithAchievement(memberId, typeList);
         log.info(memberAchievementList.toString());
@@ -90,7 +90,7 @@ public class KafkaConsumer {
             } else if (type.equals(PLOGGING_CNT)) {
                 addRewardPoint += memberAchievement.updateNumber();
             } else if (type.equals(GROUP_PLOGGING_CNT)) {
-                if (isGroupPlogging) {
+                if (crewId != null) {
                     addRewardPoint += memberAchievement.updateNumber();
                 }
             }
