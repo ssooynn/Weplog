@@ -23,10 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ssafy.ploggingservice.global.common.error.exception.NotFoundException.*;
@@ -179,5 +178,54 @@ public class PloggingServiceImpl implements PloggingService {
 
         return CrewFeedList.stream().map(plogging -> PloggingFeedRes.from(plogging))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CrewPloggingByDateRes> getCrewPloggingRecordByDate(Long crewId, LocalDate date) {
+        List<Plogging> findCrewPloggingByDate = ploggingRepository.findPloggingByCrewIdAndDate(crewId, date);
+
+        List<CrewPloggingByDateRes> result = new ArrayList<>(); // 반환될 결과값
+
+        // 찾아온 기록 데이터로 반복문
+        for (Plogging plogging : findCrewPloggingByDate) {
+            Member addMember = plogging.getMember(); // 기록의 주인
+            boolean existMember = false;
+            for (CrewPloggingByDateRes crewPloggingByDateRes : result) { // 기록의 주인이 이미 결과값에 포함되어 있으면 좌표 리스트만 추가
+                if (crewPloggingByDateRes.getMemberId().equals(addMember.getId().toString())) {
+                    crewPloggingByDateRes.getCoordinatesList().add(
+                            plogging.getCoordinates()
+                                    .stream().map(coordinate -> new CoordinateDto(coordinate))
+                                    .collect(Collectors.toList())
+                    );
+                    existMember = true;
+                    break;
+                }
+            }
+            if (existMember) continue;
+
+            CrewPloggingByDateRes createResponse = CrewPloggingByDateRes.from(plogging);
+            Color newColor = getNewColor(result);
+            createResponse.setColor(newColor.name());
+            result.add(createResponse);
+        }
+
+        return result;
+    }
+
+    private Color getNewColor(List<CrewPloggingByDateRes> crewPloggingByDateResList) {
+        Set<Color> usedColors = new HashSet<>();
+        if (crewPloggingByDateResList.size() == 0) return Color.RED;
+        for (CrewPloggingByDateRes crewPloggingByDateRes : crewPloggingByDateResList) {
+            usedColors.add(Color.valueOf(crewPloggingByDateRes.getColor()));
+        }
+
+        int size = crewPloggingByDateResList.size() * 2;
+        for (int i = 0; i < size; i++) {
+            Color newColor = Color.randomColor();
+            if (!usedColors.contains(newColor)) {
+                return newColor;
+            }
+        }
+        return Color.RED;
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -77,5 +79,12 @@ public class PloggingController
     @GetMapping("/feed/crew/{crewId}")
     public ResponseEntity<List<PloggingFeedRes>> getPloggingFeedByCrew(@PathVariable Long crewId) {
         return ResponseEntity.ok(ploggingService.getPloggingCrewFeed(crewId));
+    }
+
+    @ApiOperation(value = "크루 안에서 날짜별 플로깅 기록 리스트")
+    @GetMapping("/crew/{crewId}/{date}") // 2022-11-01
+    public ResponseEntity<List<CrewPloggingByDateRes>> getCrewPloggingRecordByDate(@PathVariable Long crewId,
+                                                                                   @PathVariable String date) {
+        return ResponseEntity.ok(ploggingService.getCrewPloggingRecordByDate(crewId, LocalDate.parse(date)));
     }
 }
