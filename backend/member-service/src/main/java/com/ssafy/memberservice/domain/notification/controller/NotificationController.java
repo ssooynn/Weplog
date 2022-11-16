@@ -24,7 +24,7 @@ public class NotificationController {
 
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     public SseEmitter subscribe(@RequestHeader("memberId") String memberId, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        log.info("Friend Controller - username = {}",memberId);
+        log.info("Notification Controller - memberId = {}",memberId);
         return notificationService.subscribe(UUID.fromString(memberId), lastEventId);
     }
 }
