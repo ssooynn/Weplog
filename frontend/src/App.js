@@ -12,7 +12,7 @@ function App() {
   const User = useSelector((state) => state.user.user);
   let eventSource = null;
   useEffect(() => {
-    if (User !== undefined) {
+    if (User !== undefined && eventSource == null) {
       eventSource = new EventSourcePolyfill(
         `${API_SERVER}member-service/notification/subscribe`,
         {
@@ -20,14 +20,39 @@ function App() {
             memberId: localStorage.getItem("memberId"),
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          withCredentials: true,
         }
       );
-      // eventSource.addEventListener("sse", function (event) {
-      //   console.log(event.data);
+    }
+    console.log("========================================================");
 
-      //   const data = JSON.parse(event.data);
+    console.log(User);
+    console.log(eventSource);
+    if (eventSource != null) {
+      eventSource.addEventListener(
+        "sse",
+        (event) => {
+          // console.log(event.data + " " + event.lastEventId);
+          // const data = JSON.parse(event.data);
+        },
+        true
+      );
+      // eventSource.onopen = event => {
+      //   console.log("connection opened" + event.data);
+      // };
 
-      // });
+      eventSource.addEventListener(
+        "message",
+        (event) => {
+          console.log(event.data);
+        },
+        false
+      );
+
+      return () => {
+        eventSource.close();
+        console.log("eventsource closed");
+      };
     }
   }, [User]);
 
