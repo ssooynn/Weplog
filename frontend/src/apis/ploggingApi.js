@@ -81,6 +81,14 @@ const getCrewPloggingDetail = async (crewId, date, success, fail) => {
   await authInstance.get(`/crew/${crewId}/${date}`).then(success).catch(fail);
 };
 
+//크루 안에서 월 기록 날짜(일) 가져오기
+const getCrewPloggingDate = async (crewId, date, success, fail) => {
+  await authInstance
+    .get(`/crew/${crewId}/month/${date}`)
+    .then(success)
+    .catch(fail);
+};
+
 //근처 쓰레기통 리스트
 const getGarbageList = async (params, success, fail) => {
   await authInstance
@@ -107,4 +115,5 @@ export {
   getGarbageList,
   postPloggingPicture,
   getCrewPloggingDetail,
+  getCrewPloggingDate,
 };

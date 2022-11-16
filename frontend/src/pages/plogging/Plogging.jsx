@@ -621,7 +621,7 @@ export const Plogging = () => {
         // console.log("location : ", coords);
 
         const gps = {
-          lat: coords.latitude + 0.0001 * time,
+          lat: coords.latitude,
           lng: coords.longitude,
         };
         publishLocation(gps.lat, gps.lng);
