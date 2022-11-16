@@ -8,6 +8,7 @@ import com.ssafy.memberservice.domain.memberpet.dto.MemberPetRes;
 import com.ssafy.memberservice.domain.pet.dao.PetRepository;
 import com.ssafy.memberservice.domain.pet.domain.Pet;
 import com.ssafy.memberservice.global.common.error.exception.DuplicateException;
+import com.ssafy.memberservice.global.common.error.exception.NotFoundException;
 import com.ssafy.memberservice.global.common.error.exception.NotMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.ssafy.memberservice.global.common.error.exception.DuplicateException.GROWING_PET_DUPLICATED;
+import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.MEMBER_PET_NOT_FOUND;
+import static com.ssafy.memberservice.global.common.error.exception.NotMatchException.PET_MAX_LEVEL_NOT_MATCH;
 
 @Service
 @Slf4j
@@ -43,6 +46,25 @@ public class MemberPetServiceImpl implements MemberPetService{
     public MemberPetRes getMyPet(UUID id, Long petId) {
         MemberPet memberPet = memberPetRepository.getMemberPetByMemberId(id, petId);
         return new MemberPetRes(memberPet);
+    }
+
+    @Override
+    @Transactional
+    public Long transformMyPetImage(Long memberPetId) {
+        MemberPet findMemberPet = memberPetRepository.findByIdWithPet(memberPetId)
+                .orElseThrow(() -> new NotFoundException(MEMBER_PET_NOT_FOUND));
+
+        // 만렙 아니면 변신 못함.
+        if (findMemberPet.getCurrentLevel() != 2) {
+            throw new NotMatchException(PET_MAX_LEVEL_NOT_MATCH);
+        }
+
+        // 지금 키우는 플로몬 종류 가져오기
+        List<Pet> petInfo = petRepository.findPetByCategory(findMemberPet.getName());
+        // image 업데이트
+        findMemberPet.updateImage(petInfo);
+
+        return memberPetId;
     }
 
     @Override
