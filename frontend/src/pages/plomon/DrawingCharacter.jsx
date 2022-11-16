@@ -113,7 +113,7 @@ export const DrawingCharacter = () => {
           }, (err) => {
             console.log(err);
           })
-          navigate("/main/plomoned", { state: { gottomPetId: petId } });
+          navigate("/main/plomon3d", { state: { gottenPetId: petId } });
         };
         setTic2((rec) => rec - 1);
         console.log("ready,,,");
