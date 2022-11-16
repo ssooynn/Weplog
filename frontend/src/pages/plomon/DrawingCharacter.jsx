@@ -14,6 +14,8 @@ import { tsParticles } from "tsparticles-engine";
 import { getAllMyPet } from "../../apis/memberPetApi";
 import styled, { css } from "styled-components";
 import useInterval from "../../hooks/UseInterval";
+import { Navigate } from "grommet-icons";
+import { useNavigate } from "react-router-dom";
 
 
 const LightStyled = styled.div`
@@ -37,13 +39,13 @@ const LightStyled = styled.div`
 ${(props) =>
     props.start && css`
        box-shadow: 0 0 0 40px white, 
-    0 0 0 60px white,
-    0 0 0 100px white,
-    0 0 0 120px white, 
-    0 0 0 200px white,
-    0 0 0 400px white, 
-    0 0 0 450px white;
-    transition: 2s;
+    0 0 40px 60px white,
+    0 0 40px 100px white,
+    0 0 40px 120px white, 
+    0 0 40px 200px white,
+    0 0 40px 400px white, 
+    0 0 40px 450px white;
+    transition: 1s;
     `}
 `
 export const DrawingCharacter = () => {
@@ -54,7 +56,11 @@ export const DrawingCharacter = () => {
   const [eggClikced, setEggClicked] = useState(false);
   const [light, setLight] = useState(false);
   const [tic, setTic] = useState(2);
+  const [tic2, setTic2] = useState(5);
   const [ready, setReady] = useState(false);
+  const [ready2, setReady2] = useState(false);
+  const navigate = useNavigate();
+
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
     // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
@@ -92,6 +98,21 @@ export const DrawingCharacter = () => {
     },
     ready ? null : 1000
   );
+
+  useInterval(
+    () => {
+      if (light) {
+        if (tic2 === 1) {
+          setReady2(true)
+          navigate("/");
+        };
+        setTic2((rec) => rec - 1);
+        console.log("ready,,,");
+      }
+    },
+    ready2 ? null : 600
+  );
+
 
   return (
     <motion.div
