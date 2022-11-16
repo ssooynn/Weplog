@@ -32,25 +32,25 @@ public class NotificationService {
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
         // 503 에러를 방지하기 위한 더미"" 이벤트 전송
-        sendToClient(emitter, id, "EventStream Created. [userId=" + userId + "]");
+        sendToClient(emitter, id, "EventStream Created. [userId=" + userId + "]", "sse");
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
         if (!lastEventId.isEmpty()) {
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(userId));
             events.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue(), "message"));
         }
 
         return emitter;
     }
 
-    private void sendToClient(SseEmitter emitter, String id, Object data) {
+    private void sendToClient(SseEmitter emitter, String id, Object data, String target) {
 
         try {
             emitter.send(SseEmitter.event()
                     .id(id)
-                    .name("sse")
+                    .name(target)
                     .data(data));
         } catch (IOException exception) {
             emitterRepository.deleteById(id);
@@ -58,7 +58,7 @@ public class NotificationService {
         }
     }
 
-    public void send(UUID userId, String value) {
+    public void send(UUID userId, String value, String target) {
         String id = String.valueOf(userId);
 
         log.info("Friend Service send - id = {}", id);
@@ -67,7 +67,7 @@ public class NotificationService {
                 (key, emitter) -> {
 //                    friendRepository.save(friend);
                     emitterRepository.saveEventCache(key, value);
-                    sendToClient(emitter, key, value);
+                    sendToClient(emitter, key, value, target);
                 }
         );
     }
