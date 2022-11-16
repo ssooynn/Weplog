@@ -63,7 +63,7 @@ public class KafkaConsumer {
                 boolean evolutionFlag = findMemberPet.get().addExp(addRewardPointDto.getRewardPoint());
                 // 레벨업 했으면 카프카로 보내서 도전과제 갱신
                 if (evolutionFlag) {
-                    notificationService.send(memberId, "플로몬이 나이를 먹었어요!!");
+                    notificationService.send(memberId, "플로몬이 나이를 먹었어요!!","message");
                     kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
                 }
             }

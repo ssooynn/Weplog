@@ -130,7 +130,7 @@ public class CrewServiceImpl implements CrewService {
 
         // 신청 완료
         joinWaitingRepository.save(JoinWaiting.create(findMember, findCrew, request.getComment()));
-        notificationService.send(findCrew.getCrewMaster().getId(), "가입 승인이 완료 됐습니다!!");
+        notificationService.send(findCrew.getCrewMaster().getId(), "가입 승인이 완료 됐습니다!!","message");
 
 
         return CreateCrewResponse.from(findCrew.getId());
@@ -166,7 +166,7 @@ public class CrewServiceImpl implements CrewService {
         // 대기목록에서 삭제
         joinWaitingRepository.delete(findJoinWaiting);
 
-        notificationService.send(findJoinWaiting.getMember().getId(), "가입 승인이 완료 됐습니다!!");
+        notificationService.send(findJoinWaiting.getMember().getId(), "가입 승인이 완료 됐습니다!!","message");
     }
 
     // 크루 참가 대기자들 보기
@@ -265,6 +265,7 @@ public class CrewServiceImpl implements CrewService {
 
         // 대기목록에서 삭제
         joinWaitingRepository.delete(findJoinWaiting);
+        notificationService.send(findJoinWaiting.getMember().getId(), "크루에서 거절 당했습니다!!", "message");
     }
 
     @Override
