@@ -127,9 +127,9 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public CreateCrewResponse signCrew(UUID memberId, Long crewId, SignCrewRequest request) {
         // 이미 가입 신청했는지 확인하기
-        Optional<MemberCrew> memberCrewByMemberIdAndCrewId =
-                memberCrewRepository.findMemberCrewByMemberIdAndCrewId(memberId, crewId);
-        if (memberCrewByMemberIdAndCrewId.isPresent()) {
+        Optional<JoinWaiting> joinWaitingByMemberIdAndCrewId =
+                joinWaitingRepository.findByMemberIdAndCrewId(memberId, crewId);
+        if (joinWaitingByMemberIdAndCrewId.isPresent()) {
             throw new DuplicateException(JOIN_CREW_DUPLICATED);
         }
 

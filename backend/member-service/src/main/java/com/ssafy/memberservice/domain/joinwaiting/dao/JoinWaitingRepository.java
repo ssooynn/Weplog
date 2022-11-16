@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface JoinWaitingRepository extends JpaRepository<JoinWaiting, Long> {
 
@@ -22,4 +23,7 @@ public interface JoinWaitingRepository extends JpaRepository<JoinWaiting, Long> 
 
     @Query("select distinct jw from JoinWaiting jw join fetch jw.member join fetch jw.crew c join c.memberCrewList where jw.crew.id = :crewId")
     List<JoinWaiting> findByCrewIdWithMember(Long crewId);
+
+    @Query("select jw from JoinWaiting jw where jw.member.id = :memberId and jw.crew.id = :crewId")
+    Optional<JoinWaiting> findByMemberIdAndCrewId(UUID memberId, Long crewId);
 }
