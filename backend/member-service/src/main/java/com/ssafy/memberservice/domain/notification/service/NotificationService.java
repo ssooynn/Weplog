@@ -27,7 +27,7 @@ public class NotificationService {
 
         String id = userId + "_" + System.currentTimeMillis();
 
-        SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+        SseEmitter emitter = emitterRepository.save(id, new SseEmitter(60 * 1000L));
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
