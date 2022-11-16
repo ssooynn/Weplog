@@ -12,7 +12,7 @@ export const Plomon3DDetail = forwardRef((props, reff) => {
   const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
   const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
-  const [animationIdx, setAnimationIdx] = useState(0);
+  const [animationIdx, setAnimationIdx] = useState(3);
   const mesh = useRef(null);
   // console.log("^^", props);
   //   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
@@ -31,7 +31,7 @@ export const Plomon3DDetail = forwardRef((props, reff) => {
     // Reset and fade in animation after an index has been changed
     // setAnimationIdx(props.animationIndex);
     // handleAnimation(animationIdx);
-    actions[names[Number(animationIdx)]].fadeIn(0.5).play();
+    actions[names[Number(animationIdx)]].play();
     // actions[names[Number(props.animationIndex)]].reset().fadeIn(0.5).play(); // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
     // In the clean-up phase, fade it out
   });
