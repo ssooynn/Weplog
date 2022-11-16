@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,4 +23,6 @@ public interface PloggingService {
     List<PloggingFeedRes> getPloggingFeed();
 
     List<PloggingFeedRes> getPloggingCrewFeed(Long crewId);
+
+    List<CrewPloggingByDateRes> getCrewPloggingRecordByDate(Long crewId, LocalDate date);
 }
