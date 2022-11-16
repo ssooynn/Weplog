@@ -76,6 +76,11 @@ const getCrewFeedList = async (crewId, success, fail) => {
   await authInstance.get(`/feed/crew/${crewId}`).then(success).catch(fail);
 };
 
+//크루 안에서 날짜별 플로깅 기록 리스트
+const getCrewPloggingDetail = async (crewId, date, success, fail) => {
+  await authInstance.get(`/crew/${crewId}/${date}`).then(success).catch(fail);
+};
+
 //근처 쓰레기통 리스트
 const getGarbageList = async (params, success, fail) => {
   await authInstance
@@ -101,4 +106,5 @@ export {
   getCrewFeedList,
   getGarbageList,
   postPloggingPicture,
+  getCrewPloggingDetail,
 };

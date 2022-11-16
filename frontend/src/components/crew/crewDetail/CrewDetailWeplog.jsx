@@ -19,6 +19,7 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
   const [open, setOpen] = useState(false);
   const [roomId, setRoomId] = useState();
   const [selectedDays, setSelectedDays] = useState([]);
+  const [loggedDays, setLoggedDays] = useState([]);
   const [scheduels, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -131,6 +132,7 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
             crewId={crewId}
             selectedDays={selectedDays}
             getSchedule={getSchedule}
+            loggedDays={loggedDays}
           ></CrewCalender>
 
           <Box direction="row" align="center" height="auto" justify="between">

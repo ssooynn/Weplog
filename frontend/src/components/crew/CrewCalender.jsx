@@ -11,8 +11,14 @@ import React, { useEffect, useState } from "react";
 import { Box, Spinner, Text } from "grommet";
 import { CreateScheduleDialog } from "./crewDetail/CreateScheduleDialog";
 import { getCrewSchedule } from "../../apis/calenderApi";
+import { getCrewPloggingDetail } from "../../apis/ploggingApi";
 
-export const CrewCalender = ({ crewId, selectedDays, getSchedule }) => {
+export const CrewCalender = ({
+  crewId,
+  selectedDays,
+  loggedDays,
+  getSchedule,
+}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -46,6 +52,24 @@ export const CrewCalender = ({ crewId, selectedDays, getSchedule }) => {
 
   const handleSelectedDates = (index) => {
     if (index < parseInt(today.getDate())) {
+      if (selectedDateIndex.includes(index)) {
+        getCrewPloggingDetail(
+          crewId,
+          new Date(
+            displayedCalenderInfo.year,
+            displayedCalenderInfo.month,
+            index
+          )
+            .toISOString()
+            .split("T")[0],
+          (response) => {
+            console.log(response);
+          },
+          (fail) => {
+            console.log(fail);
+          }
+        );
+      }
     } else {
       setSelectedDate(
         (prev) =>

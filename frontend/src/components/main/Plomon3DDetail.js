@@ -1,20 +1,40 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
-export function Plomon3DDetail(props) {
+export const Plomon3DDetail = forwardRef((props, reff) => {
   const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
   const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
+  const [animationIdx, setAnimationIdx] = useState(0);
   const mesh = useRef(null);
-  console.log('^^',props)
-    //   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+  // console.log("^^", props);
+  //   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+  useImperativeHandle(reff, () => ({
+    // 부모에서 사용하고 싶었던 함수
+    handleAnimation,
+  }));
+  const handleAnimation = (idx) => {
+    console.log("^^", props);
+    console.log(actions);
+    actions[names[Number(animationIdx)]].stop();
+    setAnimationIdx(idx);
+    // actions[names[Number(animationIndex)]].reset().stop();
+  };
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
-    actions[names[Number(props.animationIndex)]].reset().fadeIn(0.5).play() // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
+    // setAnimationIdx(props.animationIndex);
+    // handleAnimation(animationIdx);
+    actions[names[Number(animationIdx)]].fadeIn(0.5).play();
+    // actions[names[Number(props.animationIndex)]].reset().fadeIn(0.5).play(); // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
     // In the clean-up phase, fade it out
-    return () => actions[names[Number(props.animationIndex)]]
-  }, [],)
+  });
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>
@@ -84,4 +104,4 @@ export function Plomon3DDetail(props) {
       </group>
     </group>
   );
-}
+});
