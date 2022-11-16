@@ -46,7 +46,7 @@ public class MemberPet extends BaseEntity {
         this.currentExp = 0;
         this.currentLevel = 1;
         this.fileUrl = pet.getFileUrl();
-        this.imageLevel = 0;
+        this.imageLevel = 1;
         this.maxExp = pet.getMaxExp();
         this.name = pet.getCategory();
     }

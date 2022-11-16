@@ -26,9 +26,9 @@ public class PloggingReq {
                 .time(time)
                 .member(member)
                 .calorie(calorie)
-                .startLat(coordinates.get(0).getLat())
-                .startLng(coordinates.get(0).getLng())
-                .crew(crew == null ? null : crew)
+                .startLat(Math.round(coordinates.get(0).getLat() * 100_000) / 100_000.0)
+                .startLng(Math.round(coordinates.get(0).getLng() * 100_000) / 100_000.0)
+                .crew(crew)
                 .startLoc(address)
                 .build();
     }
