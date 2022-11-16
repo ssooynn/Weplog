@@ -48,6 +48,21 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
       return top3[id].name;
     }
   }
+  const secChangeTime = (seconds) => {
+    var hour = parseInt(seconds / 3600);
+    var min = parseInt((seconds % 3600) / 60);
+    var sec = seconds % 60;
+    if (hour <= 10) {
+      hour = `0${hour}`;
+    }
+    if (min <= 10) {
+      min = `0${min}`;
+    }
+    if (sec <= 10) {
+      sec = `0${sec}`;
+    }
+    return `${hour} : ${min} : ${sec}`;
+  }
   const changevalue = (id) => {
     if (type === 'user') {
       switch (rankType) {
@@ -58,7 +73,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
           return top3[id].totalCnt + " 회";
 
         case "TIME":
-          return top3[id].totalTime;
+          return secChangeTime(top3[id].totalTime);
 
         default:
           return undefined;
