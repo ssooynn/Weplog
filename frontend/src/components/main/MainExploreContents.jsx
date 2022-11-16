@@ -2,7 +2,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { DetailDialog } from "../AlertDialog";
 import { getRecentFeedList } from "../../apis/ploggingApi";
-
+import dayjs from "dayjs";
 export const ExploreArea = styled.div`
   height: 86vh;
   overflow: scroll;
@@ -79,12 +79,12 @@ export const ArticleProfileTime = styled.div`
 `;
 
 export function getPrettyPostingTime(PostingTime) {
-  let today = new Date();
-  let nowYear = Number(today.getFullYear());
-  let nowMonth = Number(today.getMonth()) + 1;
-  let nowDay = Number(today.getDate());
-  let nowHour = Number(today.getHours());
-  let nowMin = Number(today.getMinutes());
+  let today = dayjs();
+  let nowYear = Number(today.year());
+  let nowMonth = Number(today.month()) + 1;
+  let nowDay = Number(today.date());
+  let nowHour = Number(today.hour());
+  let nowMin = Number(today.minute());
 
   let postingYear = Number(PostingTime.slice(0, 4));
   let postingMonth = Number(PostingTime.slice(5, 7));
