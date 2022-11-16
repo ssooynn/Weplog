@@ -18,14 +18,17 @@ export const Rank = () => {
   const [myProfile, setMyProfile] = useState("");
   const [myNickname, setMyNickname] = useState("");
   useEffect(() => {
-    rankApi((res) => {
-      console.log(res);
-      setAllRankingList(res.data);
-      setRankType("DISTANCE")
-    }, (err) => {
-      console.log(err);
-    })
-  }, [])
+    rankApi(
+      (res) => {
+        console.log(res);
+        setAllRankingList(res.data);
+        setRankType("DISTANCE");
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }, []);
   useEffect(() => {
     switch (rankType) {
       case "DISTANCE":
@@ -43,7 +46,7 @@ export const Rank = () => {
       default:
         break;
     }
-  }, [rankType])
+  }, [rankType]);
   return (
     <motion.div
       style={{
@@ -110,16 +113,30 @@ export const Rank = () => {
             내 랭킹
           </Text>
           <Box width="100%" align="center">
-            <ChallengeRankCard my={true} rank={myRank} profileImgUrl={myProfile} nickname={myNickname} value={myRankValue}></ChallengeRankCard>
+            <ChallengeRankCard
+              my={true}
+              rank={myRank}
+              profileImgUrl={myProfile}
+              nickname={myNickname}
+              value={myRankValue}
+            ></ChallengeRankCard>
           </Box>
         </Box>
         {/* 내 랭크*/}
-        <Box direction="column" pad="0px 8%" width="100%" margin="30px 0px">
+        <Box direction="column" pad="50px 8%" width="100%" margin="30px 0px">
           <Text size="16px" weight={400}>
             참여자 기여도 Ranking
           </Text>
-          {rankList !== undefined && rankList.length > 0 && <ChallengeRankCardList rankType={rankType} list={rankList} setMyRank={setMyRank} setMyNickname={setMyNickname} setMyProfile={setMyProfile} setMyRankValue={setMyRankValue} />}
-
+          {rankList !== undefined && rankList.length > 0 && (
+            <ChallengeRankCardList
+              rankType={rankType}
+              list={rankList}
+              setMyRank={setMyRank}
+              setMyNickname={setMyNickname}
+              setMyProfile={setMyProfile}
+              setMyRankValue={setMyRankValue}
+            />
+          )}
         </Box>
       </Box>
     </motion.div>

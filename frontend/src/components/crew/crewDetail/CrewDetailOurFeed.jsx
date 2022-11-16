@@ -36,7 +36,11 @@ const CrewDetailOurFeed = ({ crewId }) => {
   }, []);
   if (recentFeedList.length > 0)
     return (
-      <ExploreArea>
+      <ExploreArea
+        style={{
+          height: "auto",
+        }}
+      >
         <LeftInfiniteBar>
           {recentFeedList !== undefined &&
             recentFeedList.length > 0 &&
