@@ -43,4 +43,10 @@ public class MemberPetController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "육성 완료된 펫 이미지 변신")
+    @PatchMapping("/{memberPetId}/transformation")
+    public ResponseEntity<Long> transformMyPetImage(@PathVariable Long memberPetId) {
+        return ResponseEntity.ok(memberPetService.transformMyPetImage(memberPetId));
+    }
+
 }
