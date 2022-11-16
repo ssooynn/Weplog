@@ -61,7 +61,7 @@ public class NotificationService {
     public void send(UUID userId, String value, String target) {
         String id = String.valueOf(userId);
 
-        log.info("Friend Service send - id = {}", id);
+        log.info("Service send - id = {} - val - {}", id, value);
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
         sseEmitters.forEach(
                 (key, emitter) -> {
