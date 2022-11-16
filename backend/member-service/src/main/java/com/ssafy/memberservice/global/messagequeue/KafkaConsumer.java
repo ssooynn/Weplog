@@ -10,6 +10,8 @@ import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
 import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
 import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
 import com.ssafy.memberservice.domain.notification.service.NotificationService;
+import com.ssafy.memberservice.domain.pet.dao.PetRepository;
+import com.ssafy.memberservice.domain.pet.domain.Pet;
 import com.ssafy.memberservice.global.messagequeue.dto.AddRewardPointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class KafkaConsumer {
     private final KafkaProducer kafkaProducer;
 
     private final NotificationService notificationService;
+    private final PetRepository petRepository;
 
     @KafkaListener(topics = "update-reward-point")
     public void updateRewardPoint(String kafkaMessage) {
@@ -60,11 +63,16 @@ public class KafkaConsumer {
             // 키우고 있는 플로몬 경험치 주고 경험치 꽉차면 레벨업
             Optional<MemberPet> findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId);
             if (findMemberPet.isPresent()) {
-                boolean evolutionFlag = findMemberPet.get().addExp(addRewardPointDto.getRewardPoint());
-                // 레벨업 했으면 카프카로 보내서 도전과제 갱신
+                MemberPet memberPet = findMemberPet.get();
+                boolean evolutionFlag = memberPet.addExp(addRewardPointDto.getRewardPoint());
+                // 레벨업 했으면 이미지, 레벨 갱신하고 카프카로 보내서 도전과제 갱신
                 if (evolutionFlag) {
                     notificationService.send(memberId, "플로몬이 나이를 먹었어요!!","message");
                     kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+                    // 지금 키우는 플로몬 종류 가져오기
+                    List<Pet> petInfo = petRepository.findPetByCategory(memberPet.getName());
+                    // image 업데이트
+                    memberPet.updateImage(petInfo);
                 }
             }
         }
@@ -120,10 +128,16 @@ public class KafkaConsumer {
         // 키우고 있는 플로몬 있으면 경험치 주고 경험치 꽉차면 레벨업
         Optional<MemberPet> findMemberPet = memberPetRepository.findGrowingPetByMemberId(memberId);
         if (findMemberPet.isPresent()) {
-            boolean evolutionFlag = findMemberPet.get().addExp(rewardPoint);
+            MemberPet memberPet = findMemberPet.get();
+            boolean evolutionFlag = memberPet.addExp(rewardPoint);
             // 레벨업 했으면 카프카로 보내서 도전과제 갱신
             if (evolutionFlag) {
                 kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
+                // 지금 키우는 플로몬 종류 가져오기
+                List<Pet> petInfo = petRepository.findPetByCategory(memberPet.getName());
+                // image 업데이트
+                memberPet.updateImage(petInfo);
+                notificationService.send(memberId, "플로몬이 나이를 먹었어요!!","message");
             }
         }
 

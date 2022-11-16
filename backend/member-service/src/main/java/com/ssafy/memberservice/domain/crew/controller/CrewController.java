@@ -28,13 +28,13 @@ public class CrewController {
     @PostMapping
     public ResponseEntity<CreateCrewResponse> createClan(@RequestPart CreateCrewRequest request,
                                                          @RequestPart MultipartFile image,
-                                                         @ApiIgnore @RequestHeader("memberId") String memberId) {
+                                                         @RequestHeader("memberId") String memberId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(crewService.createCrew(request, image, UUID.fromString(memberId)));
     }
 
     @ApiOperation(value = "크루 가입 신청하기")
     @PostMapping("/join/{crewId}")
-    public ResponseEntity<CreateCrewResponse> signCrew(@ApiIgnore @RequestHeader("memberId") String memberId,
+    public ResponseEntity<CreateCrewResponse> signCrew(@RequestHeader("memberId") String memberId,
                                    @PathVariable Long crewId, @RequestBody SignCrewRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(crewService.signCrew(UUID.fromString(memberId), crewId, request));
@@ -42,7 +42,7 @@ public class CrewController {
 
     @ApiOperation(value = "크루 가입신청 허가하기")
     @PostMapping("/access/{joinWaitingId}")
-    public ResponseEntity accessJoinCrew(@ApiIgnore @RequestHeader("memberId") String memberId,
+    public ResponseEntity accessJoinCrew(@RequestHeader("memberId") String memberId,
                                          @PathVariable Long joinWaitingId) {
         crewService.accessJoinCrew(UUID.fromString(memberId), joinWaitingId);
 
@@ -58,7 +58,7 @@ public class CrewController {
     @ApiOperation(value = "크루 상세 조회", notes = "본인이 크루장이면 isCrewMaster: true")
     @GetMapping("/{crewId}")
     public ResponseEntity<CrewDetailInfoResponse> getCrewDetailInfo(@PathVariable Long crewId,
-                                                                    @ApiIgnore @RequestHeader String memberId) {
+                                                                    @RequestHeader String memberId) {
         return ResponseEntity.ok(crewService.getCrewDetailInfo(crewId, UUID.fromString(memberId)));
     }
 
@@ -82,7 +82,7 @@ public class CrewController {
 
     @ApiOperation(value = "내 크루 목록 조회")
     @GetMapping("/my")
-    public ResponseEntity<List<CrewSimpleResponse>> getMyCrewList(@ApiIgnore @RequestHeader("memberId") String memberId) {
+    public ResponseEntity<List<CrewSimpleResponse>> getMyCrewList(@RequestHeader("memberId") String memberId) {
         return ResponseEntity.ok(crewService.getMyCrewList(UUID.fromString(memberId)));
     }
 

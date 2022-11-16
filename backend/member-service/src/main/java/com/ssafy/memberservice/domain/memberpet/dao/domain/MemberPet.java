@@ -7,6 +7,7 @@ import com.ssafy.memberservice.global.common.base.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,7 +46,7 @@ public class MemberPet extends BaseEntity {
         this.currentExp = 0;
         this.currentLevel = 1;
         this.fileUrl = pet.getFileUrl();
-        this.imageLevel = 0;
+        this.imageLevel = 1;
         this.maxExp = pet.getMaxExp();
         this.name = pet.getCategory();
     }
@@ -72,6 +73,26 @@ public class MemberPet extends BaseEntity {
             this.currentExp += rewardPoint;
 
             return false;
+        }
+    }
+
+    public void updateImage(List<Pet> petInfo) {
+        if (this.imageLevel == 1) {
+            for (Pet pet1 : petInfo) {
+                if (pet1.getLevel() == 2) {
+                    this.imageLevel = 2;
+                    this.fileUrl = pet1.getFileUrl();
+                    break;
+                }
+            }
+        } else {
+            for (Pet pet1 : petInfo) {
+                if (pet1.getLevel() == 1) {
+                    this.imageLevel = 1;
+                    this.fileUrl = pet1.getFileUrl();
+                    break;
+                }
+            }
         }
     }
 }

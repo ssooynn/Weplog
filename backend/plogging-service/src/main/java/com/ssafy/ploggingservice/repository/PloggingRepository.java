@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,4 +34,10 @@ public interface PloggingRepository extends JpaRepository<Plogging, Long> {
     @Query("select p from Plogging p join fetch p.member where p.crew.id = :crewId and p.imageUrl is not null" +
             " order by p.createdDate desc ")
     List<Plogging> findCrewPloggingAllWithMemberOrderByCreatedDate(Long crewId);
+
+    @Query("select distinct p from Plogging p join fetch p.member join fetch p.coordinates where p.crew.id = :crewId and year(p.createdDate) = year(:date) and month(p.createdDate) = month(:date) and day(p.createdDate) = day(:date)")
+    List<Plogging> findPloggingByCrewIdAndDate(Long crewId, LocalDate date);
+
+    @Query("select distinct day(p.createdDate) from Plogging p where p.crew.id = :crewId and year(p.createdDate) = year(:date) and month(p.createdDate) = month(:date) order by day(p.createdDate) asc")
+    List<Integer> findCrewPloggingDayByCrewIdAndDate(Long crewId, LocalDate date);
 }
