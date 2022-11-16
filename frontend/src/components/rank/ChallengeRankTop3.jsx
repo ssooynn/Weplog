@@ -14,7 +14,7 @@ const Profile1st = styled.img`
 `;
 
 const Profile2nd = styled.img`
-  width: 65 px;
+  width: 65px;
   height: 65px;
   object-fit: cover;
   border-radius: 50%;
