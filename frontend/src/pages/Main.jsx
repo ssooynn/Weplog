@@ -13,7 +13,7 @@ import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
 import PlomonSample4 from "../assets/PlomonSample4.gif";
-import { getAllMyPet } from '../apis/memberPetApi'
+import { changePetLevelApi, getAllMyPet, getMyPetDetail } from '../apis/memberPetApi'
 import Switch from 'react-ios-switch';
 
 
@@ -172,7 +172,7 @@ const ProgressBar = styled.progress`
 
   ::-webkit-progress-value {
     border-radius: 5px;
-    background: ${props => props.value === 100 ? '#FFBB54':'#57ba83'};
+    background: ${props => props.value === 100 ? '#FFBB54' : '#57ba83'};
   }
 `;
 
@@ -192,10 +192,10 @@ export const Main = () => {
     navigate("/main/plomon3d", { state: { gottenPetId: petId } });
   };
 
-  useEffect(()=>{
-  },[plomonOpen, isPlomonClicked]);
+  useEffect(() => {
+  }, [plomonOpen, isPlomonClicked,]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getAllMyPet(
       (res) => {
         console.log(res.data);
@@ -205,10 +205,23 @@ export const Main = () => {
         console.log(err);
       }
     );
+  }, [])
 
-  },[])
 
+  const changeImgLevel = () => {
+    changePetLevelApi(targetPlomon.memberPetId, (res) => {
+      console.log(res);
+      getMyPetDetail(targetPlomon.petId, (res) => {
+        console.log(res.data);
+        setTargetPlomon(res.data);
+      }, (err) => {
+        console.log(err);
+      })
+    }, (err) => {
+      console.log(err);
+    })
 
+  }
   return (
     <div
       style={{
@@ -251,19 +264,19 @@ export const Main = () => {
         onDismiss={() => setOpen(false)}
         snapPoints={({ maxHeight }) => 0.93 * maxHeight}
       >
-      <PlomonTableTitle onClick={() => setOpen(false)}>
-        <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
-        모아보기
-      </PlomonTableTitle>
-      <PlomonTableArea>
-        {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>
-          <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false), setTargetPlomon(pet)) }>
-            <img style={{width:"28vw", height:"24vw", objectFit:'cover'}} src={pet.file_url}/>
-            <PlomonName>{pet.name}</PlomonName>
-            <PlomonState lev={pet.level}>{pet.level === 1 ? 'Baby' : 'Adult'}</PlomonState>
-          </SmallPlomon>
-        )}
-      </PlomonTableArea>
+        <PlomonTableTitle onClick={() => setOpen(false)}>
+          <img style={{ width: "30px", height: "30px", paddingRight: "20px" }} src={BackArrowIcon} />
+          모아보기
+        </PlomonTableTitle>
+        <PlomonTableArea>
+          {allMyPet !== undefined && allMyPet.length > 0 && allMyPet.map((pet, idx) =>
+            <SmallPlomon onClick={() => (setPlomonOpen(true), setOpen(false), setIsPlomonClicked(false), setTargetPlomon(pet))}>
+              <img style={{ width: "28vw", height: "24vw", objectFit: 'cover' }} src={pet.file_url} />
+              <PlomonName>{pet.name}</PlomonName>
+              <PlomonState lev={pet.level}>{pet.level === 1 ? 'Baby' : 'Adult'}</PlomonState>
+            </SmallPlomon>
+          )}
+        </PlomonTableArea>
       </BottomSheet>
 
 
@@ -273,42 +286,43 @@ export const Main = () => {
         onDismiss={() => setPlomonOpen(false)}
         snapPoints={({ maxHeight }) => 0.93 * maxHeight}
       >
-      <PlomonTableTitle onClick={() => (isPlomonClicked===false ? (setPlomonOpen(false), setOpen(true)): setPlomonOpen(false))}>
-        <img style={{width:"30px", height:"30px", paddingRight:"20px"}} src={BackArrowIcon} />
-        {targetPlomon.name}
-      </PlomonTableTitle>
-      <PlomonTableArea>
-        <SmallPlomon>
-          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={targetPlomon.file_url} onClick={() => goPlomon3D(targetPlomon.petId)}/>
-          <PlomonDetailName>{targetPlomon.name}</PlomonDetailName>
-          <PlomonDetailState lev={targetPlomon.level}>{targetPlomon.level === 1 ? 'Baby' : 'Adult'}</PlomonDetailState>
-          <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
-            <PlomonDetailText>
-              경험치
-            </PlomonDetailText>
-            <ProgressBar
-              id="progress"
-              value={parseInt(targetPlomon.current_exp/300)}
-              min="0"
-              max="100"
-            ></ProgressBar>
-            <Text size="12px" weight={400}>
-              {parseInt(targetPlomon.current_exp/300) === 100 ? 'MAX' : parseInt(targetPlomon.current_exp/300)+'%'}
-            </Text>
-          </Box>
-          <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
-            <PlomonDetailText>
-              변신
-            </PlomonDetailText>
-            <div style={{margin:"1px 52vw 0 0"}}>
-              {targetPlomon.level === 1 ? <Switch checked={targetPlomon.imageLevel === 2} onChange={checked => {targetPlomon.imageLevel === 2 ? targetPlomon.imageLevel = 1 : targetPlomon.imageLevel = 2}}/> : <Switch />}
-            </div>
-          </Box>
-        </SmallPlomon>
-      </PlomonTableArea>
+        <PlomonTableTitle onClick={() => (isPlomonClicked === false ? (setPlomonOpen(false), setOpen(true)) : setPlomonOpen(false))}>
+          <img style={{ width: "30px", height: "30px", paddingRight: "20px" }} src={BackArrowIcon} />
+          {targetPlomon.name}
+        </PlomonTableTitle>
+        <PlomonTableArea>
+          <SmallPlomon>
+            <img style={{ width: "92vw", height: "50vw", objectFit: 'cover' }} src={targetPlomon.file_url} onClick={() => goPlomon3D(targetPlomon.petId)} />
+            <PlomonDetailName>{targetPlomon.name}</PlomonDetailName>
+            <PlomonDetailState lev={targetPlomon.level}>{targetPlomon.level === 1 ? 'Baby' : 'Adult'}</PlomonDetailState>
+            <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
+              <PlomonDetailText>
+                경험치
+              </PlomonDetailText>
+              <ProgressBar
+                id="progress"
+                value={parseInt(targetPlomon.current_exp / 300)}
+                min="0"
+                max="100"
+              ></ProgressBar>
+              <Text size="12px" weight={400}>
+                {parseInt(targetPlomon.current_exp / 300) === 100 ? 'MAX' : parseInt(targetPlomon.current_exp / 300) + '%'}
+              </Text>
+            </Box>
+            <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
+              <PlomonDetailText>
+                변신
+              </PlomonDetailText>
+              <div style={{ margin: "1px 52vw 0 0" }}>
+                {/* 만약 baby라면 스위치 없어야함  */}
+                {targetPlomon.level === 2 ? <Switch checked={targetPlomon.imageLevel === 2} onChange={() => changeImgLevel()} onColor="#57BA83" /> : <Switch disabled handleColor="gray" />}
+              </div>
+            </Box>
+          </SmallPlomon>
+        </PlomonTableArea>
       </BottomSheet>
 
-      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked} setTargetPlomon={setTargetPlomon}/>
+      <MainMYContents style={{ position: "absolute" }} setPlomonOpen={setPlomonOpen} setIsPlomonClicked={setIsPlomonClicked} setTargetPlomon={setTargetPlomon} />
     </div>
   );
 };
