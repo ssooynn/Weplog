@@ -35,7 +35,21 @@ export const ChallengeRankCardList = (data) => {
         }
     }, [rankingList])
     const rankType = data.rankType;
-
+    const secChangeTime = (seconds) => {
+        var hour = parseInt(seconds / 3600);
+        var min = parseInt((seconds % 3600) / 60);
+        var sec = seconds % 60;
+        if (hour <= 10) {
+            hour = `0${hour}`;
+        }
+        if (min <= 10) {
+            min = `0${min}`;
+        }
+        if (sec <= 10) {
+            sec = `0${sec}`;
+        }
+        return `${hour} : ${min} : ${sec}`;
+    }
     const valueName = (user) => {
         switch (rankType) {
             case "DISTANCE":
@@ -45,7 +59,7 @@ export const ChallengeRankCardList = (data) => {
                 return user.totalCnt + " 회";
 
             case "TIME":
-                return user.totalTime;
+                return secChangeTime(user.totalTime);
 
             default:
                 return undefined;
