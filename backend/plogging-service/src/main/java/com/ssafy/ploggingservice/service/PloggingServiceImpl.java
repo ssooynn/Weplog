@@ -104,6 +104,7 @@ public class PloggingServiceImpl implements PloggingService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         Crew findCrew = null;
+        log.info("plogging 종료 후 crewId 받기 -> {}", ploggingReq.getCrewId());
         if (ploggingReq.getCrewId() != null) {
             findCrew = crewRepository.findById(ploggingReq.getCrewId())
                     .orElseThrow(() -> new NotFoundException(CREW_NOT_FOUND));
