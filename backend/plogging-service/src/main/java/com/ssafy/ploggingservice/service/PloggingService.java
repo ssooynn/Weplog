@@ -25,4 +25,6 @@ public interface PloggingService {
     List<PloggingFeedRes> getPloggingCrewFeed(Long crewId);
 
     List<CrewPloggingByDateRes> getCrewPloggingRecordByDate(Long crewId, LocalDate date);
+
+    List<Integer> getCrewPloggingDayByMonth(Long crewId, LocalDate date);
 }

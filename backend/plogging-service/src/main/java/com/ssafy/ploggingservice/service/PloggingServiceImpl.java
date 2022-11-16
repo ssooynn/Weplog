@@ -212,6 +212,11 @@ public class PloggingServiceImpl implements PloggingService {
         return result;
     }
 
+    @Override
+    public List<Integer> getCrewPloggingDayByMonth(Long crewId, LocalDate date) {
+        return ploggingRepository.findCrewPloggingDayByCrewIdAndDate(crewId, date);
+    }
+
     private Color getNewColor(List<CrewPloggingByDateRes> crewPloggingByDateResList) {
         Set<Color> usedColors = new HashSet<>();
         if (crewPloggingByDateResList.size() == 0) return Color.RED;

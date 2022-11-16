@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,5 +87,12 @@ public class PloggingController
     public ResponseEntity<List<CrewPloggingByDateRes>> getCrewPloggingRecordByDate(@PathVariable Long crewId,
                                                                                    @PathVariable String date) {
         return ResponseEntity.ok(ploggingService.getCrewPloggingRecordByDate(crewId, LocalDate.parse(date)));
+    }
+
+    @ApiOperation(value = "크루 안에서 월 기록 날짜(일) 가져오기")
+    @GetMapping("/crew/{crewId}/month/{date}")
+    public ResponseEntity<List<Integer>> getCrewPloggingDayByMonth(@PathVariable Long crewId,
+                                                       @PathVariable("date") String date) {
+        return ResponseEntity.ok(ploggingService.getCrewPloggingDayByMonth(crewId, LocalDate.parse(date)));
     }
 }
