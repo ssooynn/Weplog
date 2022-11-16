@@ -60,6 +60,7 @@ const PlomonContentsButton = styled.div`
   
 `
 
+
 function Plomon(props) {
   const mesh = useRef(null);
   const [animationIndex, setAnimationIndex] = useState([2, 9, 0, 3, 17, 13]);
@@ -149,7 +150,14 @@ export const Plomon3D = () => {
       </Box>
       <PlomonContentsArea>
         <PlomonContentsName>{myPetDetail.name}</PlomonContentsName>
-        <PlomonContentsDescription>{myPetDetail.description}</PlomonContentsDescription>
+        <PlomonContentsDescription>
+          {myPetDetail.description ? (myPetDetail.description.split('\\n').map((item, idx) => 
+            <div key={idx}>
+              {item}
+            </div>
+            )) : <></>}
+          {/* {replaceBrTag(myPetDetail.description)} */}
+          </PlomonContentsDescription>
         <PlomonContentsButtonsArea>
           <PlomonContentsButton>
             <img src={CameraIcon} />
