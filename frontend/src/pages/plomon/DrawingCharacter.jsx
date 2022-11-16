@@ -11,7 +11,7 @@ import { container, petList } from "../../utils/util";
 import { loadLightInteraction } from "tsparticles-interaction-light";
 import LightEffect from "../../assets/images/light.png";
 import { tsParticles } from "tsparticles-engine";
-import { getAllMyPet } from "../../apis/memberPetApi";
+import { getAllMyPet, postMyPet } from "../../apis/memberPetApi";
 import styled, { css } from "styled-components";
 import useInterval from "../../hooks/UseInterval";
 import { Navigate } from "grommet-icons";
@@ -78,7 +78,10 @@ export const DrawingCharacter = () => {
     getAllMyPet(
       (response) => {
         console.log(response);
-        const pets = myPets.filter((pet) => pet !== response.data.find(pet));
+        console.log(response.data.find(function (item) { return item.petId === 1 }).petId)
+        const pets = myPets.filter((pet) => (response.data.find(function (item) { return item.petId === pet }) === undefined));
+        console.log(myPets);
+        console.log(pets);
         setMyPets(pets);
       },
       (fail) => {
@@ -104,7 +107,13 @@ export const DrawingCharacter = () => {
       if (light) {
         if (tic2 === 1) {
           setReady2(true)
-          navigate("/");
+          const petId = myPets[Math.floor(Math.random() * myPets.length)];
+          postMyPet(petId, (res) => {
+            console.log(res);
+          }, (err) => {
+            console.log(err);
+          })
+          navigate("/main/plomon3d", { state: { gottenPetId: petId } });
         };
         setTic2((rec) => rec - 1);
         console.log("ready,,,");
