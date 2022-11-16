@@ -27,11 +27,12 @@ public interface PloggingRepository extends JpaRepository<Plogging, Long> {
     List<PloggingInterface> getPloggingLoc(double lat, double lng, LocalDateTime time);
 
     // 최근 플로깅 리스트 조회
-    @Query("select p from Plogging p join fetch p.member order by p.createdDate desc ")
+    @Query("select p from Plogging p join fetch p.member where p.imageUrl is not null order by p.createdDate desc ")
     List<Plogging> findAllWithMemberOrderByCreatedDate();
 
     // 최근 크루별 플로깅 리스트 조회
-    @Query("select p from Plogging p join fetch p.member where p.crew.id = :crewId order by p.createdDate desc ")
+    @Query("select p from Plogging p join fetch p.member where p.crew.id = :crewId and p.imageUrl is not null" +
+            " order by p.createdDate desc ")
     List<Plogging> findCrewPloggingAllWithMemberOrderByCreatedDate(Long crewId);
 
     @Query("select p from Plogging p join fetch p.member join fetch p.coordinates where p.crew.id = :crewId and year(p.createdDate) = year(:date) and month(p.createdDate) = month(:date) and day(p.createdDate) = day(:date)")
