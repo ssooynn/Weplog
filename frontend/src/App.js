@@ -1,5 +1,5 @@
 import "./App.css";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Router} from "./Router";
 import {Grommet, Notification} from "grommet";
 import {GrommetTheme} from "./utils/util";
@@ -9,10 +9,19 @@ import {EventSourcePolyfill} from 'event-source-polyfill';
 
 function App() {
   const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("");
   const User = useSelector((state) => state.user.user);
   let eventSource = null;
+
+  const notification = (event) => new Notification({
+    toast: true,
+    title: "알람",
+    message: event.data,
+    onClose: () => {
+    }
+  });
   useEffect(() => {
-    if (User !== undefined && eventSource == null) {
+    if (User !== undefined) {
       eventSource = new EventSourcePolyfill(`${API_SERVER}member-service/notification/subscribe`, {
         headers: {
           'memberId': localStorage.getItem("memberId"),
@@ -20,17 +29,17 @@ function App() {
 
         },
         withCredentials: true,
-
+        lastEventIdQueryParameterName: 'Last-Event-Id'
       });
 
+      console.log("========================================================")
     }
-    console.log("========================================================")
 
     console.log(User);
     console.log(eventSource);
     if (eventSource != null) {
       eventSource.addEventListener("sse", (event) => {
-        // console.log(event.data + " " + event.lastEventId);
+        console.log(event.data + " " + event.lastEventId);
 
         // const data = JSON.parse(event.data);
 
@@ -41,7 +50,11 @@ function App() {
 
       eventSource.addEventListener("message", (event) => {
         console.log(event.data);
-      },false)
+
+        setVisible(true);
+        setMessage(event.data);
+
+      }, false)
 
       return () => {
         eventSource.close();
@@ -54,11 +67,12 @@ function App() {
   return (
     <div className="App">
       {visible && (
-        <Grommet theme={GrommetTheme}>
+        <Grommet theme={GrommetTheme.notification}>
           <Notification
-            toast={{position: "center"}}
-            title={"새 마커가 등록되었습니다."}
+            toast={{position:"top",autoClose:true}}
+            title={"알림"}
             status={"normal"}
+            message={message}
             onClose={() => setVisible(false)}
           />
         </Grommet>
