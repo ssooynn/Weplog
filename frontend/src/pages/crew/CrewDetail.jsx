@@ -125,7 +125,11 @@ export const CrewDetail = () => {
             }}
           ></Box>
         </Box>
-        <Box background={{ color: "white" }} pad="15px 30px 35px 30px">
+        <Box
+          background={{ color: "white" }}
+          pad="15px 30px 35px 30px"
+          margin={{ bottom: "50px" }}
+        >
           <Box direction="row" justify="between" align="center">
             <Text size="20px" weight={500}>
               {crewData.name}
@@ -207,7 +211,7 @@ export const CrewDetail = () => {
                 />
               )}
               {clicked === 1 && <CrewDetailTalk crewId={crewId} />}
-              {clicked === 2 && <CrewDetailOurFeed />}
+              {clicked === 2 && <CrewDetailOurFeed crewId={crewId} />}
               {clicked === 3 && (
                 <CrewDetailMember getCrew={getCrew} crewData={crewData} />
               )}
