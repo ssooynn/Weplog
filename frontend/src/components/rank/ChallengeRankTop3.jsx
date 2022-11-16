@@ -8,15 +8,18 @@ const Profile1st = styled.img`
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #ffd100;
+  border: 3px solid #ffd100;
+    margin-bottom: 5px;
+
 `;
 
 const Profile2nd = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 65 px;
+  height: 65px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #c1c1c1;
+  border: 3px solid #c0c0c0;
+  margin-bottom: 5px;
 `;
 
 const Profile3rd = styled.img`
@@ -24,7 +27,9 @@ const Profile3rd = styled.img`
   height: 50px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #ff9900;
+  border: 3px solid #c2780a;
+    margin-bottom: 5px;
+
 `;
 
 export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
@@ -43,6 +48,21 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
       return top3[id].name;
     }
   }
+  const secChangeTime = (seconds) => {
+    var hour = parseInt(seconds / 3600);
+    var min = parseInt((seconds % 3600) / 60);
+    var sec = seconds % 60;
+    if (hour <= 10) {
+      hour = `0${hour}`;
+    }
+    if (min <= 10) {
+      min = `0${min}`;
+    }
+    if (sec <= 10) {
+      sec = `0${sec}`;
+    }
+    return `${hour} : ${min} : ${sec}`;
+  }
   const changevalue = (id) => {
     if (type === 'user') {
       switch (rankType) {
@@ -53,7 +73,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
           return top3[id].totalCnt + " 회";
 
         case "TIME":
-          return top3[id].totalTime;
+          return secChangeTime(top3[id].totalTime);
 
         default:
           return undefined;
@@ -71,7 +91,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
         align="end"
         margin="20px 0px"
       >
-        <Box direction="column" height="85px" justify="between" align="center">
+        <Box direction="column" height="100px" justify="between" align="center">
           <Profile2nd src={changeImage(1)} alt="프로필 사진" />
           <Box direction="column" align="center">
             <Text size="10px" weight={400}>
@@ -85,7 +105,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
         <Box
           direction="column"
           height="120px"
-          justify="between"
+          justify="end"
           align="center"
           style={{ position: "relative" }}
         >
@@ -104,7 +124,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
             </Text>
           </Box>
         </Box>
-        <Box direction="column" height="85px" justify="between" align="center">
+        <Box direction="column" height="100px" justify="end" align="center">
           <Profile3rd src={changeImage(2)} alt="프로필 사진" />
           <Box direction="column" align="center">
             <Text size="10px" weight={400}>

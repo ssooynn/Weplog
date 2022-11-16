@@ -32,6 +32,7 @@ const RankProfileImg = styled.img`
 `;
 
 export const ChallengeRankCard = ({ rank, profileImgUrl, nickname, value, my }) => {
+
   return (
     <ChallengeRankStyled my={my}>
       <Box direction="row" justify="between" width="100%" align="center">

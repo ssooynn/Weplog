@@ -58,15 +58,15 @@ export const Rank = () => {
         justify="between"
         align="center"
       >
-        <Box direction="row" align="center">
+        <Box direction="row" align="center" width="100%">
           <img src={rankIcon} width="45px" height="45px" />
           <Text size="20px" weight={500} margin={{ left: "10px" }}>
             Plogger Ranking
           </Text>
         </Box>
-        <Text size="10px" weight={400} color="#7E7E7E" alignSelf="end">
+        {/* <Text size="10px" weight={400} color="#7E7E7E" alignSelf="end">
           *매주 일요일 자정 기준
-        </Text>
+        </Text> */}
       </Box>
       <Box pad="10px 30px" direction="row" justify="end" align="center">
         <Text
