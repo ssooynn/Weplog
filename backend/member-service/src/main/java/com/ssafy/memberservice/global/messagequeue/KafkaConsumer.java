@@ -9,6 +9,7 @@ import com.ssafy.memberservice.domain.memberdetail.dao.MemberDetailRepository;
 import com.ssafy.memberservice.domain.memberdetail.domain.MemberDetail;
 import com.ssafy.memberservice.domain.memberpet.dao.MemberPetRepository;
 import com.ssafy.memberservice.domain.memberpet.dao.domain.MemberPet;
+import com.ssafy.memberservice.domain.notification.service.NotificationService;
 import com.ssafy.memberservice.global.messagequeue.dto.AddRewardPointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,8 @@ public class KafkaConsumer {
     private final MemberCrewRepository memberCrewRepository;
     private final MemberPetRepository memberPetRepository;
     private final KafkaProducer kafkaProducer;
+
+    private final NotificationService notificationService;
 
     @KafkaListener(topics = "update-reward-point")
     public void updateRewardPoint(String kafkaMessage) {
@@ -60,6 +63,7 @@ public class KafkaConsumer {
                 boolean evolutionFlag = findMemberPet.get().addExp(addRewardPointDto.getRewardPoint());
                 // 레벨업 했으면 카프카로 보내서 도전과제 갱신
                 if (evolutionFlag) {
+                    notificationService.send(memberId, "플로몬이 나이를 먹었어요!!");
                     kafkaProducer.sendPetMaxLevel("pet-max-level", memberId.toString());
                 }
             }
