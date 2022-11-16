@@ -94,6 +94,19 @@ export const GrommetTheme = {
       },
       icon: () => <Fail />,
     },
+    info: {
+      toast: {
+        time: 3000,
+        container: {
+          width: "long"
+        },
+        background: {
+          color: "white",
+          opacity: "strong",
+        },
+      },
+      icon: () => <Success />,
+    },
   },
   carousel: {
     animation: {
