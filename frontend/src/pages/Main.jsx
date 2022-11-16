@@ -13,8 +13,8 @@ import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
 import PlomonSample4 from "../assets/PlomonSample4.gif";
-import Switch from '@mui/material/Switch';
 import { getAllMyPet } from '../apis/memberPetApi'
+import Switch from 'react-ios-switch';
 
 
 
@@ -143,7 +143,7 @@ const PlomonDetailName = styled.div`
 `
 
 const PlomonDetailState = styled.div`
-  background-color: #57BA83;
+  background-color: ${props => props.lev === 1 ? "#A6A6A6" : "#57BA83"};
   color: white;
   font-size: 14px;
   font-weight: 500;
@@ -172,7 +172,7 @@ const ProgressBar = styled.progress`
 
   ::-webkit-progress-value {
     border-radius: 5px;
-    background: #57ba83;
+    background: ${props => props.value === 100 ? '#FFBB54':'#57ba83'};
   }
 `;
 
@@ -187,6 +187,10 @@ export const Main = () => {
   const [isPlomonClicked, setIsPlomonClicked] = useState(false);
   const [allMyPet, setAllMyPet] = useState([]);
   const [targetPlomon, setTargetPlomon] = useState([]);
+
+  const goPlomon3D = (petId) => {
+    navigate("/main/plomon3d", { state: { gottenPetId: petId } });
+  };
 
   useEffect(()=>{
   },[plomonOpen, isPlomonClicked]);
@@ -275,21 +279,21 @@ export const Main = () => {
       </PlomonTableTitle>
       <PlomonTableArea>
         <SmallPlomon>
-          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={targetPlomon.file_url} onClick={() => navigate("/main/plomon3d")}/>
+          <img style={{width:"92vw", height:"50vw", objectFit:'cover'}} src={targetPlomon.file_url} onClick={() => goPlomon3D(targetPlomon.petId)}/>
           <PlomonDetailName>{targetPlomon.name}</PlomonDetailName>
-          <PlomonDetailState>Baby</PlomonDetailState>
+          <PlomonDetailState lev={targetPlomon.level}>{targetPlomon.level === 1 ? 'Baby' : 'Adult'}</PlomonDetailState>
           <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
             <PlomonDetailText>
               경험치
             </PlomonDetailText>
             <ProgressBar
               id="progress"
-              value={67}
+              value={parseInt(targetPlomon.current_exp/300)}
               min="0"
               max="100"
             ></ProgressBar>
             <Text size="12px" weight={400}>
-              {67}%
+              {parseInt(targetPlomon.current_exp/300) === 100 ? 'MAX' : parseInt(targetPlomon.current_exp/300)+'%'}
             </Text>
           </Box>
           <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
@@ -297,7 +301,7 @@ export const Main = () => {
               변신
             </PlomonDetailText>
             <div style={{margin:"1px 52vw 0 0"}}>
-              <Switch {...label}/>
+              {targetPlomon.level === 1 ? <Switch checked={targetPlomon.imageLevel === 2} onChange={checked => {targetPlomon.imageLevel === 2 ? targetPlomon.imageLevel = 1 : targetPlomon.imageLevel = 2}}/> : <Switch />}
             </div>
           </Box>
         </SmallPlomon>
