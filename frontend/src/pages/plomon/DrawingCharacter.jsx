@@ -110,10 +110,10 @@ export const DrawingCharacter = () => {
           const petId = myPets[Math.floor(Math.random() * myPets.length)];
           postMyPet(petId, (res) => {
             console.log(res);
+            navigate("/main/plomon3d", { state: { gottenPetId: petId } });
           }, (err) => {
             console.log(err);
           })
-          navigate("/main/plomon3d", { state: { gottenPetId: petId } });
         };
         setTic2((rec) => rec - 1);
         console.log("ready,,,");
