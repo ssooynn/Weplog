@@ -6,11 +6,17 @@ import styled from "styled-components";
 import Button from "../../Button";
 import { getCrewPloggingDetail } from "../../../apis/ploggingApi";
 import { CustomOverlayMap, Map, Polyline } from "react-kakao-maps-sdk";
-import { convertStringToColor, httpToHttps } from "../../../utils/util";
+import {
+  calcDistance,
+  convertStringToColor,
+  httpToHttps,
+} from "../../../utils/util";
 
 export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
   const [loading, setLoading] = useState(true);
   const [log, setLog] = useState();
+  const [distance, setDistance] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
   useEffect(() => {
     if (loading)
       getCrewPloggingDetail(
@@ -19,6 +25,14 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
         (response) => {
           console.log(response);
           setLog(response.data);
+          let d = 0;
+          let t = 0;
+          response.data.forEach((log) => {
+            d = d + log.totalDistance;
+            t = t + totalTime;
+          });
+          setDistance(d);
+          setTotalTime(t);
           setLoading(false);
         },
         (fail) => {
@@ -54,7 +68,7 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
         <Box
           direction="column"
           width="80vw"
-          height="40vh"
+          height="50vh"
           justify="around"
           align="start"
         >
@@ -108,6 +122,23 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
                 })}
             </Map>
           )}
+          <Box
+            direction="row"
+            width="90%"
+            justify="end"
+            gap="large"
+            margin="10px"
+          >
+            <Box direction="row" align="end" height="100%">
+              <Text weight="bold">{calcDistance(totalTime)}</Text>
+              <Text size="14px">시간</Text>
+            </Box>
+            <Box direction="row" align="end" height="100%">
+              <Text weight="bold">{calcDistance(distance)}</Text>
+              <Text size="14px">km</Text>
+            </Box>
+          </Box>
+
           <Box
             direction="row"
             overflow="scroll"

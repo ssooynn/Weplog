@@ -69,12 +69,17 @@ export const ChallengeRegister = () => {
     if (name && type && goal && endDate) {
       //api전송을 위한 formData객체
       const formData = new FormData();
-
+      let valueGoal;
       //user 객체 만들기
+      if (type == "DISTANCE") {
+        valueGoal = goal * 1000;
+      } else if (type == "TIME") {
+        valueGoal = goal * 60 * 60;
+      }
       const request = JSON.stringify({
         title: name,
         type: type,
-        goal: goal,
+        goal: valueGoal,
         endDate: endDate,
       });
       console.log(request);

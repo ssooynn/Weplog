@@ -984,7 +984,7 @@ export const Plogging = () => {
                         }}
                       >
                         <Avatar
-                          src={message.profileImg}
+                          src={httpToHttps(message.profileImg)}
                           name={message.sender}
                         />
                         <Message.Footer
