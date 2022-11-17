@@ -41,8 +41,8 @@ const CrewDetailMember = ({ crewData, getCrew }) => {
   useEffect(() => {
     if (crewData.isCrewMaster) {
       getWaitingList();
-      getRankingList();
     }
+    getRankingList();
   }, [])
   useEffect(() => {
     console.log(rankType);
@@ -90,11 +90,50 @@ const CrewDetailMember = ({ crewData, getCrew }) => {
 
         {/* 내 랭크 */}
         <Box direction="column" width="100%" margin="20px 0px">
-          <Box direction="row" align="center">
-            <img src={rankIcon} width="30px" height="30px" alt="캘린더" />
-            <Text size="18px" weight={500} margin={{ left: "7px" }}>
-              Ranking
-            </Text>
+          <Box direction="row" justify="between" width="100%">
+
+            <Box direction="row" align="center">
+              <img src={rankIcon} width="30px" height="30px" alt="캘린더" />
+              <Text size="18px" weight={500} margin={{ left: "7px" }}>
+                Ranking
+              </Text>
+
+            </Box>
+            <Box direction="row" justify="end" align="center">
+              <Text
+                size="14px"
+                weight={500}
+                style={{
+                  color: `${rankType === "DISTANCE" ? "#00853B" : "#7E7E7E"}`,
+                }}
+                margin={{ left: "10px" }}
+                onClick={(e) => setRankType("DISTANCE")}
+              >
+                거리
+              </Text>
+              <Text
+                size="14px"
+                weight={500}
+                style={{
+                  color: `${rankType === "TIME" ? "#00853B" : "#7E7E7E"}`,
+                }}
+                margin={{ left: "10px" }}
+                onClick={(e) => setRankType("TIME")}
+              >
+                시간
+              </Text>
+              <Text
+                size="14px"
+                weight={500}
+                style={{
+                  color: `${rankType === "PLOGGING_CNT" ? "#00853B" : "#7E7E7E"}`,
+                }}
+                margin={{ left: "10px" }}
+                onClick={(e) => setRankType("PLOGGING_CNT")}
+              >
+                횟수
+              </Text>
+            </Box>
           </Box>
           <Box direction="column" width="100%" margin="15px 0px">
             {rankList !== undefined && rankList.length > 3 && <Text size="15px" weight={500}>
