@@ -171,7 +171,7 @@ export const Crew = () => {
                 color={type === "TIME" ? "#57BA83" : "#AEAEAE"}
                 onClick={() => handleType("TIME")}
               >
-                총 횟수
+                총 시간
               </Text>
               <Text weight={400} size="12px" color="#AEAEAE">
                 |
@@ -187,10 +187,10 @@ export const Crew = () => {
             </Box>
           </Box>
           {type === "TIME" && (
-            <ChallengeRankTop3 type={"crew"} top3={top3Time} />
+            <ChallengeRankTop3 type={"crew"} top3={top3Time} rankType="TIME" />
           )}
           {type === "DIS" && (
-            <ChallengeRankTop3 type={"crew"} top3={top3Distance} />
+            <ChallengeRankTop3 type={"crew"} top3={top3Distance} rankType="DISTANCE" />
           )}
         </Box>
 
