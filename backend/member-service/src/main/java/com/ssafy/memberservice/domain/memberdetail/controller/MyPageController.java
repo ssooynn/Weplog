@@ -1,5 +1,6 @@
 package com.ssafy.memberservice.domain.memberdetail.controller;
 
+import com.ssafy.memberservice.domain.memberdetail.dto.MyPageRes;
 import com.ssafy.memberservice.domain.memberdetail.service.MyPageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class MyPageController {
 
 	@ApiOperation(value = "프로필 조회")
 	@GetMapping("/profile")
-	public ResponseEntity<?> getProfile(@ApiIgnore @RequestHeader("memberId")String memberId) {
+	public ResponseEntity<MyPageRes> getProfile(@ApiIgnore @RequestHeader("memberId")String memberId) {
 		return new ResponseEntity<>(myPageService.getMyPage(UUID.fromString(memberId)), HttpStatus.OK);
 	}
 
