@@ -34,6 +34,9 @@ export const ChallengeDetail = () => {
   const [typeUnit, setTypeUnit] = useState();
   const [endDate, setEndDate] = useState([]);
   const [challengeRanking, setChallengeRanking] = useState([]);
+  const [goal, setGoal] = useState("");
+  const [toalDistance, setTotalDistance] = useState("");
+  const [totalTime, setTotalTime] = useState("");
 
   const sharePage = () => {
     window.navigator.share({
@@ -52,8 +55,10 @@ export const ChallengeDetail = () => {
     challengeDetailApi(challengeId, (res) => {
       setChallenge(res.data);
       if (res.data.type === 'DISTANCE') {
+        setGoal(Number(challenge.goal) * 0.001);
         setTypeUnit("Km")
       } else if (res.data.type === 'TIME') {
+        setGoal((Number(challenge.goal) / 3600));
         setTypeUnit("시간")
       } else {
         setTypeUnit("회")
@@ -128,7 +133,7 @@ export const ChallengeDetail = () => {
             </Box>
             <Box>
               <Text size="12px" weight={400}>
-                Goal - {challenge.goal}{typeUnit} 플로깅
+                Goal - {goal}{typeUnit} 플로깅
               </Text>
               <Text size="12px" weight={400}>
                 기한 - {endDate[0]}.{endDate[1]}.{endDate[2]} 까지
@@ -159,13 +164,13 @@ export const ChallengeDetail = () => {
             <Box direction="row" justify="between" align="end">
               <Box>
                 <Text size="12px" weight={400} margin="5px 0px 0px 0px">
-                  참여자 총 플로깅 횟수 : {challenge.totalPloggingCnt} 회
+                  참여자 총 플로깅 횟수 : {Number(challenge.totalPloggingCnt)} 회
                 </Text>
                 <Text size="12px" weight={400} margin="5px 0px">
-                  참여자 총 플로깅 거리 : {challenge.totalDistance} Km
+                  참여자 총 플로깅 거리 : {Number(challenge.totalDistance) * 0.001} Km
                 </Text>
                 <Text size="12px" weight={400}>
-                  참여자 총 플로깅 시간 : {challenge.totalTime} 시간
+                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600).toFixed(2)} 시간
                 </Text>
               </Box>
               <Text size="12px" weight={500} alignSelf="end">
