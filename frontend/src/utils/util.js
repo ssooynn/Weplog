@@ -73,7 +73,7 @@ export const GrommetTheme = {
     toast: {
       time: 500,
       container: {
-        width: "small",
+        width: "long",
       },
     },
     normal: {
