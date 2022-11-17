@@ -2,7 +2,10 @@ import { Box, Text } from "grommet";
 import React, { useEffect, useState } from "react";
 import bgGradient from "../../assets/images/bgGradient.png";
 import searchIcon from "../../assets/icons/searchIcon.svg";
-import { ChallengeCard, ChallengeCardList } from "../../components/challenge/ChallengeCard";
+import {
+  ChallengeCard,
+  ChallengeCardList,
+} from "../../components/challenge/ChallengeCard";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
@@ -23,33 +26,44 @@ export const ChallengeList = () => {
   const [myChallengeList, setMyChallengeList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState("");
-  const user = useSelector(state => state.user.user);
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     if (loading) {
-      challengeListAPi(0, 3, "ASC", (res) => {
-        setChallengeList(res.data.content);
-      }, (err) => {
-        console.log(err);
-      })
+      challengeListAPi(
+        0,
+        3,
+        "ASC",
+        (res) => {
+          setChallengeList(res.data.content);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
-      challengeIngListAPi((res) => {
-        console.log(res);
-        setMyChallengeList(res.data);
-      }, (err) => {
-        console.log(err);
-      })
+      challengeIngListAPi(
+        (res) => {
+          console.log(res);
+          setMyChallengeList(res.data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
-      myPageProfileApi((res) => {
-        setProfile(res.data.profileImageUrl);
-      }, (err) => {
-        console.log(err);
-      })
+      myPageProfileApi(
+        (res) => {
+          setProfile(res.data.profileImageUrl);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
       setLoading(false);
     }
-
-  }, [loading])
+  }, [loading]);
   return (
     <motion.div>
       <Box direction="column">
@@ -73,7 +87,6 @@ export const ChallengeList = () => {
               onClick={() => navigate("/")}
             />
             <Box direction="row" align="center">
-
               <img
                 src={searchIcon}
                 style={{ alignSelf: "center" }}
@@ -81,10 +94,10 @@ export const ChallengeList = () => {
               />
               <motion.img
                 style={{
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '50%',
-                  marginLeft: "5px"
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  marginLeft: "5px",
                 }}
                 whileTap={{ scale: 0.9 }}
                 alt="mypage"
@@ -101,7 +114,13 @@ export const ChallengeList = () => {
           >
             내 챌린지
           </Text>
-          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={myChallengeList}></ChallengeCardList>}
+          {!loading &&
+            challengeList !== undefined &&
+            challengeList.length > 0 && (
+              <ChallengeCardList
+                ChallengeList={myChallengeList}
+              ></ChallengeCardList>
+            )}
           <Box width="100%" pad="15px 0px">
             <Text
               alignSelf="start"
@@ -153,7 +172,12 @@ export const ChallengeList = () => {
             ></img>
           </Box>
         </Box>
-        <Box pad="large" direction="column" align="center" justify="start">
+        <Box
+          pad={{ left: "large", right: "large", top: "large", bottom: "50px" }}
+          direction="column"
+          align="center"
+          justify="start"
+        >
           <Button biggreenround="true" onClick={goChallengeRegister}>
             새로운 챌린지 만들기
           </Button>
@@ -165,7 +189,13 @@ export const ChallengeList = () => {
           >
             최신 챌린지
           </Text>
-          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={challengeList}></ChallengeCardList>}
+          {!loading &&
+            challengeList !== undefined &&
+            challengeList.length > 0 && (
+              <ChallengeCardList
+                ChallengeList={challengeList}
+              ></ChallengeCardList>
+            )}
 
           {/* <Box direction="row" justify="between" width="100%">
             <Text weight={500} size="16px" margin={{ top: "20px" }}>
