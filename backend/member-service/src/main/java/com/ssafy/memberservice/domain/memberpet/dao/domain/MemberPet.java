@@ -65,7 +65,7 @@ public class MemberPet extends BaseEntity {
 
     public boolean addExp(int rewardPoint) {
         if (this.currentExp + rewardPoint >= maxExp) {
-            this.currentExp = 0;
+            this.currentExp = 30000;
             this.currentLevel += 1;
 
             return true;
