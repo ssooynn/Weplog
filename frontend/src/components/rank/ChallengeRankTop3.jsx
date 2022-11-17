@@ -67,7 +67,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
     if (type === 'user') {
       switch (rankType) {
         case "DISTANCE":
-          return top3[id].totalDistance + " Km";
+          return (Number(top3[id].totalDistance) * 0.001).toFixed(2) + " Km";
 
         case "PLOGGING_CNT":
           return top3[id].totalCnt + " 회";
