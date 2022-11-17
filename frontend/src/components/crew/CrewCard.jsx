@@ -61,7 +61,7 @@ export const CrewCard = ({ crew }) => {
       <Box
         background={{
           image: `url(${crew.imageUrl})`,
-          opacity: "0.4",
+          opacity: "0.2",
         }}
         round="small"
         elevation="small"
