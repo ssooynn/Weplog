@@ -179,7 +179,7 @@ export const PloggingStart = () => {
         <Box
           width="100%"
           align="center"
-          style={{ position: "absolute", top: "5%", zIndex: "3" }}
+          style={{ position: "absolute", top: "3%", zIndex: "3" }}
           gap="medium"
         >
           {/* 주소박스 */}

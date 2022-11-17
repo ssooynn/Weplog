@@ -13,6 +13,8 @@ import {
 } from "../../../apis/crewApi";
 import { getCrewSchedule } from "../../../apis/calenderApi";
 import { CrewJoinDialog } from "./CrewJoinDialog";
+import { getCrewPloggingDate } from "../../../apis/ploggingApi";
+import dayjs from "dayjs";
 
 const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
   const navigate = useNavigate();
@@ -41,6 +43,17 @@ const CrewDetailWeplog = ({ crewId, ploggingDateList, isMyCrew }) => {
           ]);
         });
         setLoading(false);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+    getCrewPloggingDate(
+      crewId,
+      dayjs().toISOString().split("T")[0],
+      (response) => {
+        console.log(response);
+        setLoggedDays(response.data);
       },
       (fail) => {
         console.log(fail);

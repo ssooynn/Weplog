@@ -12,6 +12,8 @@ import { Box, Spinner, Text } from "grommet";
 import { CreateScheduleDialog } from "./crewDetail/CreateScheduleDialog";
 import { getCrewSchedule } from "../../apis/calenderApi";
 import { getCrewPloggingDetail } from "../../apis/ploggingApi";
+import dayjs from "dayjs";
+import { CrewLogDialog } from "./crewDetail/CrewLogDialog";
 
 export const CrewCalender = ({
   crewId,
@@ -21,11 +23,12 @@ export const CrewCalender = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const today = new Date();
+  const [openLog, setOpenLog] = useState(false);
+  // const today = dayjs(new Date()).tz("Asia/Seoul");
+  const today = dayjs(new Date());
   const defaultDisplayedCalender = {
-    month: new Date().getMonth(),
-    year: new Date().getFullYear(),
+    month: today.month(),
+    year: today.year(),
   };
   const [displayedCalenderInfo, setDisplayedCalenderInfo] = useState(
     defaultDisplayedCalender
@@ -33,7 +36,6 @@ export const CrewCalender = ({
   const [selectedDate, setSelectedDate] = useState("");
 
   const [selectedDateIndex, setSelectedDateIndex] = useState([]);
-
   const handleArrowClick = (action) => {
     if (action === "next" && displayedCalenderInfo.month !== 11) {
       setSelectedDateIndex([]);
@@ -51,24 +53,20 @@ export const CrewCalender = ({
   };
 
   const handleSelectedDates = (index) => {
-    if (index < parseInt(today.getDate())) {
-      if (selectedDateIndex.includes(index)) {
-        getCrewPloggingDetail(
-          crewId,
-          new Date(
-            displayedCalenderInfo.year,
-            displayedCalenderInfo.month,
-            index
-          )
-            .toISOString()
-            .split("T")[0],
-          (response) => {
-            console.log(response);
-          },
-          (fail) => {
-            console.log(fail);
-          }
-        );
+    if (index < parseInt(today.date())) {
+      if (loggedDays.includes(index)) {
+        setSelectedDate(dayjs().set("date", index).format("YYYY-MM-DD"));
+        // getCrewPloggingDetail(
+        //   crewId,
+        //   dayjs().set("date", index).format("YYYY-MM-DD"),
+        //   (response) => {
+        //     console.log(response);
+        //   },
+        //   (fail) => {
+        //     console.log(fail);
+        //   }
+        // );
+        setOpenLog(true);
       }
     } else {
       setSelectedDate(
@@ -102,9 +100,11 @@ export const CrewCalender = ({
         key={`calender-day-number${index}`}
         className={`num-item ${
           selectedDateIndex.includes(index)
-            ? parseInt(item) < parseInt(today.getDate())
-              ? "passed"
+            ? parseInt(item) < parseInt(today.date())
+              ? ""
               : "selected"
+            : loggedDays.includes(index)
+            ? "passed"
             : ""
         } ${currentMonthDay(displayedCalenderInfo, item) ? "current-day" : ""}`}
         onClick={(_) => handleSelectedDates(index)}
@@ -117,6 +117,7 @@ export const CrewCalender = ({
   useEffect(() => {
     if (loading) {
       setSelectedDateIndex(selectedDays);
+
       setLoading(false);
     }
   }, []);
@@ -133,7 +134,16 @@ export const CrewCalender = ({
           accept={getSchedule}
           date={selectedDate}
         />
-
+        {openLog && (
+          <CrewLogDialog
+            crewId={crewId}
+            date={selectedDate}
+            open={openLog}
+            onClose={() => {
+              setOpenLog(false);
+            }}
+          />
+        )}
         <Box width="90%" margin="20px" align="center">
           <div className="calender">
             <div className="month-name">
