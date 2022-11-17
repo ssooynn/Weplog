@@ -164,7 +164,7 @@ export const PloggingRegister = () => {
           <input
             id="image"
             type="file"
-            accept="image/jpg,image/png,image/jpeg,image/gif"
+            accept="image/*"
             style={{
               display: "none",
             }}
