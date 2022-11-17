@@ -15,24 +15,30 @@ import { useSelector } from "react-redux";
 import { Loading } from "../../components/common/Loading";
 
 export const ChallengeList = () => {
+  //변수
   const navigate = useNavigate();
-  const goChallengeRegister = () => {
-    navigate("/challenge/register");
-  };
   const [challengeList, setChallengeList] = useState([]);
   const [myChallengeList, setMyChallengeList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState("");
   const user = useSelector(state => state.user.user);
 
+
+  //함수
+  const goChallengeRegister = () => {
+    navigate("/challenge/register");
+  };
+
+  //hooks
   useEffect(() => {
     if (loading) {
+      //챌린지 리스트 조회
       challengeListAPi(0, 3, "ASC", (res) => {
         setChallengeList(res.data.content);
       }, (err) => {
         console.log(err);
       })
-
+      //내 챌린지 (진행중인) 리스 조회
       challengeIngListAPi((res) => {
         console.log(res);
         setMyChallengeList(res.data);
@@ -40,6 +46,7 @@ export const ChallengeList = () => {
         console.log(err);
       })
 
+      //내 프로필 조회
       myPageProfileApi((res) => {
         setProfile(res.data.profileImageUrl);
       }, (err) => {
@@ -50,6 +57,8 @@ export const ChallengeList = () => {
     }
 
   }, [loading])
+
+
   return (
     <motion.div>
       <Box direction="column">
@@ -74,11 +83,11 @@ export const ChallengeList = () => {
             />
             <Box direction="row" align="center">
 
-              <img
+              {/* <img
                 src={searchIcon}
                 style={{ alignSelf: "center" }}
                 alt="챌린지 검색"
-              />
+              /> */}
               <motion.img
                 style={{
                   width: '30px',
@@ -109,10 +118,10 @@ export const ChallengeList = () => {
               size="18px"
               margin={{ top: "10px" }}
             >
-              Weplog의
+              Weplog로
             </Text>
             <Text alignSelf="start" weight={600} size="18px">
-              주인공이 되어주세요!
+              당신과 지구를 더 건강하게
             </Text>
             <Text
               alignSelf="start"
@@ -121,21 +130,21 @@ export const ChallengeList = () => {
               color="#8A8181"
               margin={{ top: "5px" }}
             >
-              이달의 Weploger를 찾습니다
+              챌린지를 통해서 새로운 기록에 도전해보세요
             </Text>
             <Box
               alignSelf="start"
-              border={{ color: "#3d3d3d", style: "solid", side: "all" }}
-              round="medium"
-              width="70px"
-              justify="center"
-              align="center"
-              height="25px"
-              style={{ marginTop: "105px" }}
+              // border={{ color: "#3d3d3d", style: "solid", side: "all" }}
+              // round="medium"
+              // width="70px"
+              // justify="center"
+              // align="center"
+              // height="25px"
+              style={{ marginTop: "140px" }}
             >
-              <Text weight={400} size="12px" color="#3d3d3d">
+              {/* <Text weight={400} size="12px" color="#3d3d3d">
                 1 / 2
-              </Text>
+              </Text> */}
             </Box>
             <img
               src={Banner}
@@ -145,8 +154,8 @@ export const ChallengeList = () => {
                 position: "absolute",
                 width: "180px",
                 height: "180px",
-                marginLeft: "45%",
-                marginTop: "80px",
+                marginLeft: "41%",
+                marginTop: "95px",
                 objectFit: "cover",
                 boxShadow: "4px 4px 4px rgba(0,0,0,0.3)",
               }}
@@ -167,40 +176,6 @@ export const ChallengeList = () => {
           </Text>
           {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={challengeList}></ChallengeCardList>}
 
-          {/* <Box direction="row" justify="between" width="100%">
-            <Text weight={500} size="16px" margin={{ top: "20px" }}>
-              Challenge Top 3
-            </Text>
-            <Box direction="row" justify="between" width="90px" alignSelf="end">
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#57BA83"
-              >
-                총 횟수
-              </Text>
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#AEAEAE"
-              >
-                |
-              </Text>
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#AEAEAE"
-              >
-                총 거리
-              </Text>
-            </Box>
-          </Box> */}
-          {/* <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" /> */}
         </Box>
       </Box>
     </motion.div>
