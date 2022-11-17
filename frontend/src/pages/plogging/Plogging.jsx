@@ -770,7 +770,7 @@ export const Plogging = () => {
         style={{
           width: "100%",
           textAlign: "center",
-          height: "100vh",
+          height: "calc(var(--vh, 1vh) * 100)",
         }}
       >
         {/* 지도 박스 */}
@@ -929,7 +929,7 @@ export const Plogging = () => {
           height="45%"
           align="center"
           justify="center"
-          gap="40px"
+          gap="25px"
           background="#fff"
           round={{ size: "large", corner: "top" }}
           style={{
@@ -949,7 +949,7 @@ export const Plogging = () => {
 
           <Box
             width="80%"
-            height="65%"
+            height="60%"
             style={{
               boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
               textAlign: "start",
