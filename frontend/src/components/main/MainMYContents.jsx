@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls } from '@react-three/drei';
 import { SnowIsland } from "./Snow_island";
 import { Plomon } from "./Plomon";
 import { getAllMyPet } from "../../apis/memberPetApi";
@@ -47,6 +47,7 @@ function Island(props) {
   useEffect(() => {
     getAllMyPet(
       (res) => {
+        console.log(res);
         setAllMyPet(res.data);
         setRandomIndexList(getRandomIndexList(res.data.length));
       },
@@ -58,12 +59,12 @@ function Island(props) {
   return (
     <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
-      {allMyPet!==undefined && allMyPet.length>0 && allMyPet.map((pet, idx)=>(
-          randomIndexList[idx] < 6 ?
-          <Plomon key={idx} name={pet.name} position={plomonStates[randomIndexList[idx]][0]} rotation={plomonStates[randomIndexList[idx]][1]} speed={plomonStates[randomIndexList[idx]][2]} rSpeed={plomonStates[randomIndexList[idx]][3]} animationIndex={plomonStates[randomIndexList[idx]][4]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true), props.setTargetPlomon(pet))}/>
+      {allMyPet !== undefined && allMyPet.length > 0 && allMyPet.map((pet, idx) => (
+        randomIndexList[idx] < 6 ?
+          <Plomon key={idx} name={pet.name} position={plomonStates[randomIndexList[idx]][0]} rotation={plomonStates[randomIndexList[idx]][1]} speed={plomonStates[randomIndexList[idx]][2]} rSpeed={plomonStates[randomIndexList[idx]][3]} animationIndex={plomonStates[randomIndexList[idx]][4]} scale={0.08} onClick={() => (props.setPlomonOpen(true), props.setIsPlomonClicked(true), props.setTargetPlomon(pet))} />
           : console.log('no')
-        )
-        )}
+      )
+      )}
       {/* {allMyPet !== undefined &&
         allMyPet.length > 0 &&
         allMyPet.map((pet, idx) =>
