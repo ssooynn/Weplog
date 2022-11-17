@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "./Button";
 // import { Avatar, Button as GBtn, Spinner } from "grommet";
 // import { Button as MBtn, ThemeProvider } from "@mui/material";
-import { Box, Image } from "grommet";
+import { Box, Image, Text } from "grommet";
 import styled from "styled-components";
 import { Paper } from "@mui/material";
 // import styled from "styled-components";
@@ -108,8 +108,8 @@ function getPrettyPostingTime(PostingTime) {
         } else { return String(nowHour - postingHour) + '시간전'; };
       } else { return String(nowDay - postingDay) + '일전'; };
     } else { return String(postingYear) + '년 ' + String(postingMonth) + '월 ' + String(postingDay) + '일'; };
-  } else { return ''};
-  
+  } else { return '' };
+
 };
 
 
@@ -251,34 +251,52 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
           height="150px"
           gap="medium"
         >
-          <Image
-            fit="cover"
-            src={TrashBtn}
-            onClick={() => {
-              handleMarker("ONE");
-            }}
-          />
-          <Image
-            fit="cover"
-            src={DishBtn}
-            onClick={() => {
-              handleMarker("TWO");
-            }}
-          />
-          <Image
-            fit="cover"
-            src={DesBtn}
-            onClick={() => {
-              handleMarker("THREE");
-            }}
-          />
-          <Image
-            fit="cover"
-            src={GarbageBtn}
-            onClick={() => {
-              handleMarker("FOUR");
-            }}
-          />
+          <Box direction="column" align="center" justify="center">
+
+            <Image
+              fit="cover"
+              src={TrashBtn}
+              onClick={() => {
+                handleMarker("ONE");
+              }}
+              style={{ width: "66px", height: "66px" }}
+            />
+            <Text size="12px" weight={600}>쓰레기통</Text>
+          </Box>
+          <Box direction="column" align="center" justify="center">
+            <Image
+              fit="cover"
+              src={DishBtn}
+              onClick={() => {
+                handleMarker("TWO");
+              }}
+              style={{ width: "66px", height: "66px" }}
+            />
+            <Text size="12px" weight={600}>맛집</Text>
+          </Box>
+          <Box direction="column" align="center" justify="center">
+            <Image
+              fit="cover"
+              src={DesBtn}
+              onClick={() => {
+                handleMarker("THREE");
+              }}
+              style={{ width: "66px", height: "66px" }}
+            />
+            <Text size="12px" weight={600}>목적지</Text>
+          </Box>
+          <Box direction="column" align="center" justify="center">
+            <Image
+              fit="cover"
+              src={GarbageBtn}
+              onClick={() => {
+                handleMarker("FOUR");
+              }}
+              style={{ width: "66px", height: "66px" }}
+            />
+            <Text size="12px" weight={600}>쓰레기</Text>
+
+          </Box>
         </Box>
       </DialogContent>
     </Dialog>

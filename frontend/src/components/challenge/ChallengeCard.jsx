@@ -31,12 +31,16 @@ export const ChallengeCard = ({ challenge }) => {
     navigate(`/challenge/detail/${challenge.challengeId}`);
   };
   const [typeUnit, setTypeUnit] = useState(challenge.type);
+  const [goal, setGoal] = useState();
   useEffect(() => {
     if (typeUnit === 'DISTANCE') {
+      setGoal(Number(challenge.goal) * 0.001);
       setTypeUnit("Km")
     } else if (typeUnit === 'TIME') {
+      setGoal(Number(challenge.goal) / 3600);
       setTypeUnit("시간")
     } else {
+      setGoal(challenge.goal);
       setTypeUnit("회")
     }
   }, [challenge])
@@ -57,7 +61,7 @@ export const ChallengeCard = ({ challenge }) => {
               {challenge.title}
             </Text>
             <Text size="10px" weight={400}>
-              Goal - {challenge.goal}{typeUnit} 플로깅
+              Goal - {goal} {typeUnit} 플로깅
             </Text>
             <Text size="10px" weight={400}>
               기한 - {challenge.endDate}까지

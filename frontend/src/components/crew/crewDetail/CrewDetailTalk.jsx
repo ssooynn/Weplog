@@ -20,7 +20,7 @@ import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 // import ChatSound from "../../assets/sounds/chatNoti.mp3";
 import { useSelector } from "react-redux";
-import { dateToDetailString } from "../../../utils/util";
+import { dateToDetailString, httpToHttps } from "../../../utils/util";
 import { getCrewChats } from "../../../apis/crewApi";
 
 var client = null;
@@ -267,7 +267,10 @@ const CrewDetailTalk = ({ crewId }) => {
                   position: message.position,
                 }}
               >
-                <Avatar src={message.profileImg} name={message.sender} />
+                <Avatar
+                  src={httpToHttps(message.profileImg)}
+                  name={message.sender}
+                />
                 <Message.Footer
                   sender={message.sender}
                   sentTime={dateToDetailString(message.sentTime)}

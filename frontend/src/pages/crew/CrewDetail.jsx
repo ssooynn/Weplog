@@ -23,14 +23,16 @@ const ProfileList = ({ memberList }) => {
   return (
     <div style={{ position: "relative" }}>
       {memberList.map((member, index) => {
-        return (
-          <StyledProfile
-            key={index}
-            src={member.profileImageUrl}
-            left={`${parseInt(-90 + index * 20)}px`}
-          />
-        );
+        if (index < 4)
+          return (
+            <StyledProfile
+              key={index}
+              src={member.profileImageUrl}
+              left={`${parseInt(-90 + index * 20)}px`}
+            />
+          );
       })}
+
       {/* <StyledProfile
         src="https://picsum.photos/100/100?random=45"
         left="-30px"
