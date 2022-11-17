@@ -418,7 +418,7 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      // brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
+      // brokerURL: "ws://localhost:8000/member-service/ws-stomp",
       brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -442,7 +442,7 @@ export const Plogging = () => {
         // Compliant brokers will terminate the connection after any error
         console.log("Broker reported error: " + frame.headers["message"]);
         console.log("Additional details: " + frame.body);
-        // client.deactivate();
+        client.deactivate();
       },
     });
 
@@ -555,9 +555,9 @@ export const Plogging = () => {
     }
   };
   // 웹소켓 연결해제
-  const disConnect = () => {
+  const disConnect = async () => {
     if (client != null) {
-      if (client.connected) client.deactivate();
+      if (client.connected) await client.deactivate();
       client = null;
     }
   };
