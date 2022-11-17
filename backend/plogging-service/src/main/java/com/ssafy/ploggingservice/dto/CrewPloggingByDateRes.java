@@ -23,6 +23,8 @@ public class CrewPloggingByDateRes {
     private String profileImageUrl;
     private String color;
     private List<List<CoordinateDto>> coordinatesList = new ArrayList<>();
+    private Integer totalTime;
+    private Integer totalDistance;
 
     public static CrewPloggingByDateRes from(Plogging plogging) {
         CrewPloggingByDateRes crewPloggingByDateRes = new CrewPloggingByDateRes();
@@ -35,7 +37,14 @@ public class CrewPloggingByDateRes {
                 .stream().map(coordinate -> new CoordinateDto(coordinate))
                 .collect(Collectors.toList())
         );
+        crewPloggingByDateRes.totalTime = plogging.getTime();
+        crewPloggingByDateRes.totalDistance = plogging.getDistance();
 
         return crewPloggingByDateRes;
+    }
+
+    public void addTimeAndDistance(Integer time, Integer distance) {
+        this.totalTime += time;
+        this.totalDistance += distance;
     }
 }

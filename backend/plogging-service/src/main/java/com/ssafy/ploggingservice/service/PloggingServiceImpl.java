@@ -197,6 +197,7 @@ public class PloggingServiceImpl implements PloggingService {
                                     .stream().map(coordinate -> new CoordinateDto(coordinate))
                                     .collect(Collectors.toList())
                     );
+                    crewPloggingByDateRes.addTimeAndDistance(plogging.getTime(), plogging.getDistance());
                     existMember = true;
                     break;
                 }
