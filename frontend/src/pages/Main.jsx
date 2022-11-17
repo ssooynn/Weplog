@@ -181,7 +181,7 @@ export const Main = () => {
   const [plomonOpen, setPlomonOpen] = useState(false);
   const [isPlomonClicked, setIsPlomonClicked] = useState(false);
   const [allMyPet, setAllMyPet] = useState([]);
-  const [targetPlomon, setTargetPlomon] = useState([]);
+  const [targetPlomon, setTargetPlomon] = useState({});
 
   const goPlomon3D = (petId) => {
     navigate("/main/plomon3d", { state: { gottenPetId: petId } });
@@ -258,12 +258,12 @@ export const Main = () => {
             allMyPet.map((pet, idx) => (
               <SmallPlomon
                 key={idx}
-                onClick={() => (
-                  setPlomonOpen(true),
-                  setOpen(false),
-                  setIsPlomonClicked(false),
-                  setTargetPlomon(pet)
-                )}
+                onClick={() => {
+                  setTargetPlomon(pet);
+                  setPlomonOpen(true);
+                  setOpen(false);
+                  setIsPlomonClicked(false);
+                }}
               >
                 <img
                   style={{ width: "28vw", height: "24vw", objectFit: "cover" }}
@@ -318,14 +318,14 @@ export const Main = () => {
               <PlomonDetailText>경험치</PlomonDetailText>
               <ProgressBar
                 id="progress"
-                value={parseInt(targetPlomon.current_exp / 300)}
+                value={new Number(parseInt(targetPlomon.current_exp) / 300)}
                 min="0"
                 max="100"
               ></ProgressBar>
               <Text size="12px" weight={400}>
-                {parseInt(targetPlomon.current_exp / 300) === 100
+                {parseInt(targetPlomon.current_exp) / 300 === 100
                   ? "MAX"
-                  : parseInt(targetPlomon.current_exp / 300) + "%"}
+                  : parseInt(targetPlomon.current_exp) / 300 + "%"}
               </Text>
             </Box>
             <Box
