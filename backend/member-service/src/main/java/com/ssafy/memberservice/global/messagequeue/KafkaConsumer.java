@@ -116,7 +116,11 @@ public class KafkaConsumer {
         UUID memberId = UUID.fromString((String) map.get("memberId"));
         Integer distance = (Integer) map.get("distance");
         Integer time = (Integer) map.get("time");
-        Long crewId = map.get("crewId") == null ? null : (Long) map.get("crewId");
+        Long crewId = null;
+        if (map.get("crewId") != null) {
+            Integer crewIdInteger = (Integer) map.get("crewId");
+            crewId = crewIdInteger.longValue();
+        }
         
         int rewardPoint = distance * 1; // m당 1점
 
