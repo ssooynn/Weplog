@@ -61,7 +61,7 @@ export const ChallengeList = () => {
 
   return (
     <motion.div>
-      <Box direction="column">
+      <Box direction="column" pad={{ bottom: "70px" }}>
         <Box
           background={{ image: `url(${bgGradient})` }}
           direction="column"

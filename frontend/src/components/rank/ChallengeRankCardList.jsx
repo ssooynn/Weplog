@@ -50,10 +50,11 @@ export const ChallengeRankCardList = (data) => {
         }
         return `${hour} : ${min} : ${sec}`;
     }
+
     const valueName = (user) => {
         switch (rankType) {
             case "DISTANCE":
-                return user.totalDistance + " Km";
+                return (Number(user.totalDistance) * 0.001).toFixed(2) + " Km";
 
             case "PLOGGING_CNT":
                 return user.totalCnt + " 회";
