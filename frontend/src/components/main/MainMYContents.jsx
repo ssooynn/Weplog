@@ -47,6 +47,7 @@ function Island(props) {
   useEffect(() => {
     getAllMyPet(
       (res) => {
+        console.log(res);
         setAllMyPet(res.data);
         setRandomIndexList(getRandomIndexList(res.data.length));
       },
