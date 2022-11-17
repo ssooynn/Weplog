@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.ssafy.memberservice.global.common.error.exception.DuplicateException.CREW_MEMBER_DUPLICATED;
 import static com.ssafy.memberservice.global.common.error.exception.DuplicateException.JOIN_CREW_DUPLICATED;
 import static com.ssafy.memberservice.global.common.error.exception.NotFoundException.*;
 import static com.ssafy.memberservice.global.common.error.exception.NotMatchException.CREW_KING_NOT_MATCH;
@@ -154,6 +155,13 @@ public class CrewServiceImpl implements CrewService {
 
         JoinWaiting findJoinWaiting = joinWaitingRepository.findByIdWithMemberAndCrew(joinWaitingId)
                 .orElseThrow(() -> new NotFoundException(JOINWAITING_NOT_FOUND));
+
+        // 이미 가입한 크루면 에러
+        Optional<MemberCrew> existCrewMember =
+                memberCrewRepository.findMemberCrewByMemberIdAndCrewId(findJoinWaiting.getMember().getId(), findJoinWaiting.getCrew().getId());
+        if (existCrewMember.isPresent()) {
+            throw new DuplicateException(CREW_MEMBER_DUPLICATED);
+        }
 
         // 허가하는 사람이 크루장인지 검사
         if (!findJoinWaiting.getCrew().getCrewMaster().getId().equals(crewKing.getId())) {
