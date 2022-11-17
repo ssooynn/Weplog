@@ -43,6 +43,7 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
           fontFamily: "gwmd",
           fontWeight: "bold",
           fontSize: "16px",
+          padding: "10px",
         }}
       >
         {date}
@@ -113,7 +114,7 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
             height="100px"
             width="100%"
             pad="10px 10px"
-            gap="small"
+            gap="medium"
           >
             {log.length > 0 &&
               log.map((member, index) => {
@@ -122,14 +123,16 @@ export const CrewLogDialog = ({ open, onClose, crewId, date }) => {
                     <Avatar
                       src={httpToHttps(member.profileImageUrl)}
                       style={{
-                        width: "35px",
-                        height: "35px",
+                        width: "50px",
+                        height: "50px",
                         border: `3px inset ${convertStringToColor(
                           member.color
                         )}`,
                       }}
                     />
-                    <Text size="10px">{member.nickname}</Text>
+                    <Text size="10px" weight="bold">
+                      {member.nickname}
+                    </Text>
                   </Box>
                 );
               })}

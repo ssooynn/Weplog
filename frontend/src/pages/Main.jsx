@@ -13,15 +13,12 @@ import PlomonSample1 from "../assets/PlomonSample1.gif";
 import PlomonSample2 from "../assets/PlomonSample2.gif";
 import PlomonSample3 from "../assets/PlomonSample3.gif";
 import PlomonSample4 from "../assets/PlomonSample4.gif";
-<<<<<<< HEAD
-import { changePetLevelApi, getAllMyPet, getMyPetDetail } from '../apis/memberPetApi'
-import Switch from 'react-ios-switch';
-
-
-=======
-import { getAllMyPet } from "../apis/memberPetApi";
+import {
+  changePetLevelApi,
+  getAllMyPet,
+  getMyPetDetail,
+} from "../apis/memberPetApi";
 import Switch from "react-ios-switch";
->>>>>>> 8599242aa4da82e5de4711822d491484cbfedcdf
 
 const MainCategoryContainer = styled.div`
   display: flex;
@@ -176,11 +173,7 @@ const ProgressBar = styled.progress`
 
   ::-webkit-progress-value {
     border-radius: 5px;
-<<<<<<< HEAD
-    background: ${props => props.value === 100 ? '#FFBB54' : '#57ba83'};
-=======
     background: ${(props) => (props.value === 100 ? "#FFBB54" : "#57ba83")};
->>>>>>> 8599242aa4da82e5de4711822d491484cbfedcdf
   }
 `;
 
@@ -198,7 +191,7 @@ export const Main = () => {
     navigate("/main/plomon3d", { state: { gottenPetId: petId } });
   };
 
-  useEffect(() => { }, [plomonOpen, isPlomonClicked]);
+  useEffect(() => {}, [plomonOpen, isPlomonClicked]);
 
   useEffect(() => {
     getAllMyPet(
@@ -213,19 +206,26 @@ export const Main = () => {
   }, []);
 
   const changeImgLevel = () => {
-    changePetLevelApi(targetPlomon.memberPetId, (res) => {
-      console.log(res);
-      getMyPetDetail(targetPlomon.petId, (res) => {
-        console.log(res.data);
-        setTargetPlomon(res.data);
-      }, (err) => {
+    changePetLevelApi(
+      targetPlomon.memberPetId,
+      (res) => {
+        console.log(res);
+        getMyPetDetail(
+          targetPlomon.petId,
+          (res) => {
+            console.log(res.data);
+            setTargetPlomon(res.data);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      },
+      (err) => {
         console.log(err);
-      })
-    }, (err) => {
-      console.log(err);
-    })
-
-  }
+      }
+    );
+  };
   return (
     <div
       style={{
@@ -353,13 +353,25 @@ export const Main = () => {
                   : parseInt(targetPlomon.current_exp) / 300 + "%"}
               </Text>
             </Box>
-            <Box margin="2vh 0" direction="row" justify="between" align="center" width="90%">
-              <PlomonDetailText>
-                변신
-              </PlomonDetailText>
+            <Box
+              margin="2vh 0"
+              direction="row"
+              justify="between"
+              align="center"
+              width="90%"
+            >
+              <PlomonDetailText>변신</PlomonDetailText>
               <div style={{ margin: "1px 52vw 0 0" }}>
                 {/* 만약 baby라면 스위치 없어야함  */}
-                {targetPlomon.level === 2 ? <Switch checked={targetPlomon.imageLevel === 2} onChange={() => changeImgLevel()} onColor="#57BA83" /> : <Switch disabled handleColor="gray" />}
+                {targetPlomon.level === 2 ? (
+                  <Switch
+                    checked={targetPlomon.imageLevel === 2}
+                    onChange={() => changeImgLevel()}
+                    onColor="#57BA83"
+                  />
+                ) : (
+                  <Switch disabled handleColor="gray" />
+                )}
               </div>
             </Box>
           </SmallPlomon>

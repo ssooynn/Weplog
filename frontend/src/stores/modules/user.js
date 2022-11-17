@@ -13,7 +13,7 @@ const user = {
   nickname: "",
   weight: "",
   profileImageUrl: "",
-  plomon: 1,
+  plomon: "",
 };
 
 export default handleActions(

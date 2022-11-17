@@ -14,6 +14,7 @@ import {
 import { Fab } from "@mui/material";
 import { BootstrapButton } from "../../components/common/Buttons";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as PlusIcon } from "../../assets/icons/plus.svg";
 
 export const Crew = () => {
   const [top3Distance, setTop3Distance] = useState([]);
@@ -77,21 +78,36 @@ export const Crew = () => {
   else
     return (
       <motion.div>
-        <BootstrapButton
+        <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => {
             navigate("/crew/register");
           }}
           style={{
+            boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
+            textTransform: "none",
+            fontSize: 32,
+            fontWeight: "bold",
+            color: "white",
+            border: "none",
+            fontFamily: `shsnMedium, sans-serif`,
+            padding: 0,
+            margin: 0,
+            backgroundColor: "#57BA83",
             position: "fixed",
             bottom: "9%",
             right: "3%",
             zIndex: "3",
-            width: "30%",
+            width: "60px",
+            height: "60px",
+            borderRadius: "30px",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          크루 만들기
-        </BootstrapButton>
+          <PlusIcon />
+        </motion.button>
         <div style={{ position: "relative", width: "100%", height: "260px" }}>
           <img
             src={crewBanner}
