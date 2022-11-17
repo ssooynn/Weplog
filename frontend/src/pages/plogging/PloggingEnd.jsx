@@ -44,7 +44,7 @@ export const PloggingEnd = () => {
   const [pathData, setPathData] = useState();
   const { kakao } = window;
   const geocoder = new kakao.maps.services.Geocoder();
-  const User = useSelector((state) => state.user);
+  const User = useSelector((state) => state.user.user);
 
   // ploggingType: "",
   //     ploggingData: {
