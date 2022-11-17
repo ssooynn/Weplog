@@ -39,9 +39,14 @@ public class MyPageServiceImpl implements MyPageService {
     public MyPageRes getMyPage(UUID uuid) {
         Member member = memberRepository.findById(uuid)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        Optional<MemberPet> memberPet = memberPetRepository.findGrowingPetByMemberId(uuid);
 
+        Long petId = null;
+        if (memberPet.isPresent()) {
+            petId = memberPet.get().getPet().getId();
+        }
 
-        return new MyPageRes(member);
+        return new MyPageRes(member, petId);
     }
 
     @Override

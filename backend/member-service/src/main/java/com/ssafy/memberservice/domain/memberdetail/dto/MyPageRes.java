@@ -18,13 +18,15 @@ public class MyPageRes {
     private String nickname;
     private int weight;
     private String profileImageUrl;
+    private Long petId;
 
 
-    public MyPageRes(Member member){
+    public MyPageRes(Member member, Long petId){
         this.name = member.getName();
         this.nickname = member.getNickname();
         this.weight = member.getWeight();
         this.profileImageUrl = member.getProfileImageUrl();
+        this.petId = petId;
     }
 
 }
