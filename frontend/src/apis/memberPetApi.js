@@ -68,8 +68,19 @@ const getPetLevel = async (level, success, fail) => {
   await authInstance.get(`/pet/${level}`).then(success).catch(fail);
 };
 
+//육성 완료된 펫 이미지 변신
+const changePetLevelApi = async (memberPetId, success, fail) => {
+  await authInstance
+    .patch(`/mypet/${memberPetId}/transformation`)
+    .then(success)
+    .catch(fail);
+};
 
-
-
-
-export { getAllMyPet, getMyPetDetail, postMyPet, getMyPetKinds, getPetLevel };
+export {
+  getAllMyPet,
+  getMyPetDetail,
+  postMyPet,
+  getMyPetKinds,
+  getPetLevel,
+  changePetLevelApi,
+};
