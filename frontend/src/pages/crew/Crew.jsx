@@ -65,7 +65,7 @@ export const Crew = () => {
             }
           );
         },
-        (err) => {}
+        (err) => { }
       );
     }
     setLoading(false);

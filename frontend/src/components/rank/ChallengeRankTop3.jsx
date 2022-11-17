@@ -76,9 +76,12 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
         align="end"
         margin="20px 0px"
       >
-        <Box direction="column" height="100px" justify="between" align="center">
+        <Box direction="column" height="120px" justify="between" align="center">
           <Profile2nd src={changeImage(1)} alt="프로필 사진" />
           <Box direction="column" align="center">
+            <Text size="10px" weight={500}>
+              2등
+            </Text>
             <Text size="10px" weight={400}>
               {changeTitle(1)}
             </Text>
@@ -89,7 +92,7 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
         </Box>
         <Box
           direction="column"
-          height="120px"
+          height="140px"
           justify="end"
           align="center"
           style={{ position: "relative" }}
@@ -101,6 +104,9 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
           />
           <Profile1st src={changeImage(0)} alt="프로필 사진" />
           <Box direction="column" align="center">
+            <Text size="10px" weight={500}>
+              1등
+            </Text>
             <Text size="12px" weight={500}>
               {changeTitle(0)}
             </Text>
@@ -109,9 +115,12 @@ export const ChallengeRankTop3 = ({ type, top3, rankType }) => {
             </Text>
           </Box>
         </Box>
-        <Box direction="column" height="100px" justify="end" align="center">
+        <Box direction="column" height="120px" justify="end" align="center">
           <Profile3rd src={changeImage(2)} alt="프로필 사진" />
           <Box direction="column" align="center">
+            <Text size="10px" weight={500}>
+              3등
+            </Text>
             <Text size="10px" weight={400}>
               {changeTitle(2)}
             </Text>
