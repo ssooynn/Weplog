@@ -13,6 +13,7 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import styled from "styled-components";
 import calendarButton from "../../assets/icons/calendar.png";
 import { challengeIngListAPi } from "../../apis/memberChallengeApi";
+import { useNavigate } from "react-router-dom";
 
 
 const LoginModalStyled = styled.div`
@@ -55,6 +56,7 @@ export const ChallengeRegister = () => {
     setImage(file);
   };
 
+  const navigate = useNavigate();
   const changeType = (str) => {
     if (myType.includes(str)) {
       alert("이미 해당 타입의 챌린지를 가지고 있습니다.");
@@ -72,9 +74,9 @@ export const ChallengeRegister = () => {
       let valueGoal;
       //user 객체 만들기
       if (type == "DISTANCE") {
-        valueGoal = goal * 1000;
+        valueGoal = Number(goal * 1000);
       } else if (type == "TIME") {
-        valueGoal = goal * 60 * 60;
+        valueGoal = Number(goal * 60 * 60);
       }
       const request = JSON.stringify({
         title: name,
@@ -96,7 +98,7 @@ export const ChallengeRegister = () => {
       }, (err) => {
         console.log(err);
       })
-
+      navigate("/challenge/list")
     } else {
       alert('모든 정보를 입력해주세요');
     }
@@ -128,7 +130,6 @@ export const ChallengeRegister = () => {
   }, [])
   return (
     <motion.div style={{ minHeight: "88vh" }}>
-      {myType}
       {/* 커버 사진 설정 */}
       <Box justify="center" align="center">
         {profile === "" ? (
