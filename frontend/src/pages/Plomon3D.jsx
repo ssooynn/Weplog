@@ -2,6 +2,7 @@ import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Plomon3DDetail } from "../components/main/Plomon3DDetail";
+import { Plomon3DDetail2 } from "../components/main/Plomon3DDetail2";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
@@ -141,7 +142,6 @@ function Bubble({ id, onAnimationEnd }) {
 function Plomon(props) {
   const mesh = useRef(null);
   const ref = useRef(null);
-  const [animationIndex, setAnimationIndex] = useState([2, 9, 0, 3, 17, 13]);
   const [index, setIndex] = useState(0);
 
   const handlePlomonClick = () => {
@@ -155,14 +155,24 @@ function Plomon(props) {
   }, [index]);
   return (
     <mesh ref={mesh} scale={0.5} position={[0, 1, 0]}>
-      <Plomon3DDetail
+      {props.imageLevel === 1 ?
+        <Plomon3DDetail
         ref={ref}
         name={props.name}
         scale={0.4}
         position={[0, 0, 0]}
-        // animationIndex={animationIndex[index]}
+        onClick={handlePlomonClick} //클릭하면 애니매이션 변경
+        />
+        :
+        <Plomon3DDetail2
+        ref={ref}
+        name={props.name}
+        scale={0.2}
+        position={[0, 0, 0]}
         onClick={handlePlomonClick} //클릭하면 애니매이션 변경
       />
+      }
+      
       <meshLambertMaterial attach="material" />
     </mesh>
   );
