@@ -10,6 +10,7 @@ import Button from "../../components/Button";
 import { ChallengeRankCard } from "../../components/rank/ChallengeRankCard";
 import { ChallengeRankCardList } from "../../components/rank/ChallengeRankCardList";
 import { ChallengeRankTop3 } from "../../components/rank/ChallengeRankTop3";
+import {Loading} from "../../components/common/Loading";
 
 const ProgressBar = styled.progress`
   appearance: none;
@@ -37,6 +38,7 @@ export const ChallengeDetail = () => {
   const [goal, setGoal] = useState("");
   const [toalDistance, setTotalDistance] = useState("");
   const [totalTime, setTotalTime] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const sharePage = () => {
     window.navigator.share({
@@ -53,20 +55,22 @@ export const ChallengeDetail = () => {
 
   const loadChallengeDetail = () => {
     challengeDetailApi(challengeId, (res) => {
+      console.log(res.data);
       setChallenge(res.data);
       if (res.data.type === 'DISTANCE') {
-        setGoal(Number(challenge.goal) * 0.001);
+        setGoal(Number(res.data.goal) * 0.001);
         setTypeUnit("Km")
       } else if (res.data.type === 'TIME') {
-        setGoal((Number(challenge.goal) / 3600));
+        setGoal((Number(res.data.goal) / 3600));
         setTypeUnit("시간")
       } else {
         setTypeUnit("회")
       }
-      setEndDate(challenge.endDate.split("-"));
-      console.log(res.data);
+      setEndDate(res.data.endDate.split("-"));
+      setLoading(false);
     }, (err) => {
       console.log(err);
+      setLoading(false);
     })
   }
 
@@ -100,7 +104,9 @@ export const ChallengeDetail = () => {
   const [myRankValue, setMyRankValue] = useState("");
   const [myProfile, setMyProfile] = useState("");
   const [myNickname, setMyNickname] = useState("");
-  return (
+
+  if (loading) return <Loading/>
+  else return (
     <motion.div>
       <div style={{ position: "relative" }}>
         {/* 챌린지 bgImage */}
@@ -157,7 +163,7 @@ export const ChallengeDetail = () => {
                   max="100"
                 ></ProgressBar>
                 <Text size="12px" weight={500}>
-                  {challenge.progressRate} %
+                  {challenge.progressRate.toFixed(2)}%
                 </Text>
               </Box>
             </Box>
@@ -170,7 +176,7 @@ export const ChallengeDetail = () => {
                   참여자 총 플로깅 거리 : {Number(challenge.totalDistance) * 0.001} Km
                 </Text>
                 <Text size="12px" weight={400}>
-                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600).toFixed(2)} 시간
+                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600)} 시간
                 </Text>
               </Box>
               <Text size="12px" weight={500} alignSelf="end">
