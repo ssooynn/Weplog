@@ -75,7 +75,7 @@ export const ChallengeCard = ({ challenge }) => {
                   max="100"
                 ></ProgressBar>
                 <Text size="10px" weight={400}>
-                  {challenge.progressRate}%
+                  {challenge.progressRate.toFixed(2)}%
                 </Text>
               </Box>
               <Box>

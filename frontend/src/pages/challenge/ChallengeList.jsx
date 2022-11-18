@@ -39,6 +39,7 @@ export const ChallengeList = () => {
         3,
         "ASC",
         (res) => {
+            console.log(res);
           setChallengeList(res.data.content);
         },
         (err) => {
