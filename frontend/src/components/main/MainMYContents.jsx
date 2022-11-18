@@ -58,13 +58,16 @@ function Island(props) {
       (res) => {
         console.log(res);
         setAllMyPet(res.data);
-        setRandomIndexList(getRandomIndexList(res.data.length));
+        if (allMyPet.length === 0) {
+
+          setRandomIndexList(getRandomIndexList(res.data.length));
+        }
       },
       (err) => {
         console.log(err);
       }
     );
-  }, []);
+  }, [props]);
   return (
     <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
@@ -74,40 +77,40 @@ function Island(props) {
           randomIndexList[idx] < 6 ? (
             (pet.imageLevel === 1 ?
               <Plomon1
-              key={idx}
-              name={pet.name}
-              imageLevel={pet.imageLevel}
-              position={plomon1States[randomIndexList[idx]][0]}
-              rotation={plomon1States[randomIndexList[idx]][1]}
-              speed={plomon1States[randomIndexList[idx]][2]}
-              rSpeed={plomon1States[randomIndexList[idx]][3]}
-              animationIndex={plomon1States[randomIndexList[idx]][4]}
-              scale={0.08}
-              onClick={() => (
-                props.setPlomonOpen(true),
-                props.setIsPlomonClicked(true),
-                props.setTargetPlomon(pet)
-              )}
+                key={idx}
+                name={pet.name}
+                imageLevel={pet.imageLevel}
+                position={plomon1States[randomIndexList[idx]][0]}
+                rotation={plomon1States[randomIndexList[idx]][1]}
+                speed={plomon1States[randomIndexList[idx]][2]}
+                rSpeed={plomon1States[randomIndexList[idx]][3]}
+                animationIndex={plomon1States[randomIndexList[idx]][4]}
+                scale={0.08}
+                onClick={() => (
+                  props.setPlomonOpen(true),
+                  props.setIsPlomonClicked(true),
+                  props.setTargetPlomon(pet)
+                )}
               />
               :
               <Plomon2
-              key={idx}
-              name={pet.name}
-              imageLevel={pet.imageLevel}
-              position={plomon2States[randomIndexList[idx]][0]}
-              rotation={plomon2States[randomIndexList[idx]][1]}
-              speed={plomon2States[randomIndexList[idx]][2]}
-              rSpeed={plomon2States[randomIndexList[idx]][3]}
-              animationIndex={plomon2States[randomIndexList[idx]][4]}
-              scale={0.05}
-              onClick={() => (
-                props.setPlomonOpen(true),
-                props.setIsPlomonClicked(true),
-                props.setTargetPlomon(pet)
-              )}
+                key={idx}
+                name={pet.name}
+                imageLevel={pet.imageLevel}
+                position={plomon2States[randomIndexList[idx]][0]}
+                rotation={plomon2States[randomIndexList[idx]][1]}
+                speed={plomon2States[randomIndexList[idx]][2]}
+                rSpeed={plomon2States[randomIndexList[idx]][3]}
+                animationIndex={plomon2States[randomIndexList[idx]][4]}
+                scale={0.05}
+                onClick={() => (
+                  props.setPlomonOpen(true),
+                  props.setIsPlomonClicked(true),
+                  props.setTargetPlomon(pet)
+                )}
               />
             )
-            
+
           ) : (
             console.log("no")
           )
