@@ -12,8 +12,9 @@ export const Plomon3DDetail = forwardRef((props, reff) => {
   const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
   const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
-  const [animationIdx, setAnimationIdx] = useState(3);
+  const [animationIdx, setAnimationIdx] = useState(2);
   const mesh = useRef(null);
+  const [animationIndex, setAnimationIndex] = useState([9, 0, 3, 17, 13, 2]);
   // console.log("^^", props);
   //   useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
   useImperativeHandle(reff, () => ({
@@ -21,10 +22,8 @@ export const Plomon3DDetail = forwardRef((props, reff) => {
     handleAnimation,
   }));
   const handleAnimation = (idx) => {
-    console.log("^^", props);
-    console.log(actions);
     actions[names[Number(animationIdx)]].stop();
-    setAnimationIdx(idx);
+    setAnimationIdx(animationIndex[idx]);
     // actions[names[Number(animationIndex)]].reset().stop();
   };
   useEffect(() => {
