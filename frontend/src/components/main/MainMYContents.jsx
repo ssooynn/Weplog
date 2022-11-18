@@ -64,7 +64,9 @@ function Island(props) {
         console.log(err);
       }
     );
-  }, []);
+  }, [props.loading]);
+
+
   return (
     <mesh ref={mesh} scale={0.5} position={[0, -5, 0]}>
       <SnowIsland />
