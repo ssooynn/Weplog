@@ -186,20 +186,22 @@ export const Main = () => {
   const [isPlomonClicked, setIsPlomonClicked] = useState(false);
   const [allMyPet, setAllMyPet] = useState([]);
   const [targetPlomon, setTargetPlomon] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const goPlomon3D = (petId) => {
     navigate("/main/plomon3d", { state: { gottenPetId: petId } });
   };
 
-  useEffect(() => {}, [plomonOpen, isPlomonClicked]);
+  useEffect(() => { }, [plomonOpen, isPlomonClicked]);
 
-  useEffect(() => {}, [allMyPet]);
+  useEffect(() => { }, [allMyPet]);
 
   useEffect(() => {
     getAllMyPet(
       (res) => {
         console.log(res.data);
         setAllMyPet(res.data);
+        setLoading(!loading);
       },
       (err) => {
         console.log(err);
@@ -347,8 +349,8 @@ export const Main = () => {
                 id="progress"
                 value={new Number(parseInt(targetPlomon.current_exp) / 300)}
                 isMax={parseInt(targetPlomon.current_exp) / 300 === 100
-                ? true
-                : false}
+                  ? true
+                  : false}
                 min="0"
                 max="100"
               ></ProgressBar>
@@ -370,13 +372,14 @@ export const Main = () => {
                 {/* 만약 baby라면 스위치 없어야함  */}
                 {targetPlomon.level === 2 ? (
                   <Switch
-                    checked={targetPlomon.imageLevel === 2}
-                    onChange={() => changeImgLevel()}
+                    value={targetPlomon.imageLevel === 2 || ''}
+                    checked={targetPlomon.imageLevel === 2 || false}
+                    onChange={changeImgLevel}
                     onColor="#57BA83"
                     offColor="#D9D9D9"
                   />
                 ) : (
-                  <Switch disabled handleColor="#9E9E9E" offColor="#868686" />
+                  <Switch disabled value={targetPlomon.imageLevel === 2 || ''} checked={false} handleColor="#9E9E9E" offColor="#868686" />
                 )}
               </div>
             </Box>
@@ -389,6 +392,7 @@ export const Main = () => {
         setPlomonOpen={setPlomonOpen}
         setIsPlomonClicked={setIsPlomonClicked}
         setTargetPlomon={setTargetPlomon}
+        loading={loading}
       />
     </div>
   );
