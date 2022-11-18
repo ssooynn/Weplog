@@ -173,7 +173,7 @@ const ProgressBar = styled.progress`
 
   ::-webkit-progress-value {
     border-radius: 5px;
-    background: ${(props) => (props.value === 100 ? "#FFBB54" : "#57ba83")};
+    background: ${(props) => (props.isMax ? "#FFBB54" : "#57ba83")};
   }
 `;
 
@@ -192,6 +192,8 @@ export const Main = () => {
   };
 
   useEffect(() => {}, [plomonOpen, isPlomonClicked]);
+
+  useEffect(() => {}, [allMyPet]);
 
   useEffect(() => {
     getAllMyPet(
@@ -344,13 +346,16 @@ export const Main = () => {
               <ProgressBar
                 id="progress"
                 value={new Number(parseInt(targetPlomon.current_exp) / 300)}
+                isMax={parseInt(targetPlomon.current_exp) / 300 === 100
+                ? true
+                : false}
                 min="0"
                 max="100"
               ></ProgressBar>
               <Text size="12px" weight={400}>
                 {parseInt(targetPlomon.current_exp) / 300 === 100
                   ? "MAX"
-                  : parseInt(targetPlomon.current_exp) / 300 + "%"}
+                  : String(Math.floor((targetPlomon.current_exp) / 300)) + "%"}
               </Text>
             </Box>
             <Box
@@ -368,9 +373,10 @@ export const Main = () => {
                     checked={targetPlomon.imageLevel === 2}
                     onChange={() => changeImgLevel()}
                     onColor="#57BA83"
+                    offColor="#D9D9D9"
                   />
                 ) : (
-                  <Switch disabled handleColor="gray" />
+                  <Switch disabled handleColor="#9E9E9E" offColor="#868686" />
                 )}
               </div>
             </Box>

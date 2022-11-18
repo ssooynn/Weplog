@@ -3,21 +3,26 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
 export function Plomon1(props) {
-  const { nodes, materials, animations } = useGLTF("/피스.glb");
+  const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
+  const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
-  const [index, setIndex] = useState(0); // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
+  const [zSpeed, setZSpeed] = useState(props.speed);
   const mesh = useRef(null);
-  // useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+
+  useFrame(() => {mesh.current.position.z += zSpeed;
+    if(mesh.current.position.z > 1000) {mesh.current.position.z = -500
+    }});
+  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += props.rSpeed));
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
-    actions[names[index]].reset().fadeIn(0.5).play()
+    actions[names[Number(props.animationIndex)]].reset().fadeIn(0.5).play() // 0:뒤뚱뒤뚱 2:하이 3:흐느적흐느적 9:점프 13:꼬물꼬물
     // In the clean-up phase, fade it out
-    return () => actions[names[index]]
+    return () => actions[names[Number(props.animationIndex)]]
   }, [])
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>
-        <group name="Dino021">
+        <group name="Dino">
           <group name="Mesh2">
             <group name="Body_A3">
               <skinnedMesh
@@ -84,5 +89,3 @@ export function Plomon1(props) {
     </group>
   );
 }
-
-useGLTF.preload("/피스.glb");
