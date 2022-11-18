@@ -275,7 +275,7 @@ export const Plomon3D = () => {
       </PlomonContentsArea>
       <Canvas camera={{ position: [0, 10, 40] }}>
         <Suspense fallback={null}>
-          <Plomon name={myPetDetail.name} />
+          <Plomon name={myPetDetail.name} imageLevel={myPetDetail.imageLevel} />
           <OrbitControls
             enableZoom={false}
             maxPolarAngle={1.5}
