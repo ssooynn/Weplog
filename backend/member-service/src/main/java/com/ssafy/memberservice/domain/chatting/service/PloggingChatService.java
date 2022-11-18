@@ -160,12 +160,15 @@ public class PloggingChatService {
     synchronized public void quitRoom(String roomId, Member member) {
         PloggingChatRoom ploggingChatRoom = ploggingChatRepository.findById(roomId).orElseThrow(() -> new NotFoundException("방이 없습니다."));
 
-        ploggingChatRoom.getParticipantMap().remove(member.getId().toString());
+        if (ploggingChatRoom.getParticipantMap() != null) {
+            ploggingChatRoom.getParticipantMap().remove(member.getId().toString());
 
-        ploggingChatRepository.save(ploggingChatRoom);
-//        if (ploggingChatRoom.getPlayerMap().size() == 0) {
-//            ploggingChatRepository.deleteById(roomId);
-//        }
+            if (ploggingChatRoom.getParticipantMap().size() == 0) {
+                ploggingChatRepository.deleteById(roomId);
+            } else {
+                ploggingChatRepository.save(ploggingChatRoom);
+            }
+        }
     }
 
     public PloggingChatRoomResponse getRoomByCrewId(Long crewId) {
