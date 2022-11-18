@@ -45,7 +45,7 @@ public class ChallengeRes {
         challengeRes.participantsCnt = challenge.getParticipantsCnt();
         challengeRes.rewardPoint = challenge.getRewardPoint();
         challengeRes.progress = challenge.getProgress();
-        challengeRes.progressRate = (challenge.getProgress() / challenge.getGoal()) * 100;
+        challengeRes.progressRate = ((double)challenge.getProgress() / challenge.getGoal()) * 100;
         challengeRes.finishFlag = challenge.getFinishFlag();
         challengeRes.imageUrl = challenge.getImageUrl();
         challengeRes.challengeId = challenge.getId();
