@@ -32,6 +32,7 @@ import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
 import { Plomon3D } from "./pages/Plomon3D.jsx";
 import { useLocation } from "react-router-dom";
 import { MypageChallenge } from "./pages/mypage/MypageChallenge.jsx";
+import { MypagePloggingLog } from "./pages/mypage/MypagePloggingLog.jsx";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ const LayoutFullScreen = () => {
 };
 
 const isLogin = () => {
-  console.log(!localStorage.getItem("accessToken"))
+  console.log(!localStorage.getItem("accessToken"));
   return localStorage.getItem("accessToken");
 };
 
@@ -80,16 +81,15 @@ export const PrivateRoute = () => {
   if (!localStorage.getItem("accessToken")) {
     alert("로그인 후 이용해주세요");
     localStorage.setItem("from", link);
-    return <Navigate to="/login" />
+    return <Navigate to="/login" />;
   } else {
-    return <Outlet></Outlet>
+    return <Outlet></Outlet>;
   }
-}
+};
 
 export const Router = () => {
   return (
     <Routes>
-
       {/* 로고, 내브바 */}
       <Route path="/" element={<PrivateRoute />}>
         <Route path="/" element={<Layout />}>
@@ -125,6 +125,7 @@ export const Router = () => {
         <Route path="/mypage/achievement" element={<MypageAchievement />} />
         <Route path="/main/plomon3d" element={<Plomon3D />} />
         <Route path="/mypage/challenge" element={<MypageChallenge />} />
+        <Route path="/mypage/plogging" element={<MypagePloggingLog />} />
       </Route>
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/login" element={<Login />} />
