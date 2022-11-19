@@ -179,20 +179,20 @@ export const PloggingStart = () => {
         <Box
           width="100%"
           align="center"
-          style={{ position: "absolute", top: "3%", zIndex: "3" }}
+          style={{ position: "absolute", top: "0", zIndex: "3" }}
           gap="medium"
         >
           {/* 주소박스 */}
           <Box
-            width="75%"
+            width="100%"
             height="46px"
             align="center"
             justify="center"
             style={{
               color: "white",
-              borderRadius: "10px",
               fontWeight: "bold",
-              background: "#57BA83",
+              background: "rgba(0, 0, 0, 0.4)",
+              boxShadow: "8px 8px 8px -8px rgb(0 0 0 / 0.2)",
             }}
           >
             {address ? address : "어디일까요?"}
