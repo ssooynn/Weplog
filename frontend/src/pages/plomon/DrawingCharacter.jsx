@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Box } from "grommet";
+import { Box, Text } from "grommet";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import Particles from "react-tsparticles";
@@ -16,6 +16,9 @@ import styled, { css } from "styled-components";
 import useInterval from "../../hooks/UseInterval";
 import { Navigate } from "grommet-icons";
 import { useNavigate } from "react-router-dom";
+import { myPageProfileApi } from "../../apis/mypageApi";
+import { setUser } from "../../stores/modules/user";
+import { useDispatch } from "react-redux";
 
 
 const LightStyled = styled.div`
@@ -60,6 +63,8 @@ export const DrawingCharacter = () => {
   const [ready, setReady] = useState(false);
   const [ready2, setReady2] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
@@ -110,7 +115,21 @@ export const DrawingCharacter = () => {
           const petId = myPets[Math.floor(Math.random() * myPets.length)];
           postMyPet(petId, (res) => {
             console.log(res);
-            navigate("/main/plomon3d", { state: { gottenPetId: petId } });
+            myPageProfileApi(
+              (res) => {
+                const user = {
+                  name: res.data.name,
+                  nickname: res.data.nickname,
+                  weight: res.data.weight,
+                  profileImageUrl: res.data.profileImageUrl,
+                  plomon: res.data.petId,
+                };
+                dispatch(setUser(user));
+                navigate("/main/plomon3d", { state: { gottenPetId: petId } });
+              },
+              (err) => {
+                console.log(err);
+              })
           }, (err) => {
             console.log(err);
           })
@@ -151,9 +170,8 @@ export const DrawingCharacter = () => {
           <>
             <Box
               width="100%"
-              height="30%"
+              height="200px"
               align="center"
-              justify="center"
               background={{
                 size: "contain",
                 image: "url(assets/images/ribbon.png)",
@@ -164,6 +182,7 @@ export const DrawingCharacter = () => {
                 color="white"
                 size="20px"
                 weight="bold"
+                style={{ marginTop: "76px" }}
               />
             </Box>
             <Box>
@@ -205,6 +224,7 @@ export const DrawingCharacter = () => {
         )}
         {clicked && (
           <Box width="100%" height="100%" align="center" justify="center">
+            <Text size="18px" weight={500} margin="0px 0px 40px 0px">클릭해보세요!</Text>
             <motion.img
               whileTap={eggClikced ? {} : { scale: 1.0 }}
               initial={{ opacity: 0, scale: 0.1 }}
