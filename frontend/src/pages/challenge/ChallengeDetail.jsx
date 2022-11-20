@@ -10,7 +10,7 @@ import Button from "../../components/Button";
 import { ChallengeRankCard } from "../../components/rank/ChallengeRankCard";
 import { ChallengeRankCardList } from "../../components/rank/ChallengeRankCardList";
 import { ChallengeRankTop3 } from "../../components/rank/ChallengeRankTop3";
-import {Loading} from "../../components/common/Loading";
+import { Loading } from "../../components/common/Loading";
 
 const ProgressBar = styled.progress`
   appearance: none;
@@ -105,7 +105,7 @@ export const ChallengeDetail = () => {
   const [myProfile, setMyProfile] = useState("");
   const [myNickname, setMyNickname] = useState("");
 
-  if (loading) return <Loading/>
+  if (loading) return <Loading />
   else return (
     <motion.div>
       <div style={{ position: "relative" }}>
@@ -173,10 +173,10 @@ export const ChallengeDetail = () => {
                   참여자 총 플로깅 횟수 : {Number(challenge.totalPloggingCnt)} 회
                 </Text>
                 <Text size="12px" weight={400} margin="5px 0px">
-                  참여자 총 플로깅 거리 : {Number(challenge.totalDistance) * 0.001} Km
+                  참여자 총 플로깅 거리 : {(Number(challenge.totalDistance) * 0.001).toFixed(2)} Km
                 </Text>
                 <Text size="12px" weight={400}>
-                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600)} 시간
+                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600).toFixed(2)} 시간
                 </Text>
               </Box>
               <Text size="12px" weight={500} alignSelf="end">
