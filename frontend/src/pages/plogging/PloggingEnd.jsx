@@ -8,6 +8,7 @@ import {
   calcMapLevel,
   container,
   getDistanceFromLatLonInKm,
+  plomonSelector,
   timeToString,
 } from "../../utils/util";
 import { Map, Polyline } from "react-kakao-maps-sdk";
@@ -18,6 +19,7 @@ import { BootstrapButton, WhiteButton } from "../../components/common/Buttons";
 import { StyledText } from "../../components/Common";
 import $ from "jquery";
 import { Plomon } from "../../components/plomon/Plomon";
+import { useSelector } from "react-redux";
 window.jQuery = $;
 window.$ = $;
 
@@ -42,6 +44,8 @@ export const PloggingEnd = () => {
   const [pathData, setPathData] = useState();
   const { kakao } = window;
   const geocoder = new kakao.maps.services.Geocoder();
+  const User = useSelector((state) => state.user.user);
+
   // ploggingType: "",
   //     ploggingData: {
   //       latlng: mapData.latlng,
@@ -128,22 +132,23 @@ export const PloggingEnd = () => {
   // };
 
   const handlePageChange = () => {
-    if (ploggingData.time < 60) {
-      navigate("/");
-    } else {
-      const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
-      console.log(line);
+    // if (ploggingData.time < 60) {
+    //   navigate("/");
+    // } else {
+    const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
+    console.log(line);
 
-      navigate("/plogging/register", {
-        state: {
-          ploggingType: ploggingType,
-          ploggingData: ploggingData,
-          ploggingId: ploggingId,
-          address: address,
-          pathData: line,
-        },
-      });
-    }
+    navigate("/plogging/register", {
+      state: {
+        ploggingType: ploggingType,
+        ploggingData: ploggingData,
+        ploggingId: ploggingId,
+        address: address,
+        pathData: line,
+      },
+    });
+    // }
+
     // line.style.background = "none";
     // // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
     // //   console.log(blob);
@@ -212,6 +217,13 @@ export const PloggingEnd = () => {
     //   //   });
     // });
   };
+
+  let vh = 0;
+
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
   if (loading) return <Spinner />;
   else
     return (
@@ -222,7 +234,7 @@ export const PloggingEnd = () => {
         style={{
           position: "relative",
           textAlign: "center",
-          height: "100vh",
+          height: "calc(var(--vh, 1vh) * 100)",
         }}
       >
         <Box width="100%" height="7%" align="center" justify="center">
@@ -266,38 +278,38 @@ export const PloggingEnd = () => {
             position: "relative",
           }}
         >
-          <div
+          {/* <div
             style={{
               width: "50%",
               height: "300px",
               position: "absolute",
-              left: "50%",
-              top: "-130px",
+              left: "55%",
+              top: "30%",
               zIndex: "15",
             }}
-          >
-            <Canvas camera={{ position: [0, 50, 120] }} flat linear>
+          > */}
+          {/* <Canvas camera={{ position: [0, 50, 120] }} flat linear>
               {/* <ambientLight intensity={0.4} /> */}
-              {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
-              {/* <pointLight position={[0, 60, 400]} /> */}
-              {/* <pointLight position={[0, 150, 250]} /> */}
+          {/* <spotLight position={[0, 50, 200]} angle={0.15} penumbra={1} /> */}
+          {/* <pointLight position={[0, 60, 400]} /> */}
+          {/* <pointLight position={[0, 150, 250]} /> 
               <Suspense fallback={null}>
                 <Plomon />
                 <Environment preset="sunset" />
               </Suspense>
-            </Canvas>
-          </div>
-          {/* <img
-            src={Charact}
+            </Canvas> */}
+          <img
+            src={`/assets/plomons/${plomonSelector(User.plomon)}.gif`}
             style={{
-              width: "200px",
+              width: "210px",
               fill: "cover",
               position: "absolute",
               right: 0,
-              top: "-150px",
+              top: "-100px",
               zIndex: "15",
             }}
-          /> */}
+          />
+          {/* </div> */}
           <Box width="100%" height="100%" align="center" justify="around">
             <Box direction="row" width="100%" justify="center" gap="55px">
               <DataBox label="킬로미터" data={ploggingData.totalDistance} />
@@ -313,7 +325,8 @@ export const PloggingEnd = () => {
                 whileTap={{ scale: 0.9 }}
                 onClick={handlePageChange}
               >
-                {ploggingData.time < 60 ? "홈으로" : "플로깅 완료!"}
+                {"플로깅 완료!"}
+                {/* {ploggingData.time < 60 ? "홈으로" : "플로깅 완료!"} */}
               </BootstrapButton>
 
               {/* <WhiteButton

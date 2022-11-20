@@ -62,13 +62,37 @@
 
 ## 🎇 기대 효과
 
+##### 1. 플로깅 활동 독려
+
+크루, 챌린지, 플로몬 키우기 등 다양한 컨텐츠들을 통해 플로깅을 실천할 수 있습니다.
+<br> 플로깅을 진행하면서 더 많은 칼로리 소모를 할 수 있고, 환경보호를 실천할 수 있습니다.
+
+##### 2. 환경문제 인식의 확산
+
+플로깅을 통해 쓰레기를 주우면서 환경문제의 심각성을 인식할 수 있습니다.
+<br> 또한 이미지로 플로깅 로그를 저장하고, SNS에 공유하면서 사람들에게 환경보호 활동을 확산시킬 수 있습니다.
+
+##### 3. 환경보호 활동의 실생활화
+
+조깅을 하면서 쓰레기를 줍는 활동을 통해 오염 문제를 줄일 수 있습니다.
+<br> 또한 환경문제를 인식함으로써 궁극적으로 환경보호 활동을 실천할 수 있게 됩니다.
+
 ## 🗣️ 협업 관리
 
-**Jira BurnDown Chart**
+**Git Flow**<br>
+![Git](README.assets/협업툴 Git.png)
 
 ---
 
-**Notion**
+**Jira BurnDown Chart**<br>
+[JIRA 바로가기](https://ssafy.atlassian.net/jira/software/c/projects/S07P31A106/boards/100)<br>
+![JIRA](README.assets/협업툴 JIRA.png)
+
+---
+
+**Notion**<br>
+[Notion 바로가기](https://www.notion.so/A106-3bc641fa277a46b6a82aae0976fea8c4)<br>
+![Notion](README.assets/협업툴 Notion.png)
 
 ## 👩‍👩‍👧 개발 멤버 소개
 

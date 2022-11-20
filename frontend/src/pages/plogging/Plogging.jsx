@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import {
   CustomOverlayMap,
-  Map,
+  Map as KakaoMap,
   MapMarker,
   Polyline,
 } from "react-kakao-maps-sdk";
@@ -25,8 +25,11 @@ import {
   calcCalories,
   calcDistance,
   container,
+  convertStringToColor,
+  dateToDetailString,
   getDistanceFromLatLonInKm,
   GrommetTheme,
+  httpToHttps,
   timeToString,
 } from "../../utils/util";
 import {
@@ -71,7 +74,10 @@ import userIcon from "../../assets/icons/userIcon.svg";
 import SockJS from "sockjs-client";
 import * as StompJs from "@stomp/stompjs";
 import ChatSound from "../../assets/sounds/chatNoti.mp3";
+import MarkerSound from "../../assets/sounds/markerNoti.mp3";
+
 import { exitPlogging, getGarbageList } from "../../apis/ploggingApi";
+import { useSelector } from "react-redux";
 
 export const DataBox = ({ label, data }) => {
   return (
@@ -100,6 +106,9 @@ export const Plogging = () => {
   const [ready, setReady] = useState(false);
   const [tic, setTic] = useState(3);
   const [time, setTime] = useState(0);
+  const [plogMembers, setPlogMembers] = useState({ members: [] });
+  const [plogMembersId, setPlogMembersId] = useState(new Map());
+  const [plogMembersCnt, setPlogMembersCnt] = useState(0);
   const [mapData, setMapData] = useState({
     latlng: [],
     center: { lng: 127.002158, lat: 37.512847 },
@@ -127,10 +136,14 @@ export const Plogging = () => {
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
   const [markerPosition, setMarkerPosition] = useState();
   const [markerPositions, setMarkerPositions] = useState([]);
+  const [crewMarker, setCrewMarker] = useState([]);
   const [visible, setVisible] = useState(false);
   const audioPlayer = useRef(null);
+  const markerPlayer = useRef(null);
   const [garbages, setGarbages] = useState([]);
   // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+  const User = useSelector((state) => state.user.user);
+  // console.log(User);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -142,7 +155,9 @@ export const Plogging = () => {
     });
 
   const [messages, setMessages] = useState([]);
-  const { ploggingType, roomId } = locations.state;
+  const { ploggingType, roomId, crewId } = locations.state;
+  let vh = 0;
+
   // ------------------함수-----------------------------
 
   // 소리 재생
@@ -151,16 +166,33 @@ export const Plogging = () => {
     audioPlayer.current.play();
   };
 
+  // 소리 재생
+  const playMarkerAudio = () => {
+    markerPlayer.current.pause();
+    markerPlayer.current.play();
+  };
+
   // 나가기 방지
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
   };
 
+  // 마커 지정 함수
+  const setMarkerImage = (pingType) => {
+    return pingType === "ONE"
+      ? TrashIcon
+      : pingType === "TWO"
+      ? DishIcon
+      : pingType === "THREE"
+      ? DesIcon
+      : GarbageIcon;
+  };
+
   // 시간에 따른 칼로리 구함.
   const handleCalories = () => {
     // kcal = MET * (3.5 * kg * min) * 5 / 1000
-    return calcCalories(user.info.weight, time);
+    return calcCalories(User.weight, time);
   };
 
   const handleDistance = () => {
@@ -173,17 +205,25 @@ export const Plogging = () => {
       return [
         ...prev,
         {
+          sender: User.nickname,
           lat: markerPosition.lat,
           lng: markerPosition.lng,
-          marker: index,
+          pingType: index,
         },
       ];
     });
-    setMarkerOpen(false);
+    if (crewId != null && client != null) {
+      publishMarker({
+        sender: User.nickname,
+        lat: markerPosition.lat,
+        lng: markerPosition.lng,
+        pingType: index,
+      });
+    }
+    setMarkerOpen((prev) => (prev = false));
   };
 
   const handleMapClick = (latLng) => {
-    setMarkerOpen(true);
     setMarker(undefined);
     setMarkerPosition((prev) => {
       return (prev = {
@@ -251,69 +291,73 @@ export const Plogging = () => {
 
   const handlePloggingFinish = () => {
     disConnect();
-    if (time < 60)
-      navigate("/plogging/end", {
-        state: {
-          ploggingType: ploggingType,
-          ploggingId: null,
-          ploggingData: {
-            latlng: mapData.latlng,
-            kcal: data.kcal,
-            time: time,
-            totalDistance: handleDistance(),
-            maxLng: mapData.maxLng,
-            minLng: mapData.minLng,
-            maxLat: mapData.maxLat,
-            minLat: mapData.minLat,
-          },
-        },
-      });
-    else
-      exitPlogging(
-        {
-          calorie: data.kcal,
-          coordinates: mapData.latlng,
-          crewId: ploggingType === "single" ? null : null,
-          distance: data.totalDistance,
-          time: time,
-        },
-        (response) => {
-          console.log(response);
-          navigate("/plogging/end", {
-            state: {
-              ploggingType: ploggingType,
-              ploggingId: response.data.ploggingId,
-              ploggingData: {
-                latlng: mapData.latlng,
-                kcal: data.kcal,
-                time: time,
-                totalDistance: handleDistance(),
-                maxLng: mapData.maxLng,
-                minLng: mapData.minLng,
-                maxLat: mapData.maxLat,
-                minLat: mapData.minLat,
-              },
+    // if (time < 60)
+    //   navigate("/plogging/end", {
+    //     state: {
+    //       ploggingType: ploggingType,
+    //       ploggingId: null,
+    //       ploggingData: {
+    //         latlng: mapData.latlng,
+    //         kcal: data.kcal,
+    //         time: time,
+    //         totalDistance: handleDistance(),
+    //         maxLng: mapData.maxLng,
+    //         minLng: mapData.minLng,
+    //         maxLat: mapData.maxLat,
+    //         minLat: mapData.minLat,
+    //       },
+    //     },
+    //   });
+    // else
+    exitPlogging(
+      {
+        calorie: data.kcal,
+        coordinates: mapData.latlng,
+        crewId: crewId,
+        distance: data.totalDistance,
+        time: time,
+      },
+      (response) => {
+        console.log(response);
+        navigate("/plogging/end", {
+          state: {
+            ploggingType: ploggingType,
+            ploggingId: response.data.ploggingId,
+            ploggingData: {
+              latlng: mapData.latlng,
+              kcal: data.kcal,
+              time: time,
+              totalDistance: handleDistance(),
+              maxLng: mapData.maxLng,
+              minLng: mapData.minLng,
+              maxLat: mapData.maxLat,
+              minLat: mapData.minLat,
             },
-          });
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+          },
+        });
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
   };
 
   const handleMessageSend = (text) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: text,
-        sentTime: new Date(),
-        sender: "localSender",
-        direction: "outgoing",
-        position: "single",
-        type: "message",
-      },
-    ]);
+    if (client != null) {
+      publishChatting(text);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: text,
+          sentTime: new Date(),
+          sender: "localSender",
+          direction: "outgoing",
+          position: "single",
+          type: "memo",
+        },
+      ]);
+    }
   };
 
   // 쓰레기통, 쓰레기많은거, 목적지, 식당
@@ -324,9 +368,11 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "POS",
+          roomId: roomId,
           lat: lat,
           lng: lng,
         }),
@@ -341,12 +387,14 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "PING",
+          roomId: roomId,
           lat: marker.lat,
           lng: marker.lng,
-          pingType: "THREE",
+          pingType: marker.pingType,
         }),
       });
     }
@@ -359,6 +407,7 @@ export const Plogging = () => {
         destination: "/pub/plogging/chat/message",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         },
         body: JSON.stringify({
           type: "TALK",
@@ -372,12 +421,15 @@ export const Plogging = () => {
   //웹소켓 초기화
   const initSocketClient = () => {
     client = new StompJs.Client({
-      brokerURL: "ws://k7a1061.p.ssafy.io:8081/ws-stomp",
+      // brokerURL: "ws://localhost:8000/member-service/ws-stomp",
+      brokerURL: "wss://k7a1061.p.ssafy.io/member-service/ws-stomp",
       connectHeaders: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        memberId: localStorage.getItem("memberId"),
       },
       webSocketFactory: () => {
-        return SockJS("http://k7a1061.p.ssafy.io:8081/ws-stomp");
+        return SockJS("https://k7a1061.p.ssafy.io/member-service/ws-stomp");
+        // return SockJS("http://localhost:8000/member-service/ws-stomp");
       },
       debug: (str) => {
         console.log("stomp debug!!!", str);
@@ -393,7 +445,7 @@ export const Plogging = () => {
         // Compliant brokers will terminate the connection after any error
         console.log("Broker reported error: " + frame.headers["message"]);
         console.log("Additional details: " + frame.body);
-        // client.deactivate();
+        client.deactivate();
       },
     });
 
@@ -405,6 +457,7 @@ export const Plogging = () => {
           destination: "/pub/plogging/chat/message",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            memberId: localStorage.getItem("memberId"),
           },
           // body: JSON.stringify({
           //   type: "ENTER",
@@ -428,39 +481,69 @@ export const Plogging = () => {
           const data = JSON.parse(response.body);
           // 1. 채팅일 때
           if (data.type === "TALK") {
+            playAudio();
             setMessages((prev) => [
               ...prev,
               {
-                text: data.text,
-                sentTime: data.time,
-                sender: data.sender,
-                direction: "incoming",
+                text: data.message,
+                sentTime: data.sendTime,
+                sender: data.sender.nickname,
+                direction:
+                  User.nickname === data.sender.nickname
+                    ? "outgoing"
+                    : "incoming",
                 position: "single",
                 type: "message",
+                profileImg: data.sender.profileImageUrl,
               },
             ]);
           }
           // 2. 마커 위치일 때
           else if (data.type === "PING") {
+            // if (data.sender !== User.nickname) {
             setVisible(true);
             // 마커 리스트 저장
-            playAudio();
+            setCrewMarker((prev) => [
+              ...prev,
+              {
+                sender: data.sender.nickname,
+                lat: data.lat,
+                lng: data.lng,
+                pingType: data.pingType,
+              },
+            ]);
+            playMarkerAudio();
+            // }
           }
           // 3. 사용자들 위치일 때
           else if (data.type === "POS") {
+            // if (!plogMembersId.has(data.sender.id)) {
+            plogMembersId.set(data.sender.id, data);
+            // setPlogMembersCnt(plogMembersCnt + 1);
+            console.log("ㅇㅇ", plogMembersId);
+            console.log("ㅇㅇ", data);
+            // }
             // 라이드어스랑 로직 똑같음
+            // if (data.sender.nickname === User.nickname) {
+            //   plogMembers.members[plogMembersId.get(data.sender.id)] = data;
+            //   setPlogMembers({ ...plogMembers });
+            // }
           }
           // 4. 사용자 입장했을때/퇴장했을 떄
           else if (data.type === "ENTER" || data.type === "QUIT") {
+            if (data.type === "QUIT") {
+              plogMembersId.delete(data.sender.id);
+            }
+            // playAudio();
             setMessages((prev) => [
               ...prev,
               {
                 text: data.message,
                 sentTime: data.time,
-                sender: data.sender,
+                sender: data.sender.nickname,
                 direction: "incoming",
                 position: "single",
-                type: "enter",
+                type: data.type,
               },
             ]);
           }
@@ -469,14 +552,16 @@ export const Plogging = () => {
         },
         {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          memberId: localStorage.getItem("memberId"),
         }
       );
     }
   };
   // 웹소켓 연결해제
-  const disConnect = () => {
+  const disConnect = async () => {
     if (client != null) {
-      if (client.connected) client.deactivate();
+      if (client.connected) await client.deactivate();
+      client = null;
     }
   };
 
@@ -527,6 +612,11 @@ export const Plogging = () => {
     ready && walking ? 1000 * 60 : 3000
   );
 
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
+
   // 실시간 위치를 찍어주는 함수
   useInterval(
     () => {
@@ -537,7 +627,7 @@ export const Plogging = () => {
           lat: coords.latitude,
           lng: coords.longitude,
         };
-
+        publishLocation(gps.lat, gps.lng);
         // console.log("gps : ", gps);
         // 이전이랑 위치가 같을 때
         if (
@@ -556,6 +646,7 @@ export const Plogging = () => {
               minLat: gps.lat < prev.minLat.lat ? gps : prev.minLat,
             };
           });
+
           if (garbages.length < 1) {
             getGarbageList(
               gps,
@@ -609,11 +700,12 @@ export const Plogging = () => {
         });
       }
     },
-    ready ? 1000 : null
+    ready ? 3000 : null
   );
 
   // 웹소켓 초기화
   useEffect(() => {
+    console.log(ploggingType, client);
     if (ploggingType === "crew" && client === null) {
       initSocketClient();
     }
@@ -644,7 +736,7 @@ export const Plogging = () => {
         style={{
           width: "100%",
           textAlign: "center",
-          height: "100vh",
+          height: "calc(var(--vh, 1vh) * 100)",
           background: "#57BA83",
           color: "white",
           fontSize: "56px",
@@ -681,20 +773,72 @@ export const Plogging = () => {
         style={{
           width: "100%",
           textAlign: "center",
-          height: "100vh",
+          height: "calc(var(--vh, 1vh) * 100)",
         }}
       >
         {/* 지도 박스 */}
 
         {/* 지도 */}
-        <Map
+        <KakaoMap
           center={mapData.center}
           isPanto={true}
           style={{ width: "100%", height: "60%" }}
           onClick={(_t, mouseEvent) => {
+            console.log(_t, mouseEvent, markerOpen);
+
+            setMarkerOpen((prev) => (prev = true));
             handleMapClick(mouseEvent.latLng);
           }}
         >
+          {plogMembersId.size > 0 &&
+            Array.from(plogMembersId.values()).map((member, idx) => {
+              // console.log(member);
+              return (
+                <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                  // 커스텀 오버레이가 표시될 위치입니다
+                  position={{ lat: member.lat, lng: member.lng }}
+                  key={idx}
+                >
+                  {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                  <Avatar
+                    src={httpToHttps(member.sender.profileImageUrl)}
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      border: `3px inset ${convertStringToColor(
+                        member.sender.color
+                      )}`,
+                    }}
+                  />
+                </CustomOverlayMap>
+              );
+            })}
+
+          {crewMarker.length > 0 &&
+            crewMarker.map((marker, index) => {
+              return (
+                <CustomOverlayMap
+                  key={index}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                >
+                  <Box
+                    width="45px"
+                    height="45px"
+                    align="center"
+                    background={{ color: "white", opacity: 0.6 }}
+                    round="small"
+                  >
+                    <Image
+                      sizes="30px"
+                      fit="cover"
+                      src={setMarkerImage(marker.pingType)}
+                    />
+                    <StyledText text={marker.sender} size="9px" weight="bold" />
+                  </Box>
+                </CustomOverlayMap>
+              );
+            })}
+
           {markerPositions.length > 0 &&
             markerPositions.map((marker, index) => {
               return (
@@ -702,21 +846,19 @@ export const Plogging = () => {
                   key={index}
                   position={{ lat: marker.lat, lng: marker.lng }}
                 >
-                  <Box width="30px" height="60px">
+                  <Box
+                    width="45px"
+                    height="45px"
+                    align="center"
+                    background={{ color: "white", opacity: 0.6 }}
+                    round="small"
+                  >
                     <Image
                       sizes="30px"
                       fit="cover"
-                      src={
-                        marker.marker === 0
-                          ? TrashIcon
-                          : marker.marker === 1
-                          ? DishIcon
-                          : marker.marker === 2
-                          ? DesIcon
-                          : GarbageIcon
-                      }
+                      src={setMarkerImage(marker.pingType)}
                     />
-                    <StyledText text="문석희" />
+                    <StyledText text={marker.sender} size="9px" weight="bold" />
                   </Box>
                 </CustomOverlayMap>
               );
@@ -760,16 +902,16 @@ export const Plogging = () => {
               strokeStyle={"solid"} // 선의 스타일입니다
             />
           )}
-        </Map>
+        </KakaoMap>
 
         {/* 종료 버튼 */}
         <Box
-          width="100%"
           align="end"
           justify="start"
           style={{
             position: "absolute",
             top: 0,
+            right: 0,
             zIndex: "15",
           }}
         >
@@ -790,7 +932,7 @@ export const Plogging = () => {
           height="45%"
           align="center"
           justify="center"
-          gap="40px"
+          gap="25px"
           background="#fff"
           round={{ size: "large", corner: "top" }}
           style={{
@@ -810,7 +952,7 @@ export const Plogging = () => {
 
           <Box
             width="80%"
-            height="65%"
+            height="60%"
             style={{
               boxShadow: "4px 4px 4px -4px rgb(172 172 172 / 0.3)",
               textAlign: "start",
@@ -838,23 +980,49 @@ export const Plogging = () => {
                         key={index}
                         model={{
                           message: message.text,
-                          sentTime: message.sentTime.toString(),
+                          sentTime: message.sentTime,
                           sender: message.sender,
                           direction: message.direction,
                           position: message.position,
                         }}
-                      />
+                      >
+                        <Avatar
+                          src={httpToHttps(message.profileImg)}
+                          name={message.sender}
+                        />
+                        <Message.Footer
+                          sender={message.sender}
+                          sentTime={dateToDetailString(message.sentTime)}
+                        />
+                      </Message>
                     );
-                  else if (message.type === "enter" || message.type === "exit")
+                  else if (message.type === "ENTER" || message.type === "QUIT")
                     return (
-                      <MessageSeparator
-                        content={
-                          message.sender + "님이 " + message.type === "enter"
-                            ? "참가했습니다."
-                            : "나가셨습니다."
-                        }
-                      />
+                      <MessageSeparator key={index} content={message.text} />
                     );
+                  else if (message.type === "memo") {
+                    return (
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.text,
+                          sentTime: message.sentTime,
+                          sender: message.sender,
+                          direction: message.direction,
+                          position: message.position,
+                        }}
+                      >
+                        <Avatar
+                          src={httpToHttps(User.profileImageUrl)}
+                          name={message.sender}
+                        />
+                        <Message.Footer
+                          sender={message.sender}
+                          sentTime={dateToDetailString(message.sentTime)}
+                        />
+                      </Message>
+                    );
+                  }
                 })}
               </MessageList>
               <MessageInput
@@ -864,7 +1032,6 @@ export const Plogging = () => {
                 attachButton={false}
                 onSend={(innerHtml, textContent, innerText, nodes) => {
                   handleMessageSend(textContent);
-                  playAudio();
                 }}
                 style={{
                   background: "#fff",
@@ -940,16 +1107,16 @@ export const Plogging = () => {
           }}
           title="플로깅 종료"
           desc={
-            time < 60
-              ? "1분 미만의 기록은 저장되지 않습니다. \n 플로깅을 종료하시겠습니까?"
-              : "플로깅을 종료하시겠습니까?"
+            // time < 60 &&
+            // "1분 미만의 기록은 저장되지 않습니다." +
+            "플로깅을 종료하시겠습니까?"
           }
           accept="종료"
         />
         <MarkerDialog
           open={markerOpen}
           handleClose={() => {
-            setMarkerOpen(false);
+            setMarkerOpen((prev) => false);
           }}
           handleMarker={handleMarker}
         />
@@ -964,6 +1131,7 @@ export const Plogging = () => {
           </Grommet>
         )}
         <audio ref={audioPlayer} src={ChatSound} />
+        <audio ref={markerPlayer} src={MarkerSound} />
       </motion.div>
     );
 };
