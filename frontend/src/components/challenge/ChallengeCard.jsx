@@ -33,17 +33,17 @@ export const ChallengeCard = ({ challenge }) => {
   const [typeUnit, setTypeUnit] = useState(challenge.type);
   const [goal, setGoal] = useState();
   useEffect(() => {
-    if (typeUnit === 'DISTANCE') {
+    if (typeUnit === "DISTANCE") {
       setGoal(Number(challenge.goal) * 0.001);
-      setTypeUnit("Km")
-    } else if (typeUnit === 'TIME') {
+      setTypeUnit("Km");
+    } else if (typeUnit === "TIME") {
       setGoal(Number(challenge.goal) / 3600);
-      setTypeUnit("시간")
+      setTypeUnit("시간");
     } else {
       setGoal(challenge.goal);
-      setTypeUnit("회")
+      setTypeUnit("회");
     }
-  }, [challenge])
+  }, [challenge]);
   if (challenge)
     return (
       <Box
@@ -67,7 +67,12 @@ export const ChallengeCard = ({ challenge }) => {
               기한 - {challenge.endDate}까지
             </Text>
             <Box direction="row" width="100%" justify="between">
-              <Box direction="row" justify="between" align="center" width="190px">
+              <Box
+                direction="row"
+                justify="between"
+                align="center"
+                width="190px"
+              >
                 <ProgressBar
                   id="progress"
                   value={challenge.progressRate}
@@ -75,7 +80,7 @@ export const ChallengeCard = ({ challenge }) => {
                   max="100"
                 ></ProgressBar>
                 <Text size="10px" weight={400}>
-                  {challenge.progressRate.toFixed(2)}%
+                  {parseFloat(challenge.progressRate).toFixed(2)}%
                 </Text>
               </Box>
               <Box>
@@ -90,11 +95,19 @@ export const ChallengeCard = ({ challenge }) => {
     );
 };
 
-
 export const ChallengeCardList = ({ ChallengeList }) => {
   return (
     <Box width="100%">
-      {ChallengeList !== undefined && ChallengeList.length > 0 ? ChallengeList.map((challenge, idx) => <div key={idx}> <ChallengeCard challenge={challenge} /></div>) : <div>챌린지가 없습니다.</div>}
+      {ChallengeList !== undefined && ChallengeList.length > 0 ? (
+        ChallengeList.map((challenge, idx) => (
+          <div key={idx}>
+            {" "}
+            <ChallengeCard challenge={challenge} />
+          </div>
+        ))
+      ) : (
+        <div>챌린지가 없습니다.</div>
+      )}
     </Box>
-  )
-}
+  );
+};

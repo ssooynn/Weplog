@@ -9,10 +9,6 @@ import UpArrowIcon from "../assets/icons/upArrowIcon.svg";
 import BackArrowIcon from "../assets/icons/backArrowIcon.svg";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import PlomonSample1 from "../assets/PlomonSample1.gif";
-import PlomonSample2 from "../assets/PlomonSample2.gif";
-import PlomonSample3 from "../assets/PlomonSample3.gif";
-import PlomonSample4 from "../assets/PlomonSample4.gif";
 import {
   changePetLevelApi,
   getAllMyPet,
@@ -193,8 +189,6 @@ export const Main = () => {
   };
 
   useEffect(() => { }, [plomonOpen, isPlomonClicked]);
-
-  useEffect(() => { }, [allMyPet]);
 
   useEffect(() => {
     getAllMyPet(
