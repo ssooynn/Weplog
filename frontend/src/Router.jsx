@@ -88,7 +88,6 @@ export const PrivateRoute = () => {
     myPageProfileApi((res) => {
       console.log(res.data.petId);
       if (res.data.petId === null) {
-        alert("플로몬 없음")
         return navigate("/plomon")
       }
     }, (err) => {
