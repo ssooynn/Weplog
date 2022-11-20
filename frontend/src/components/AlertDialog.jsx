@@ -207,7 +207,13 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
   const ref = useRef(null);
   async function url2blob(url) {
     try {
-      const data = await fetch(url);
+      const data = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
       const blob = await data.blob();
       saveAs(
         blob,
@@ -252,7 +258,13 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
             <motion.button
               style={{ marginLeft: "40px", background: "none", border: "none" }}
               onClick={() => {
-                url2blob(plogData.imageUrl);
+                // url2blob(plogData.imageUrl);
+                saveAs(
+                  plogData.imageUrl,
+                  `weplog_${plogData.nickname}_${
+                    plogData.createdDate.split("T")[0]
+                  }.png`
+                );
                 // try {
                 //   const data = await fetch(url);
                 //   const blob = await data.blob();
