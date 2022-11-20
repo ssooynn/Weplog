@@ -125,27 +125,12 @@ export const ChallengeDetail = () => {
   const [myProfile, setMyProfile] = useState("");
   const [myNickname, setMyNickname] = useState("");
 
-<<<<<<< HEAD
-  if (loading) return <Loading />
-  else return (
-    <motion.div>
-      <div style={{ position: "relative" }}>
-        {/* 챌린지 bgImage */}
-        <Box
-          background={{ image: `url(${challenge.imageUrl})` }}
-          width="100%"
-          height="280px"
-        ></Box>
-        {/* 챌린지 설명 box */}
-        <div style={{ width: "100%", height: "120px" }}>
-=======
   if (loading) return <Loading />;
   else
     return (
       <motion.div>
         <div style={{ position: "relative" }}>
           {/* 챌린지 bgImage */}
->>>>>>> 4185a736f7a085bc287cfc17f71b1dc44c76e041
           <Box
             background={{ image: `url(${challenge.imageUrl})` }}
             width="100%"
@@ -179,16 +164,6 @@ export const ChallengeDetail = () => {
                 ></img>
               </Box>
               <Box>
-<<<<<<< HEAD
-                <Text size="12px" weight={400} margin="5px 0px 0px 0px">
-                  참여자 총 플로깅 횟수 : {Number(challenge.totalPloggingCnt)} 회
-                </Text>
-                <Text size="12px" weight={400} margin="5px 0px">
-                  참여자 총 플로깅 거리 : {(Number(challenge.totalDistance) * 0.001).toFixed(2)} Km
-                </Text>
-                <Text size="12px" weight={400}>
-                  참여자 총 플로깅 시간 : {(Number(challenge.totalTime) / 3600).toFixed(2)} 시간
-=======
                 <Text size="12px" weight={400}>
                   Goal - {goal}
                   {typeUnit} 플로깅
@@ -240,7 +215,6 @@ export const ChallengeDetail = () => {
                 </Box>
                 <Text size="12px" weight={500} alignSelf="end">
                   참여인원 {challenge.participantsCnt}명
->>>>>>> 4185a736f7a085bc287cfc17f71b1dc44c76e041
                 </Text>
               </Box>
             </Box>
