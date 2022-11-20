@@ -16,6 +16,15 @@ import TrashBtn from "../assets/images/trash.png";
 import DishBtn from "../assets/images/dish.png";
 import GarbageBtn from "../assets/images/garbage.png";
 import DesBtn from "../assets/images/destination.png";
+import { motion } from "framer-motion";
+import { saveAs } from "file-saver";
+import { ReactComponent as DownIcon } from "../assets/icons/download.svg";
+import { useRef } from "react";
+import domtoimage from "dom-to-image";
+import { useSelector } from "react-redux";
+import $ from "jquery";
+window.jQuery = $;
+window.$ = $;
 // import SoloBtn from "../assets/images/solo.png";
 // import GroupBtn from "../assets/images/group.png";
 // import { StyledHorizonTable } from "./HorizontalScrollBox";
@@ -104,15 +113,27 @@ function getPrettyPostingTime(PostingTime) {
     if (nowYear === postingYear && nowMonth === postingMonth) {
       if (nowDay === postingDay) {
         if (nowHour === postingHour) {
-          return String(nowMin - postingMin) + '분전';
-        } else { return String(nowHour - postingHour) + '시간전'; };
-      } else { return String(nowDay - postingDay) + '일전'; };
-    } else { return String(postingYear) + '년 ' + String(postingMonth) + '월 ' + String(postingDay) + '일'; };
-  } else { return '' };
-
-};
-
-
+          return String(nowMin - postingMin) + "분전";
+        } else {
+          return String(nowHour - postingHour) + "시간전";
+        }
+      } else {
+        return String(nowDay - postingDay) + "일전";
+      }
+    } else {
+      return (
+        String(postingYear) +
+        "년 " +
+        String(postingMonth) +
+        "월 " +
+        String(postingDay) +
+        "일"
+      );
+    }
+  } else {
+    return "";
+  }
+}
 
 export const AlertDialog = ({
   open,
@@ -183,6 +204,26 @@ export const AlertDialog = ({
 
 export const DetailDialog = ({ open, handleClose, plogData }) => {
   console.log(plogData);
+  const ref = useRef(null);
+  async function url2blob(url) {
+    try {
+      const data = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      const blob = await data.blob();
+      saveAs(
+        blob,
+        `weplog_${plogData.nickname}_${plogData.createdDate.split("T")[0]}.png`
+      );
+      console.log("Success.");
+    } catch (err) {
+      console.error(err.name, err.message);
+    }
+  }
   return (
     <Dialog
       open={open}
@@ -210,8 +251,47 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
             </ArticleBoxProfileImgArea>
             <ArticleBoxProfileTextArea>
               <ArticleBoxProfileName>{plogData.nickname}</ArticleBoxProfileName>
-              <ArticleBoxProfileTime>{getPrettyPostingTime(plogData.createdDate)}</ArticleBoxProfileTime>
+              <ArticleBoxProfileTime>
+                {getPrettyPostingTime(plogData.createdDate)}
+              </ArticleBoxProfileTime>
             </ArticleBoxProfileTextArea>
+            <motion.button
+              style={{ marginLeft: "40px", background: "none", border: "none" }}
+              onClick={() => {
+                // url2blob(plogData.imageUrl);
+                saveAs(
+                  plogData.imageUrl,
+                  `weplog_${plogData.nickname}_${
+                    plogData.createdDate.split("T")[0]
+                  }.png`
+                );
+                // try {
+                //   const data = await fetch(url);
+                //   const blob = await data.blob();
+                //   saveAs(
+                //     blob,
+                //     `weplog_${plogData.nickname}_${
+                //       plogData.createdDate.split("T")[0]
+                //     }.png`
+                //   );
+                //   console.log("Success.");
+                // } catch (err) {
+                //   console.error(err.name, err.message);
+                // }
+
+                // $.get(`blob:${plogData.imageUrl}`).then(function (data) {
+                //   var blob = new Blob([data], { type: "image/png" });
+                //   saveAs(
+                //     blob,
+                //     `weplog_${plogData.nickname}_${
+                //       plogData.createdDate.split("T")[0]
+                //     }.png`
+                //   );
+                // });
+              }}
+            >
+              <DownIcon />
+            </motion.button>
           </ArticleBoxProfileArea>
         </ArticleBox>
       </Box>
@@ -252,7 +332,6 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
           gap="medium"
         >
           <Box direction="column" align="center" justify="center">
-
             <Image
               fit="cover"
               src={TrashBtn}
@@ -261,7 +340,9 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
               }}
               style={{ width: "66px", height: "66px" }}
             />
-            <Text size="12px" weight={600}>쓰레기통</Text>
+            <Text size="12px" weight={600}>
+              쓰레기통
+            </Text>
           </Box>
           <Box direction="column" align="center" justify="center">
             <Image
@@ -272,7 +353,9 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
               }}
               style={{ width: "66px", height: "66px" }}
             />
-            <Text size="12px" weight={600}>맛집</Text>
+            <Text size="12px" weight={600}>
+              맛집
+            </Text>
           </Box>
           <Box direction="column" align="center" justify="center">
             <Image
@@ -283,7 +366,9 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
               }}
               style={{ width: "66px", height: "66px" }}
             />
-            <Text size="12px" weight={600}>목적지</Text>
+            <Text size="12px" weight={600}>
+              목적지
+            </Text>
           </Box>
           <Box direction="column" align="center" justify="center">
             <Image
@@ -294,8 +379,9 @@ export const MarkerDialog = ({ open, handleClose, handleMarker }) => {
               }}
               style={{ width: "66px", height: "66px" }}
             />
-            <Text size="12px" weight={600}>쓰레기</Text>
-
+            <Text size="12px" weight={600}>
+              쓰레기
+            </Text>
           </Box>
         </Box>
       </DialogContent>
