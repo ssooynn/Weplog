@@ -32,6 +32,7 @@ import { OAuth2RedirectHandler } from "./pages/OAuth2RedirectHandler.js";
 import { Plomon3D } from "./pages/Plomon3D.jsx";
 import { useLocation } from "react-router-dom";
 import { MypageChallenge } from "./pages/mypage/MypageChallenge.jsx";
+import { myPageProfileApi } from "./apis/mypageApi.js";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -76,12 +77,22 @@ const isLogin = () => {
 };
 
 export const PrivateRoute = () => {
+  const navigate = useNavigate();
   const link = useLocation().pathname;
   if (!localStorage.getItem("accessToken")) {
     alert("로그인 후 이용해주세요");
     localStorage.setItem("from", link);
     return <Navigate to="/login" />
   } else {
+    myPageProfileApi((res) => {
+      console.log(res.data.petId);
+      if (res.data.petId === null) {
+        alert("플로몬 없음")
+        return navigate("/plomon")
+      }
+    }, (err) => {
+      console.log(err);
+    })
     return <Outlet></Outlet>
   }
 }
@@ -107,10 +118,7 @@ export const Router = () => {
         </Route>
         {/* 로고 */}
         <Route path="/" element={<LayoutFullScreen />}>
-          <Route path="/plogging/end" element={<PloggingEnd />} />
-          <Route path="/plogging/register" element={<PloggingRegister />} />
           <Route path="/plogging" element={<Plogging />} />
-          <Route path="/plomon" element={<DrawingCharacter />} />
         </Route>
         {/* 내브바 */}
         <Route path="/" element={<LayoutNoLogo />}>
@@ -129,6 +137,11 @@ export const Router = () => {
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/" element={<LayoutFullScreen />}>
+        <Route path="/plomon" element={<DrawingCharacter />} />
+        <Route path="/plogging/end" element={<PloggingEnd />} />
+        <Route path="/plogging/register" element={<PloggingRegister />} />
+      </Route>
     </Routes>
   );
 };
