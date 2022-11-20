@@ -354,7 +354,7 @@ export const Plogging = () => {
           sender: "localSender",
           direction: "outgoing",
           position: "single",
-          type: "message",
+          type: "memo",
         },
       ]);
     }
@@ -1000,6 +1000,29 @@ export const Plogging = () => {
                     return (
                       <MessageSeparator key={index} content={message.text} />
                     );
+                  else if (message.type === "memo") {
+                    return (
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.text,
+                          sentTime: message.sentTime,
+                          sender: message.sender,
+                          direction: message.direction,
+                          position: message.position,
+                        }}
+                      >
+                        <Avatar
+                          src={httpToHttps(User.profileImageUrl)}
+                          name={message.sender}
+                        />
+                        <Message.Footer
+                          sender={message.sender}
+                          sentTime={dateToDetailString(message.sentTime)}
+                        />
+                      </Message>
+                    );
+                  }
                 })}
               </MessageList>
               <MessageInput
