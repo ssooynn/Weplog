@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Box } from "grommet";
+import { Box, Text } from "grommet";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import Particles from "react-tsparticles";
@@ -11,13 +11,61 @@ import { container, petList } from "../../utils/util";
 import { loadLightInteraction } from "tsparticles-interaction-light";
 import LightEffect from "../../assets/images/light.png";
 import { tsParticles } from "tsparticles-engine";
-import { getAllMyPet } from "../../apis/memberPetApi";
+import { getAllMyPet, postMyPet } from "../../apis/memberPetApi";
+import styled, { css } from "styled-components";
+import useInterval from "../../hooks/UseInterval";
+import { Navigate } from "grommet-icons";
+import { useNavigate } from "react-router-dom";
+import { myPageProfileApi } from "../../apis/mypageApi";
+import { setUser } from "../../stores/modules/user";
+import { useDispatch } from "react-redux";
+
+
+const LightStyled = styled.div`
+  position: absolute;
+  top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  width: 1px;
+  height: 1px;
+  z-index: 2100;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 0 20px white,
+  0 0 40px white, 
+  0 0 60px white, 
+  0 0 80px white, 
+  0 0 120px white,
+  0 0 220px white,
+  0 0 320px white;
+  transition: 4s;
+${(props) =>
+    props.start && css`
+       box-shadow: 0 0 0 40px white, 
+    0 0 40px 60px white,
+    0 0 40px 100px white,
+    0 0 40px 120px white, 
+    0 0 40px 200px white,
+    0 0 40px 400px white, 
+    0 0 40px 450px white;
+    transition: 1s;
+    `}
+`
 export const DrawingCharacter = () => {
   const [eggs, setEggs] = useState([1, 2, 3]);
   const [select, setSelect] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [myPets, setMyPets] = useState(petList);
   const [eggClikced, setEggClicked] = useState(false);
+  const [light, setLight] = useState(false);
+  const [tic, setTic] = useState(2);
+  const [tic2, setTic2] = useState(5);
+  const [ready, setReady] = useState(false);
+  const [ready2, setReady2] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
     // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
@@ -35,7 +83,10 @@ export const DrawingCharacter = () => {
     getAllMyPet(
       (response) => {
         console.log(response);
-        const pets = myPets.filter((pet) => pet !== response.data.find(pet));
+        console.log(response.data.find(function (item) { return item.petId === 1 }).petId)
+        const pets = myPets.filter((pet) => (response.data.find(function (item) { return item.petId === pet }) === undefined));
+        console.log(myPets);
+        console.log(pets);
         setMyPets(pets);
       },
       (fail) => {
@@ -43,6 +94,53 @@ export const DrawingCharacter = () => {
       }
     );
   }, []);
+
+
+  useInterval(
+    () => {
+      if (light) {
+        if (tic === 1) setReady(true);
+        setTic((rec) => rec - 1);
+        console.log("ready,,,");
+      }
+    },
+    ready ? null : 1000
+  );
+
+  useInterval(
+    () => {
+      if (light) {
+        if (tic2 === 1) {
+          setReady2(true)
+          const petId = myPets[Math.floor(Math.random() * myPets.length)];
+          postMyPet(petId, (res) => {
+            console.log(res);
+            myPageProfileApi(
+              (res) => {
+                const user = {
+                  name: res.data.name,
+                  nickname: res.data.nickname,
+                  weight: res.data.weight,
+                  profileImageUrl: res.data.profileImageUrl,
+                  plomon: res.data.petId,
+                };
+                dispatch(setUser(user));
+                navigate("/main/plomon3d", { state: { gottenPetId: petId } });
+              },
+              (err) => {
+                console.log(err);
+              })
+          }, (err) => {
+            console.log(err);
+          })
+        };
+        setTic2((rec) => rec - 1);
+        console.log("ready,,,");
+      }
+    },
+    ready2 ? null : 600
+  );
+
 
   return (
     <motion.div
@@ -72,9 +170,8 @@ export const DrawingCharacter = () => {
           <>
             <Box
               width="100%"
-              height="30%"
+              height="200px"
               align="center"
-              justify="center"
               background={{
                 size: "contain",
                 image: "url(assets/images/ribbon.png)",
@@ -85,6 +182,7 @@ export const DrawingCharacter = () => {
                 color="white"
                 size="20px"
                 weight="bold"
+                style={{ marginTop: "76px" }}
               />
             </Box>
             <Box>
@@ -126,69 +224,74 @@ export const DrawingCharacter = () => {
         )}
         {clicked && (
           <Box width="100%" height="100%" align="center" justify="center">
+            <Text size="18px" weight={500} margin="0px 0px 40px 0px">클릭해보세요!</Text>
             <motion.img
               whileTap={eggClikced ? {} : { scale: 1.0 }}
               initial={{ opacity: 0, scale: 0.1 }}
               animate={
                 eggClikced
                   ? {
-                      opacity: 1,
-                      scale: 1.3,
-                      rotate: [0, 15, 0, -15, 0],
-                      y: 10,
-                    }
+                    opacity: 1,
+                    scale: 1.3,
+                    rotate: [0, 15, 0, -15, 0],
+                  }
                   : {
-                      opacity: 1,
-                      scale: 1.3,
-                      rotate: [0, 20, 0, -20, 0],
-                    }
+                    opacity: 1,
+                    scale: 1.3,
+                    rotate: [0, 20, 0, -20, 0],
+                  }
               }
               transition={
                 eggClikced
                   ? {
-                      default: {
-                        duration: 0.3,
-                        ease: [0, 0.71, 0.2, 1.01],
-                      },
-                      scale: {
-                        type: "spring",
-                        damping: 5,
-                        stiffness: 100,
-                        restDelta: 0.001,
-                      },
-                      rotate: {
-                        repeatDelay: 0.005,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                      },
-                    }
+                    default: {
+                      duration: 0.3,
+                      ease: [0, 0.71, 0.2, 1.01],
+                    },
+                    scale: {
+                      type: "spring",
+                      damping: 5,
+                      stiffness: 100,
+                      restDelta: 0.001,
+                    },
+                    rotate: {
+                      repeatDelay: 0.005,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                    },
+                  }
                   : {
-                      default: {
-                        duration: 0.3,
-                        ease: [0, 0.71, 0.2, 1.01],
-                      },
-                      scale: {
-                        type: "spring",
-                        damping: 5,
-                        stiffness: 100,
-                        restDelta: 0.001,
-                      },
-                      rotate: {
-                        repeatDelay: 0.7,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                      },
-                    }
+                    default: {
+                      duration: 0.3,
+                      ease: [0, 0.71, 0.2, 1.01],
+                    },
+                    scale: {
+                      type: "spring",
+                      damping: 5,
+                      stiffness: 100,
+                      restDelta: 0.001,
+                    },
+                    rotate: {
+                      repeatDelay: 0.7,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                    },
+                  }
               }
               onTap={() => {
                 // 짱~
+                console.log("test")
                 setEggClicked(true);
+                setLight(true);
               }}
               src={`/assets/images/egg${select}.png`}
             />
           </Box>
+
+
         )}
       </Box>
+      {light && <LightStyled start={ready} />}
       <Particles
         id="tsparticles"
         init={particlesInit}

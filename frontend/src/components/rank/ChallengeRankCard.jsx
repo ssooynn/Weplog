@@ -14,7 +14,7 @@ const ChallengeRankStyled = styled.div`
   border-radius: 5px;
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  background-color: #cdebda;
+  background-color: ${(props) => props.my ? "#cdebda" : "white"};
   margin-top: 10px;
 
   ${(props) =>
@@ -28,35 +28,36 @@ const RankProfileImg = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  margin-right: 20px;
 `;
 
-export const ChallengeRankCard = (rank, profileimg, name, contribution) => {
+export const ChallengeRankCard = ({ rank, profileImgUrl, nickname, value, my }) => {
+
   return (
-    <ChallengeRankStyled>
+    <ChallengeRankStyled my={my}>
       <Box direction="row" justify="between" width="100%" align="center">
-        <Box direction="row" width="35%" align="center">
-          <Text size="14px" weight={400} color="#00853B">
-            5
+        <Box direction="row" width="60%" align="center">
+          <Text size="14px" weight={400} color={my ? "#00853B" : "#1f1d1d"}>
+            {rank}
           </Text>
           <Box
             direction="row"
             width="70%"
-            justify="between"
+            justify="start"
             margin={{ left: "20px" }}
             align="center"
           >
             <RankProfileImg
-              src="https://picsum.photos/400/300"
+              src={profileImgUrl}
               alt="프로필 사진"
             ></RankProfileImg>
-            <Text size="13px" weight={400}>
-              {" "}
-              이아현{" "}
+            <Text size="13px" weight={500} >
+              {nickname}
             </Text>
           </Box>
         </Box>
-        <Text size="14px" weight={400} color="#00853B">
-          6.2%
+        <Text size="14px" weight={500} color={my ? "#00853B" : "#1f1d1d"}>
+          {value}
         </Text>
       </Box>
     </ChallengeRankStyled>

@@ -2,55 +2,76 @@ import { Box, Text } from "grommet";
 import React, { useEffect, useState } from "react";
 import bgGradient from "../../assets/images/bgGradient.png";
 import searchIcon from "../../assets/icons/searchIcon.svg";
-import { ChallengeCard, ChallengeCardList } from "../../components/challenge/ChallengeCard";
+import {
+  ChallengeCard,
+  ChallengeCardList,
+} from "../../components/challenge/ChallengeCard";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Banner from "../../assets/images/Login1.jpg";
 import Button from "../../components/Button";
 import { challengeListAPi, challengeMyApi } from "../../apis/challengeApi";
-import { List } from "grommet-icons";
 import { myPageProfileApi } from "../../apis/mypageApi";
 import { challengeIngListAPi } from "../../apis/memberChallengeApi";
+import { useSelector } from "react-redux";
+import { Loading } from "../../components/common/Loading";
 
 export const ChallengeList = () => {
+  //변수
   const navigate = useNavigate();
-  const goChallengeRegister = () => {
-    navigate("/challenge/register");
-  };
   const [challengeList, setChallengeList] = useState([]);
   const [myChallengeList, setMyChallengeList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState("");
+  const user = useSelector((state) => state.user.user);
 
+  //함수
+  const goChallengeRegister = () => {
+    navigate("/challenge/register");
+  };
+
+  //hooks
   useEffect(() => {
     if (loading) {
-      challengeListAPi(0, 3, "ASC", (res) => {
-        setChallengeList(res.data.content);
-      }, (err) => {
-        console.log(err);
-      })
+      challengeListAPi(
+        0,
+        3,
+        "ASC",
+        (res) => {
+            console.log(res);
+          setChallengeList(res.data.content);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
-      challengeIngListAPi((res) => {
-        console.log(res);
-        setMyChallengeList(res.data);
-      }, (err) => {
-        console.log(err);
-      })
+      challengeIngListAPi(
+        (res) => {
+          console.log(res);
+          setMyChallengeList(res.data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
-      myPageProfileApi((res) => {
-        setProfile(res.data.profileImageUrl);
-      }, (err) => {
-        console.log(err);
-      })
+      myPageProfileApi(
+        (res) => {
+          setProfile(res.data.profileImageUrl);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
       setLoading(false);
     }
-
-  }, [loading])
+  }, [loading]);
   return (
     <motion.div>
-      <Box direction="column">
+      <Box direction="column" pad={{ bottom: "70px" }}>
         <Box
           background={{ image: `url(${bgGradient})` }}
           direction="column"
@@ -71,18 +92,17 @@ export const ChallengeList = () => {
               onClick={() => navigate("/")}
             />
             <Box direction="row" align="center">
-
-              <img
+              {/* <img
                 src={searchIcon}
                 style={{ alignSelf: "center" }}
                 alt="챌린지 검색"
-              />
+              /> */}
               <motion.img
                 style={{
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '50%',
-                  marginLeft: "5px"
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  marginLeft: "5px",
                 }}
                 whileTap={{ scale: 0.9 }}
                 alt="mypage"
@@ -99,7 +119,13 @@ export const ChallengeList = () => {
           >
             내 챌린지
           </Text>
-          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={myChallengeList}></ChallengeCardList>}
+          {!loading &&
+            challengeList !== undefined &&
+            challengeList.length > 0 && (
+              <ChallengeCardList
+                ChallengeList={myChallengeList}
+              ></ChallengeCardList>
+            )}
           <Box width="100%" pad="15px 0px">
             <Text
               alignSelf="start"
@@ -107,10 +133,10 @@ export const ChallengeList = () => {
               size="18px"
               margin={{ top: "10px" }}
             >
-              Weplog의
+              Weplog로
             </Text>
             <Text alignSelf="start" weight={600} size="18px">
-              주인공이 되어주세요!
+              당신과 지구를 더 건강하게
             </Text>
             <Text
               alignSelf="start"
@@ -119,21 +145,21 @@ export const ChallengeList = () => {
               color="#8A8181"
               margin={{ top: "5px" }}
             >
-              이달의 Weploger를 찾습니다
+              챌린지를 통해서 새로운 기록에 도전해보세요
             </Text>
             <Box
               alignSelf="start"
-              border={{ color: "#3d3d3d", style: "solid", side: "all" }}
-              round="medium"
-              width="70px"
-              justify="center"
-              align="center"
-              height="25px"
-              style={{ marginTop: "105px" }}
+              // border={{ color: "#3d3d3d", style: "solid", side: "all" }}
+              // round="medium"
+              // width="70px"
+              // justify="center"
+              // align="center"
+              // height="25px"
+              style={{ marginTop: "140px" }}
             >
-              <Text weight={400} size="12px" color="#3d3d3d">
+              {/* <Text weight={400} size="12px" color="#3d3d3d">
                 1 / 2
-              </Text>
+              </Text> */}
             </Box>
             <img
               src={Banner}
@@ -143,15 +169,20 @@ export const ChallengeList = () => {
                 position: "absolute",
                 width: "180px",
                 height: "180px",
-                marginLeft: "45%",
-                marginTop: "80px",
+                marginLeft: "41%",
+                marginTop: "95px",
                 objectFit: "cover",
                 boxShadow: "4px 4px 4px rgba(0,0,0,0.3)",
               }}
             ></img>
           </Box>
         </Box>
-        <Box pad="large" direction="column" align="center" justify="start">
+        <Box
+          pad={{ left: "large", right: "large", top: "large", bottom: "50px" }}
+          direction="column"
+          align="center"
+          justify="start"
+        >
           <Button biggreenround="true" onClick={goChallengeRegister}>
             새로운 챌린지 만들기
           </Button>
@@ -163,42 +194,13 @@ export const ChallengeList = () => {
           >
             최신 챌린지
           </Text>
-          {!loading && challengeList !== undefined && challengeList.length > 0 && <ChallengeCardList ChallengeList={challengeList}></ChallengeCardList>}
-
-          {/* <Box direction="row" justify="between" width="100%">
-            <Text weight={500} size="16px" margin={{ top: "20px" }}>
-              Challenge Top 3
-            </Text>
-            <Box direction="row" justify="between" width="90px" alignSelf="end">
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#57BA83"
-              >
-                총 횟수
-              </Text>
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#AEAEAE"
-              >
-                |
-              </Text>
-              <Text
-                weight={400}
-                size="12px"
-                margin={{ top: "20px" }}
-                color="#AEAEAE"
-              >
-                총 거리
-              </Text>
-            </Box>
-          </Box> */}
-          {/* <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" />
-          <ChallengeCard bgimage="https://picsum.photos/200/300" /> */}
+          {!loading &&
+            challengeList !== undefined &&
+            challengeList.length > 0 && (
+              <ChallengeCardList
+                ChallengeList={challengeList}
+              ></ChallengeCardList>
+            )}
         </Box>
       </Box>
     </motion.div>

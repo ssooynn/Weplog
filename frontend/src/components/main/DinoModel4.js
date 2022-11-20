@@ -17,7 +17,7 @@ export function DinoModel4(props) {
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>
-        <group name="Dino121">
+        <group name="Dino">
           <group name="Mesh2">
             <group name="Body_A3">
               <skinnedMesh

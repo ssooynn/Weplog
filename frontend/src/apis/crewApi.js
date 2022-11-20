@@ -27,6 +27,22 @@ const authFormInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      config.headers["memberId"] = localStorage.getItem("memberId");
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 // 전체 크루 리스트 조회
 const getAllCrewList = async (success, fail) => {
   await authInstance.get(`/`).then(success).catch(fail);
@@ -47,12 +63,14 @@ const approveCrewJoin = async (joinWatingId, success, fail) => {
   await authInstance.post(`/access/${joinWatingId}`).then(success).catch(fail);
 };
 
+//크루 가입신청 거절하기
+const rejectCrewJoin = async (joinWatingId, success, fail) => {
+  await authInstance.delete(`/deny/${joinWatingId}`).then(success).catch(fail);
+};
+
 //크루 가입신청 하기
-const createCrewJoin = async (crewId, params, success, fail) => {
-  await authInstance
-    .post(`/join/${crewId}`, { params: params })
-    .then(success)
-    .catch(fail);
+const createCrewJoin = async (crewId, request, success, fail) => {
+  await authInstance.post(`/join/${crewId}`, request).then(success).catch(fail);
 };
 
 // 내 크루 목록 조회
@@ -78,6 +96,30 @@ const getCrewWaitingList = async (crewId, success, fail) => {
   await authInstance.get(`/waiting/${crewId}`).then(success).catch(fail);
 };
 
+//플로깅 채팅 만들기
+const createCrewRoom = async (crewId, success, fail) => {
+  await authInstance.post(`/room`, crewId).then(success).catch(fail);
+};
+
+// 크루 아이디로 룸 불러오기
+const getRoomByCrewId = async (crewId, success, fail) => {
+  await authInstance.get(`/room/${crewId}`).then(success).catch(fail);
+};
+
+// 플로깅 시작 전 진행중인 크루 플로깅 가져오가
+const getExistCrewPlogging = async (success, fail) => {
+  await authInstance.get(`/rooms`).then(success).catch(fail);
+};
+
+//크루 랭킹
+const getCrewRankingList = async (crewId, success, fail) => {
+  await authInstance.get(`/ranking/${crewId}`).then(success).catch(fail);
+};
+// 크루 채팅 기록 불러오기
+const getCrewChats = async (crewId, success, fail) => {
+  await authInstance.get(`/chat/${crewId}`).then(success).catch(fail);
+};
+
 export {
   getAllCrewList,
   createCrew,
@@ -88,4 +130,10 @@ export {
   getMyNearCrewList,
   getTop3CrewList,
   getCrewWaitingList,
+  createCrewRoom,
+  getRoomByCrewId,
+  getExistCrewPlogging,
+  rejectCrewJoin,
+  getCrewRankingList,
+  getCrewChats,
 };

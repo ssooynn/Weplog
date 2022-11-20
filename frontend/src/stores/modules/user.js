@@ -7,14 +7,13 @@ const SET_USER = "SET_USER";
 
 export const setUser = createAction(SET_USER, (user) => user);
 
-const initialState = {
-  user: {
-    memberId: "",
-    name: "",
-    nickname: "",
-    weight: "",
-    profileImageUrl: "",
-  },
+const user = {
+  memberId: "",
+  name: "",
+  nickname: "",
+  weight: "",
+  profileImageUrl: "",
+  plomon: "",
 };
 
 export default handleActions(
@@ -26,7 +25,7 @@ export default handleActions(
         // console.log(draft.user);
       }),
   },
-  initialState
+  user
 );
 
 const actionCreators = {

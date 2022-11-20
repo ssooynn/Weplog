@@ -5,6 +5,8 @@ import plus from "../../assets/icons/plusIcon.svg";
 import gallery from "../../assets/icons/galleryIcon.svg";
 import { StyledInput } from "../../components/common/TextInput";
 import Button from "../../components/Button";
+import { createCrew } from "../../apis/crewApi";
+import { useNavigate } from "react-router-dom";
 export const CrewRegister = () => {
   const [profile, setProfile] = useState("");
   const [image, setImage] = useState("");
@@ -24,6 +26,45 @@ export const CrewRegister = () => {
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
   const [local, setLocal] = useState("");
+  const navigate = useNavigate();
+
+  // Multipart로
+  // request {
+  // name: string
+  // description: string
+  // activityArea: string
+  // maxParticipantCnt: int
+  // lat: double
+  // lon: double
+  // }
+
+  // image → 1장
+
+  const handleCreateCrew = () => {
+    const request = {
+      name: name,
+      description: desc,
+      activityArea: local,
+      maxParticipantCnt: amount,
+    };
+
+    const formData = new FormData();
+    formData.append("image", image);
+    const blob = new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    });
+    formData.append("request", blob);
+    createCrew(
+      formData,
+      (response) => {
+        console.log(response);
+        navigate("/crew/detail/" + response.data.crewId);
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
+  };
 
   return (
     <motion.div style={{ minHeight: "88vh" }}>
@@ -225,7 +266,9 @@ export const CrewRegister = () => {
             </Box>
           </Grid>
 
-          <Button biggreenround="true">크루 만들기</Button>
+          <Button biggreenround="true" onClick={handleCreateCrew}>
+            크루 만들기
+          </Button>
         </Box>
       </Box>
     </motion.div>

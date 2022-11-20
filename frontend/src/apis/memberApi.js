@@ -18,6 +18,22 @@ const authInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      config.headers["memberId"] = localStorage.getItem("memberId");
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 //닉네임 중복체크
 const checkNicknameApi = async (nickname, success, fail) => {
   instance.defaults.headers.common["Authorization"] =

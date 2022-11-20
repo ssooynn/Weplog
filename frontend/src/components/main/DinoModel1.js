@@ -1,19 +1,37 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
-export function DinoModel1(props) {
-  const { nodes, materials, animations } = useGLTF("/재권.glb");
+export const DinoModel1 = forwardRef((props, reff) => {
+  // props.petId = 1
+  const [modelGLB, setModelGLB] = useState(`/${props.name}.glb`);
+  // if (props.petId === 1) {setModelGLB("/재권.glb")};
+  const { nodes, materials, animations } = useGLTF(modelGLB);
   const { ref, actions, names } = useAnimations(animations);
   const [index, setIndex] = useState(9);
   const mesh = useRef(null);
-  useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+  // useFrame(() => (mesh.current.rotation.y = mesh.current.rotation.y += 0.02));
+  useImperativeHandle(reff, () => ({
+    // 부모에서 사용하고 싶었던 함수
+    handleAnimation,
+  }));
+  const handleAnimation = (index3) => {
+    setIndex(index3);
+    actions[names[index3]].reset().fadeIn(0.5).play();
+  };
+
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
-    actions[names[index]].reset().fadeIn(0.5).play()
+    handleAnimation(index);
     // In the clean-up phase, fade it out
-    return () => actions[names[index]]
-  }, [])
+    return () => actions[names[index]];
+  }, []);
   return (
     <group ref={ref} {...props} dispose={null}>
       <group ref={mesh}>
@@ -83,6 +101,4 @@ export function DinoModel1(props) {
       </group>
     </group>
   );
-}
-
-useGLTF.preload("/재권.glb");
+});

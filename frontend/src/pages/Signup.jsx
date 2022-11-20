@@ -7,6 +7,9 @@ import { StyledInput } from "../components/common/TextInput";
 import Button from "../components/Button";
 import { checkNicknameApi, signupApi } from "../apis/memberApi";
 import { useNavigate } from "react-router-dom";
+import { myPageProfileApi } from "../apis/mypageApi";
+import { setUser } from "../stores/modules/user";
+import { useDispatch } from "react-redux";
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -69,7 +72,9 @@ export const Signup = () => {
     })
   };
 
+  const dispatch = useDispatch();
   const signup = (e) => {
+
     //유효성 체크
     if (name && nickname && weight && checkNickname && checkAll) {
       //api전송을 위한 formData객체
@@ -95,7 +100,21 @@ export const Signup = () => {
 
       signupApi(formData, (res) => {
         console.log(res);
-        navigate("/plomon");
+        myPageProfileApi(
+          (res) => {
+            const user = {
+              name: res.data.name,
+              nickname: res.data.nickname,
+              weight: res.data.weight,
+              profileImageUrl: res.data.profileImageUrl,
+            };
+            dispatch(setUser(user));
+            navigate("/plomon");
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
       }, (err) => {
         console.log(err);
       })

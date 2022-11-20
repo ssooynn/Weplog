@@ -27,6 +27,22 @@ const authFormInstance = axios.create({
   },
 });
 
+authInstance.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      config.headers["memberId"] = localStorage.getItem("memberId");
+    } else {
+      window.location.href = "/login";
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
 // 내 플로깅 리스트 가져오기
 const getPloggingList = async (params, success, fail) => {
   await authInstance.get(`/`, { params: params }).then(success).catch(fail);
@@ -46,8 +62,8 @@ const getPloggingDetail = async (ploggingId, success, fail) => {
 };
 
 // 플로깅 종료
-const exitPlogging = async (params, success, fail) => {
-  await authInstance.post(`/exit`, params).then(success).catch(fail);
+const exitPlogging = async (ploggingReq, success, fail) => {
+  await authInstance.post(`/exit`, ploggingReq).then(success).catch(fail);
 };
 
 //최근 피드 리스트 조회
@@ -58,6 +74,19 @@ const getRecentFeedList = async (success, fail) => {
 //크루 플로깅 피드 리스트 조회
 const getCrewFeedList = async (crewId, success, fail) => {
   await authInstance.get(`/feed/crew/${crewId}`).then(success).catch(fail);
+};
+
+//크루 안에서 날짜별 플로깅 기록 리스트
+const getCrewPloggingDetail = async (crewId, date, success, fail) => {
+  await authInstance.get(`/crew/${crewId}/${date}`).then(success).catch(fail);
+};
+
+//크루 안에서 월 기록 날짜(일) 가져오기
+const getCrewPloggingDate = async (crewId, date, success, fail) => {
+  await authInstance
+    .get(`/crew/${crewId}/month/${date}`)
+    .then(success)
+    .catch(fail);
 };
 
 //근처 쓰레기통 리스트
@@ -85,4 +114,6 @@ export {
   getCrewFeedList,
   getGarbageList,
   postPloggingPicture,
+  getCrewPloggingDetail,
+  getCrewPloggingDate,
 };

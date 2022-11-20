@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { container } from "../../utils/util";
+import { container, timeToString } from "../../utils/util";
 import { Avatar, Box } from "grommet";
 import BackBtn from "../../assets/images/backButton.png";
 import PlusBtn from "../../assets/images/plus.png";
@@ -108,6 +108,13 @@ export const PloggingRegister = () => {
     );
   };
 
+  let vh = 0;
+
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
+
   return (
     <motion.div
       initial="hidden"
@@ -116,7 +123,7 @@ export const PloggingRegister = () => {
       style={{
         position: "relative",
         textAlign: "center",
-        height: "100vh",
+        height: "calc(var(--vh, 1vh) * 100)",
       }}
     >
       {/* 헤더 */}
@@ -157,7 +164,7 @@ export const PloggingRegister = () => {
           <input
             id="image"
             type="file"
-            accept="image/jpg,image/png,image/jpeg,image/gif"
+            accept="image/*"
             style={{
               display: "none",
             }}
@@ -274,7 +281,7 @@ export const PloggingRegister = () => {
               </Box>
               <Box align="end" direction="row">
                 <StyledText
-                  text={data.time}
+                  text={timeToString(data.time)}
                   weight="bold"
                   size="20px"
                   color={contentColor}
