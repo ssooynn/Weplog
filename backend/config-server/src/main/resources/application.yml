@@ -1,0 +1,32 @@
+server:
+  port: 8888
+
+spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  application:
+    name: config-service
+#  profiles:
+#    active: native
+  cloud:
+    config:
+      server:
+#        native:
+#          search-locations: file:///${user.home}/IdeaProjects/weplog-file-repo
+        #          search-locations: file:///D:/IntellijWorkspace/native-file-repo
+        git:
+          uri: https://github.com/wornjs135/spring-cloud-config.git
+          # Github ??? private repo? ????? token ??.
+          # Settings - DeveloperSettings - Personal Access Token?? ?? ?? ?? ?, ?? ???? password? ????? ?? ?????.
+          # public repo? username, password ?? ?? ??
+          username: wornjs135
+          password: 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
+#          uri: file://C:\Users\SSAFY\IdeaProjects\git-local-repo
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh
