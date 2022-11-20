@@ -1,10 +1,18 @@
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+
 .App {
   max-width: 500px;
   margin: 0 auto;
+  font-family: "Spoqa Han Sans Neo", "sans-serif";
 }
 
 .rootRoute {
   max-width: 500px;
   margin: 0 auto;
   align-items: center;
+}
+
+.Muidialog-paper{
+  background-color: aqua;
+  border-radius: 50%;
 }

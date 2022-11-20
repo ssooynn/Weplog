@@ -1,14 +1,18 @@
 import axios from "axios";
 
-export const API_SERVER = "https://j7a603.p.ssafy.io/api";
+export const API_SERVER = "https://k7a1061.p.ssafy.io/";
 
 // export const API_SERVER = "http://localhost:8080/api";
 
-export const CLIENT_URL = "https://j7a603.p.ssafy.io";
+export const CLIENT_URL = "https://k7a106.p.ssafy.io";
 
 // export const CLIENT_URL = "http://localhost:3000";
 
-export const AUTH_URL = API_SERVER + "/oauth2/authorize/kakao";
+export const AUTH_URL_KAKAO =
+  API_SERVER + "member-service/oauth2/authorize/kakao";
+
+export const AUTH_URL_GOOGLE =
+  API_SERVER + "member-service/oauth2/authorize/google";
 
 export const OAUTH2_REDIRECT_URI = `?redirect_uri=${CLIENT_URL}/oauth2/redirect`;
 //

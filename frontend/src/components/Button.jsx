@@ -13,13 +13,62 @@ const StyledButton = styled(motion.button)`
   ${(props) =>
     props.biggreen &&
     css`
+      border-radius: 2px;
       height: 59px;
       border: 0px;
-      font-size: 18px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 300;
+      font-size: 16px;
       color: white;
-      background: #64ccbe;
-      width: 80vw;
+      background: #57ba83;
+      width: 100%;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
     `}
+  ${(props) =>
+    props.biggreenround &&
+    css`
+      border-radius: 10px;
+      height: 59px;
+      border: 0px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 400;
+      font-size: 16px;
+      color: white;
+      background: #57ba83;
+      width: 100%;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
+    `}
+
+    ${(props) =>
+    props.smallgreenround &&
+    css`
+      border-radius: 10px;
+      border: 0px;
+      width: 120px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 400;
+      font-size: 14px;
+      color: white;
+      background: #57ba83;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
+    `}
+    
+    ${(props) =>
+    props.bigpinkround &&
+    css`
+      border-radius: 10px;
+      height: 59px;
+      border: 0px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 400;
+      font-size: 16px;
+      color: white;
+      background: #ec8888;
+      width: 100%;
+      box-shadow: 8px 8px 8px -8px rgb(0 0 0 / 0.2);
+    `}
+
+    
 
   ${(props) =>
     props.bigpink &&
@@ -36,7 +85,7 @@ const StyledButton = styled(motion.button)`
       border: 0px;
       color: white;
       background: #f29393;
-      width: 20vw;
+      width: 23vw;
     `}
 
     ${(props) =>
@@ -107,14 +156,17 @@ const StyledButton = styled(motion.button)`
     `}
 
     ${(props) =>
-    props.infoselect &&
+    props.nicknamecheck &&
     css`
-      height: 29px;
+      height: 32px;
       border: 0px;
-      border-radius: 88px;
-      background: rgba(67, 150, 82, 0.79);
+      border-radius: 2px;
+      background: #57ba83;
       color: white;
-      width: 15vw;
+      width: 90px;
+      font-family: "Spoqa Han Sans Neo";
+      font-weight: 300;
+      font-size: 13px;
     `}
 
     ${(props) =>
@@ -155,7 +207,7 @@ const StyledButton = styled(motion.button)`
 
 export default function Button({ children, ...props }) {
   return (
-    <StyledButton {...props} whileTap={{ scale: 1.2 }}>
+    <StyledButton {...props} whileTap={{ scale: 1.05 }}>
       {children}
     </StyledButton>
   );
