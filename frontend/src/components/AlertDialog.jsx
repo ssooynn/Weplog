@@ -19,6 +19,12 @@ import DesBtn from "../assets/images/destination.png";
 import { motion } from "framer-motion";
 import { saveAs } from "file-saver";
 import { ReactComponent as DownIcon } from "../assets/icons/download.svg";
+import { useRef } from "react";
+import domtoimage from "dom-to-image";
+import { useSelector } from "react-redux";
+import $ from "jquery";
+window.jQuery = $;
+window.$ = $;
 // import SoloBtn from "../assets/images/solo.png";
 // import GroupBtn from "../assets/images/group.png";
 // import { StyledHorizonTable } from "./HorizontalScrollBox";
@@ -198,15 +204,20 @@ export const AlertDialog = ({
 
 export const DetailDialog = ({ open, handleClose, plogData }) => {
   console.log(plogData);
-  const convertURLtoFile = async (url) => {
-    const response = await fetch(url);
-    const data = await response.blob();
-    const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
-    const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
-    const metadata = { type: `image/${ext}` };
-    return new File([data], filename, metadata);
-  };
-
+  const ref = useRef(null);
+  async function url2blob(url) {
+    try {
+      const data = await fetch(url);
+      const blob = await data.blob();
+      saveAs(
+        blob,
+        `weplog_${plogData.nickname}_${plogData.createdDate.split("T")[0]}.png`
+      );
+      console.log("Success.");
+    } catch (err) {
+      console.error(err.name, err.message);
+    }
+  }
   return (
     <Dialog
       open={open}
@@ -241,14 +252,30 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
             <motion.button
               style={{ marginLeft: "40px", background: "none", border: "none" }}
               onClick={() => {
-                convertURLtoFile(plogData.imageUrl).then((f) => {
-                  saveAs(
-                    f,
-                    `weplog_${plogData.nickname}_${
-                      plogData.createdDate.split("T")[0]
-                    }.png`
-                  );
-                });
+                url2blob(plogData.imageUrl);
+                // try {
+                //   const data = await fetch(url);
+                //   const blob = await data.blob();
+                //   saveAs(
+                //     blob,
+                //     `weplog_${plogData.nickname}_${
+                //       plogData.createdDate.split("T")[0]
+                //     }.png`
+                //   );
+                //   console.log("Success.");
+                // } catch (err) {
+                //   console.error(err.name, err.message);
+                // }
+
+                // $.get(`blob:${plogData.imageUrl}`).then(function (data) {
+                //   var blob = new Blob([data], { type: "image/png" });
+                //   saveAs(
+                //     blob,
+                //     `weplog_${plogData.nickname}_${
+                //       plogData.createdDate.split("T")[0]
+                //     }.png`
+                //   );
+                // });
               }}
             >
               <DownIcon />
