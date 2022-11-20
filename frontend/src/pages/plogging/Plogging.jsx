@@ -343,18 +343,21 @@ export const Plogging = () => {
   };
 
   const handleMessageSend = (text) => {
-    publishChatting(text);
-    // setMessages((prev) => [
-    //   ...prev,
-    //   {
-    //     text: text,
-    //     sentTime: new Date(),
-    //     sender: "localSender",
-    //     direction: "outgoing",
-    //     position: "single",
-    //     type: "message",
-    //   },
-    // ]);
+    if (client != null) {
+      publishChatting(text);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: text,
+          sentTime: new Date(),
+          sender: "localSender",
+          direction: "outgoing",
+          position: "single",
+          type: "message",
+        },
+      ]);
+    }
   };
 
   // 쓰레기통, 쓰레기많은거, 목적지, 식당
