@@ -201,7 +201,7 @@ export const Main = () => {
         console.log(err);
       }
     );
-  }, []);
+  }, [targetPlomon]);
 
   const changeImgLevel = () => {
     changePetLevelApi(
