@@ -198,6 +198,15 @@ export const AlertDialog = ({
 
 export const DetailDialog = ({ open, handleClose, plogData }) => {
   console.log(plogData);
+  const convertURLtoFile = async (url) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    const ext = url.split(".").pop(); // url 구조에 맞게 수정할 것
+    const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
+    const metadata = { type: `image/${ext}` };
+    return new File([data], filename, metadata);
+  };
+
   return (
     <Dialog
       open={open}
@@ -232,12 +241,14 @@ export const DetailDialog = ({ open, handleClose, plogData }) => {
             <motion.button
               style={{ marginLeft: "40px", background: "none", border: "none" }}
               onClick={() => {
-                saveAs(
-                  plogData.imageUrl,
-                  `weplog_${plogData.nickname}_${
-                    plogData.createdDate.split("T")[0]
-                  }.png`
-                );
+                convertURLtoFile(plogData.imageUrl).then((f) => {
+                  saveAs(
+                    f,
+                    `weplog_${plogData.nickname}_${
+                      plogData.createdDate.split("T")[0]
+                    }.png`
+                  );
+                });
               }}
             >
               <DownIcon />
