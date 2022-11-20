@@ -132,22 +132,22 @@ export const PloggingEnd = () => {
   // };
 
   const handlePageChange = () => {
-    if (ploggingData.time < 60) {
-      navigate("/");
-    } else {
-      const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
-      console.log(line);
+    // if (ploggingData.time < 60) {
+    //   navigate("/");
+    // } else {
+    const line = $("path[id*='daum-maps-shape']")[0].attributes[2].value;
+    console.log(line);
 
-      navigate("/plogging/register", {
-        state: {
-          ploggingType: ploggingType,
-          ploggingData: ploggingData,
-          ploggingId: ploggingId,
-          address: address,
-          pathData: line,
-        },
-      });
-    }
+    navigate("/plogging/register", {
+      state: {
+        ploggingType: ploggingType,
+        ploggingData: ploggingData,
+        ploggingId: ploggingId,
+        address: address,
+        pathData: line,
+      },
+    });
+    // }
 
     // line.style.background = "none";
     // // domtoimage.toBlob(line, { filter: filter }).then((blob) => {
@@ -325,7 +325,8 @@ export const PloggingEnd = () => {
                 whileTap={{ scale: 0.9 }}
                 onClick={handlePageChange}
               >
-                {ploggingData.time < 60 ? "홈으로" : "플로깅 완료!"}
+                {"플로깅 완료!"}
+                {/* {ploggingData.time < 60 ? "홈으로" : "플로깅 완료!"} */}
               </BootstrapButton>
 
               {/* <WhiteButton
