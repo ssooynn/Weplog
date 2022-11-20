@@ -118,7 +118,6 @@ export const Router = () => {
         </Route>
         {/* 로고 */}
         <Route path="/" element={<LayoutFullScreen />}>
-          <Route path="/plogging" element={<Plogging />} />
         </Route>
         {/* 내브바 */}
         <Route path="/" element={<LayoutNoLogo />}>
@@ -139,6 +138,7 @@ export const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/" element={<LayoutFullScreen />}>
+        <Route path="/plogging" element={<Plogging />} />
         <Route path="/plomon" element={<DrawingCharacter />} />
         <Route path="/plogging/end" element={<PloggingEnd />} />
         <Route path="/plogging/register" element={<PloggingRegister />} />
