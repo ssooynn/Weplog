@@ -291,55 +291,55 @@ export const Plogging = () => {
 
   const handlePloggingFinish = () => {
     disConnect();
-    if (time < 60)
-      navigate("/plogging/end", {
-        state: {
-          ploggingType: ploggingType,
-          ploggingId: null,
-          ploggingData: {
-            latlng: mapData.latlng,
-            kcal: data.kcal,
-            time: time,
-            totalDistance: handleDistance(),
-            maxLng: mapData.maxLng,
-            minLng: mapData.minLng,
-            maxLat: mapData.maxLat,
-            minLat: mapData.minLat,
-          },
-        },
-      });
-    else
-      exitPlogging(
-        {
-          calorie: data.kcal,
-          coordinates: mapData.latlng,
-          crewId: crewId,
-          distance: data.totalDistance,
-          time: time,
-        },
-        (response) => {
-          console.log(response);
-          navigate("/plogging/end", {
-            state: {
-              ploggingType: ploggingType,
-              ploggingId: response.data.ploggingId,
-              ploggingData: {
-                latlng: mapData.latlng,
-                kcal: data.kcal,
-                time: time,
-                totalDistance: handleDistance(),
-                maxLng: mapData.maxLng,
-                minLng: mapData.minLng,
-                maxLat: mapData.maxLat,
-                minLat: mapData.minLat,
-              },
+    // if (time < 60)
+    //   navigate("/plogging/end", {
+    //     state: {
+    //       ploggingType: ploggingType,
+    //       ploggingId: null,
+    //       ploggingData: {
+    //         latlng: mapData.latlng,
+    //         kcal: data.kcal,
+    //         time: time,
+    //         totalDistance: handleDistance(),
+    //         maxLng: mapData.maxLng,
+    //         minLng: mapData.minLng,
+    //         maxLat: mapData.maxLat,
+    //         minLat: mapData.minLat,
+    //       },
+    //     },
+    //   });
+    // else
+    exitPlogging(
+      {
+        calorie: data.kcal,
+        coordinates: mapData.latlng,
+        crewId: crewId,
+        distance: data.totalDistance,
+        time: time,
+      },
+      (response) => {
+        console.log(response);
+        navigate("/plogging/end", {
+          state: {
+            ploggingType: ploggingType,
+            ploggingId: response.data.ploggingId,
+            ploggingData: {
+              latlng: mapData.latlng,
+              kcal: data.kcal,
+              time: time,
+              totalDistance: handleDistance(),
+              maxLng: mapData.maxLng,
+              minLng: mapData.minLng,
+              maxLat: mapData.maxLat,
+              minLat: mapData.minLat,
             },
-          });
-        },
-        (fail) => {
-          console.log(fail);
-        }
-      );
+          },
+        });
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
   };
 
   const handleMessageSend = (text) => {
@@ -1084,9 +1084,9 @@ export const Plogging = () => {
           }}
           title="플로깅 종료"
           desc={
-            time < 60 &&
-            "1분 미만의 기록은 저장되지 않습니다." +
-              "플로깅을 종료하시겠습니까?"
+            // time < 60 &&
+            // "1분 미만의 기록은 저장되지 않습니다." +
+            "플로깅을 종료하시겠습니까?"
           }
           accept="종료"
         />
