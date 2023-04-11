@@ -161,7 +161,7 @@ each service package strategy
 
 **Jira BurnDown Chart**<br>
 [JIRA 바로가기](https://ssafy.atlassian.net/jira/software/c/projects/S07P31A106/boards/100)<br>
-![JIRA](README.assets/협업툴 JIRA.png)
+![image](https://user-images.githubusercontent.com/74709068/231026087-95f9890b-cc00-4f34-b368-0d32d19e4668.png)
 
 ---
 
