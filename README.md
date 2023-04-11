@@ -167,7 +167,7 @@ each service package strategy
 
 **Notion**<br>
 [Notion 바로가기](https://www.notion.so/A106-3bc641fa277a46b6a82aae0976fea8c4)<br>
-![Notion](README.assets/협업툴 Notion.png)
+
 
 ## 👩‍👩‍👧 개발 멤버 소개
 
